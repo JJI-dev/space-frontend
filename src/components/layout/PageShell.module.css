@@ -1,0 +1,24 @@
+.shell {
+  min-height: calc(100vh - var(--header-h));
+  display: flex;
+  flex-direction: column;
+}
+
+.header {
+  padding: 48px var(--px) 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 32px;
+}
+
+.title {
+  font-size: clamp(28px, 5vw, 48px);
+  font-weight: 700;
+  letter-spacing: -0.05em;
+  color: var(--black);
+}
+
+.body {
+  flex: 1;
+}

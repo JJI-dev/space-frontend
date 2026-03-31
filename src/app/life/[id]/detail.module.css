@@ -1,0 +1,108 @@
+.topBar {
+  padding: 24px var(--px) 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+}
+
+.back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--gray-400);
+  transition: color 0.2s;
+}
+.back:hover { color: var(--black); }
+
+.shareBtn {
+  font-size: 12px;
+  color: var(--gray-400);
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1px solid var(--gray-200);
+  transition: color 0.2s, border-color 0.2s;
+}
+.shareBtn:hover { color: var(--black); border-color: var(--gray-400); }
+
+.wrap {
+  padding: 0 var(--px) 80px;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.category {
+  font-size: 11px;
+  color: var(--gray-400);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 10px;
+}
+
+.title {
+  font-size: clamp(22px, 4vw, 32px);
+  font-weight: 700;
+  letter-spacing: -0.04em;
+  line-height: 1.2;
+  margin-bottom: 24px;
+}
+
+.heroImg {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 10px;
+  overflow: hidden;
+  background: var(--gray-100);
+  margin-bottom: 20px;
+}
+.heroImg img { width: 100%; height: 100%; object-fit: cover; }
+.heroPlaceholder {
+  width: 100%; height: 100%;
+  background: var(--gray-100);
+  display: flex; align-items: center; justify-content: center;
+}
+.heroPlaceholder span {
+  font-size: clamp(28px, 4vw, 48px);
+  color: var(--gray-400);
+  letter-spacing: -0.04em;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.tag {
+  padding: 5px 14px;
+  border-radius: 100px;
+  border: 1px solid var(--gray-200);
+  font-size: 12px;
+  color: var(--gray-600);
+}
+
+.content {
+  font-size: 15px;
+  line-height: 1.85;
+  color: #333;
+  letter-spacing: var(--tracking);
+}
+.content p { margin-bottom: 20px; }
+
+.nav {
+  display: flex;
+  justify-content: space-between;
+  padding: 24px var(--px);
+  border-top: 1px solid var(--gray-200);
+  flex-wrap: wrap;
+  gap: 16px;
+}
+.navLink {
+  font-size: 13px;
+  color: var(--gray-400);
+  transition: color 0.2s;
+  letter-spacing: var(--tracking);
+  max-width: 45%;
+}
+.navLink:hover { color: var(--black); }
