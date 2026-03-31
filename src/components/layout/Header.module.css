@@ -10,12 +10,8 @@
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   z-index: 100;
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s;
 }
-.header.scrolled { border-color: var(--gray-200); }
 
-/* Logo */
 .logo {
   display: flex;
   align-items: center;
@@ -29,49 +25,36 @@
 .logo:hover { background: rgba(0, 0, 0, 0.06); }
 .logo svg { height: 20px; width: auto; display: block; }
 
-/* Nav */
 .nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
   gap: 0;
 }
 .navLink {
-  padding: 8px 18px;
+  padding: 7px 16px;
   border-radius: 100px;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.01em;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0em;
   color: var(--gray-600);
   transition: color 0.2s, background 0.2s;
   white-space: nowrap;
 }
-.navLink:hover { color: var(--black); }
-.navLink.active { background: rgba(0, 0, 0, 0.06); color: var(--black); }
+.navLink:hover { color: var(--black); background: rgba(0,0,0,0.04); }
+.navLink.active { background: var(--black); color: var(--white); font-weight: 500; }
 
-.sep {
-  width: 1px; height: 16px;
-  background: var(--gray-200);
-  display: inline-block;
-  margin: 0 4px;
-  flex-shrink: 0;
-}
-
-/* Right */
 .right { display: flex; align-items: center; gap: 8px; }
 
-.searchBtn {
-  display: flex; align-items: center; justify-content: center;
-  width: 36px; height: 36px; border-radius: 50%;
-  transition: background 0.2s;
-}
-.searchBtn:hover { background: rgba(0, 0, 0, 0.06); }
-
 .contactBtn {
-  padding: 10px 22px;
+  padding: 8px 20px;
   border-radius: 100px;
   border: 1px solid var(--gray-200);
   font-size: 12px; font-weight: 500;
   transition: background 0.2s, border-color 0.2s;
+  letter-spacing: var(--tracking);
 }
 .contactBtn:hover { background: rgba(0, 0, 0, 0.04); border-color: var(--gray-400); }
 
@@ -81,7 +64,6 @@
   width: 40px; height: 40px;
 }
 
-/* Mobile menu */
 .mobOverlay {
   position: fixed; inset: 0; z-index: 148;
   background: rgba(0, 0, 0, 0.4);
@@ -110,6 +92,5 @@
 @media (max-width: 768px) {
   .nav { display: none; }
   .contactBtn { display: none; }
-  .searchBtn { display: none; }
   .hamBtn { display: flex; }
 }

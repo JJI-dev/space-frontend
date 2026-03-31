@@ -22,14 +22,14 @@
   padding: 0 0 0 var(--px);
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 10px;
   position: sticky;
   top: calc(var(--header-h) + 24px);
   height: fit-content;
 }
 
 .catBtn {
-  font-size: 24px;
+  font-size: 13px;
   font-weight: 500;
   letter-spacing: var(--tracking);
   text-align: left;

@@ -18,7 +18,7 @@
 
 .logoWrap {
   position: relative;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
 }
@@ -28,16 +28,18 @@
   height: auto;
   color: var(--black);
   transition: color 0.6s var(--ease-spring);
+  display: block;
 }
 
 .logoWrap.accent .mainLogo {
   color: var(--accent);
 }
 
+/* site button overlaps bottom-right of logo */
 .siteBtn {
   position: absolute;
-  bottom: -12px;
-  right: -12px;
+  bottom: 10px;
+  right: -8px;
   padding: 8px 18px;
   border-radius: 100px;
   background: var(--gray-100);
@@ -47,6 +49,7 @@
   letter-spacing: var(--tracking);
   transition: background 0.2s, transform 0.2s;
   cursor: pointer;
+  z-index: 2;
 }
 
 .siteBtn:hover {
@@ -56,11 +59,7 @@
 
 @media (max-width: 480px) {
   .siteBtn {
-    bottom: -44px;
-    right: 50%;
-    transform: translateX(50%);
-  }
-  .siteBtn:hover {
-    transform: translateX(50%) scale(1.04);
+    bottom: 4px;
+    right: -4px;
   }
 }

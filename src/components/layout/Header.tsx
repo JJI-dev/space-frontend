@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import Spotlight from '@/components/ui/Spotlight'
 import styles from './Header.module.css'
 
 const NAV_LINKS = [
@@ -11,38 +10,20 @@ const NAV_LINKS = [
   { label: 'Life',    href: '/life' },
   { label: 'Wish',    href: '/wish' },
   { label: 'Archive', href: '/archive' },
+  { label: 'Token',   href: '/token' },
 ]
 
 export default function Header() {
   const pathname = usePathname()
-  const [scrolled,      setScrolled]      = useState(false)
-  const [spotlightOpen, setSpotlightOpen] = useState(false)
-  const [mobOpen,       setMobOpen]       = useState(false)
-
-  useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 10)
-    window.addEventListener('scroll', fn, { passive: true })
-    return () => window.removeEventListener('scroll', fn)
-  }, [])
+  const [mobOpen, setMobOpen] = useState(false)
 
   useEffect(() => { setMobOpen(false) }, [pathname])
-
-  useEffect(() => {
-    const fn = (e: KeyboardEvent) => {
-      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
-        e.preventDefault()
-        setSpotlightOpen(p => !p)
-      }
-    }
-    window.addEventListener('keydown', fn)
-    return () => window.removeEventListener('keydown', fn)
-  }, [])
 
   const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/')
 
   return (
     <>
-      <header className={`${styles.header} ${scrolled ? styles.scrolled : ''}`}>
+      <header className={styles.header}>
         {/* Logo */}
         <Link href="/" aria-label="Home" className={styles.logo}>
           <svg viewBox="0 0 107 67" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -55,9 +36,9 @@ export default function Header() {
           </svg>
         </Link>
 
-        {/* Desktop nav */}
+        {/* Desktop nav - centered */}
         <nav className={styles.nav}>
-          {NAV_LINKS.map(n => (
+          {NAV_LINKS.map((n, i) => (
             <Link
               key={n.href}
               href={n.href}
@@ -66,28 +47,10 @@ export default function Header() {
               {n.label}
             </Link>
           ))}
-          <span className={styles.sep} />
-          <Link
-            href="/token"
-            className={`${styles.navLink} ${isActive('/token') ? styles.active : ''}`}
-          >
-            Token
-          </Link>
-          <span className={styles.sep} />
         </nav>
 
         {/* Right */}
         <div className={styles.right}>
-          <button
-            className={styles.searchBtn}
-            onClick={() => setSpotlightOpen(true)}
-            aria-label="검색 (⌘K)"
-          >
-            <svg width="18" height="18" viewBox="0 0 64 62" fill="none">
-              <rect x="35.918" y="30" width="36" height="10.8473" rx="4" transform="rotate(39.6266 35.918 30)" fill="black"/>
-              <circle cx="29" cy="29" r="26" fill="white" stroke="black" strokeWidth="6"/>
-            </svg>
-          </button>
           <button className={styles.contactBtn}>Contact</button>
 
           {/* Mobile ham */}
@@ -110,18 +73,10 @@ export default function Header() {
         <div className={styles.mobOverlay} onClick={() => setMobOpen(false)} />
       )}
       <div className={`${styles.mobMenu} ${mobOpen ? styles.mobOpen : ''}`}>
-        {[...NAV_LINKS, { label: 'Token', href: '/token' }].map(n => (
+        {NAV_LINKS.map(n => (
           <Link key={n.href} href={n.href} className={styles.mobLink}>{n.label}</Link>
         ))}
-        <button
-          className={styles.mobLink}
-          onClick={() => { setSpotlightOpen(true); setMobOpen(false) }}
-        >
-          Search
-        </button>
       </div>
-
-      <Spotlight open={spotlightOpen} onClose={() => setSpotlightOpen(false)} />
     </>
   )
 }

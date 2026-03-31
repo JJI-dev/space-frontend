@@ -1,7 +1,6 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import SiteModal from '@/components/ui/SiteModal'
 import Footer from '@/components/layout/Footer'
 import styles from './page.module.css'
@@ -30,6 +29,7 @@ export default function HomePage() {
               <path d="M501.73 366.289C508.79 370.583 523.363 375.633 573.254 374.37C600.198 373.688 619.926 359.527 632.213 348.981C637.544 344.405 641.884 338.624 647.689 334.638C656.764 328.406 669.854 334.546 702.552 346.958C709.325 349.412 711.278 349.946 713.455 350.844C715.633 351.743 717.976 352.989 722.165 357.509" stroke="currentColor" strokeWidth="20" strokeLinecap="round"/>
             </svg>
 
+            {/* site button overlaps logo - bottom right */}
             <button
               className={styles.siteBtn}
               onClick={() => setModalOpen(true)}

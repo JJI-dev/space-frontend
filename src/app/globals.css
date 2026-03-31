@@ -1,4 +1,5 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+@import "tailwindcss";
 
 /* ── Design Tokens ── */
 :root {
@@ -73,23 +74,37 @@ button {
 /* ── Reveal animations ── */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
+  transform: translateY(20px);
   transition:
-    opacity 0.65s var(--ease-spring),
-    transform 0.65s var(--ease-spring);
+    opacity 0.55s var(--ease-spring),
+    transform 0.55s var(--ease-spring);
 }
 .reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.1s; }
-.reveal-delay-2 { transition-delay: 0.2s; }
-.reveal-delay-3 { transition-delay: 0.3s; }
-.reveal-delay-4 { transition-delay: 0.4s; }
+.reveal-delay-1 { transition-delay: 0.08s; }
+.reveal-delay-2 { transition-delay: 0.16s; }
+.reveal-delay-3 { transition-delay: 0.24s; }
+.reveal-delay-4 { transition-delay: 0.32s; }
+
+/* Auto-reveal for page-enter children with .reveal class */
+.page-enter .reveal {
+  animation: revealIn 0.55s var(--ease-spring) both;
+}
+.page-enter .reveal-delay-1 { animation-delay: 0.08s; }
+.page-enter .reveal-delay-2 { animation-delay: 0.16s; }
+.page-enter .reveal-delay-3 { animation-delay: 0.24s; }
+.page-enter .reveal-delay-4 { animation-delay: 0.32s; }
+
+@keyframes revealIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
 /* ── Page enter ── */
 @keyframes pageIn {
-  from { opacity: 0; transform: translateY(12px); }
+  from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.page-enter { animation: pageIn 0.4s var(--ease-spring) both; }
+.page-enter { animation: pageIn 0.35s var(--ease-spring) both; }
 
 /* ── Mobile responsive ── */
 @media (max-width: 480px) {
