@@ -69,7 +69,12 @@ export default function Spotlight({ open, onClose }: Props) {
   const router = useRouter()
 
   useEffect(() => {
-    if (open) { setQuery(''); setTimeout(() => inputRef.current?.focus(), 60) }
+    if (open) { 
+      setTimeout(() => {
+        setQuery('');
+        inputRef.current?.focus();
+      }, 60);
+    }
   }, [open])
 
   useEffect(() => {
