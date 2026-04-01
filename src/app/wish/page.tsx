@@ -3,19 +3,19 @@
 import { useState } from 'react'
 import { WISH_ITEMS } from '@/lib/data'
 import type { WishCategory } from '@/types'
-import SearchIcon from '@/components/ui/SearchIcon'
+// import SearchIcon from '@/components/ui/SearchIcon'
 import WishModal from './WishModal'
 import Footer from '@/components/layout/Footer'
 import styles from './wish.module.css'
 import type { WishItem } from '@/types'
 
-const CATEGORIES: WishCategory[] = ['ALL', 'GOODS', 'CLOTHES', 'COSMETICS']
+const CATEGORIES: WishCategory[] = ['All', 'GOODS', 'CLOTHES', 'COSMETICS']
 
 export default function WishPage() {
-  const [cat,      setCat]      = useState<WishCategory>('ALL')
+  const [cat,      setCat]      = useState<WishCategory>('All')
   const [selected, setSelected] = useState<WishItem | null>(null)
 
-  const filtered = (cat === 'ALL' ? WISH_ITEMS : WISH_ITEMS.filter(w => w.category === cat))
+  const filtered = (cat === 'All' ? WISH_ITEMS : WISH_ITEMS.filter(w => w.category === cat))
     .sort((a, b) => Number(a.isGot) - Number(b.isGot))
 
   return (
@@ -24,7 +24,7 @@ export default function WishPage() {
         {/* Page header */}
         <div className={`${styles.pageHeader} reveal`}>
           <h1 className={styles.pageTitle}>Wish</h1>
-          <SearchIcon />
+          {/* <SearchIcon /> */}
         </div>
 
         <div className={styles.layout}>

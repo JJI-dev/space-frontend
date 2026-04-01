@@ -1,97 +1,60 @@
 .pageHeader {
   padding: 48px var(--px) 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: flex; align-items: flex-end; justify-content: space-between;
   margin-bottom: 0;
 }
-.pageTitle {
-  font-size: clamp(28px, 5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-}
+.pageTitle { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -.05em; }
 
-.layout {
-  display: flex;
-  padding: 24px 0 80px;
-}
+.layout { display: flex; padding: 24px 0 80px; }
 
 .sidebar {
-  width: 200px;
-  flex-shrink: 0;
+  width: 180px; flex-shrink: 0;
   padding: 0 0 0 var(--px);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  position: sticky;
-  top: calc(var(--header-h) + 24px);
-  height: fit-content;
+  display: flex; flex-direction: column; gap: 10px;
+  position: sticky; top: calc(var(--header-h) + 24px); height: fit-content;
+  padding-right: 24px;
 }
 
+/* Archive 카테고리 스타일과 동일 */
 .catBtn {
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 14px; font-weight: 400;
   letter-spacing: var(--tracking);
-  text-align: left;
-  color: var(--gray-400);
-  transition: color 0.2s;
-  line-height: 1.3;
+  color: var(--gray-400); text-align: left;
+  transition: color .2s; padding: 4px 0;
 }
-.catBtn.active { color: var(--black); }
-.catBtn:hover  { color: rgba(0,0,0,.7); }
+.catBtn.active { color: var(--black); font-weight: 600; }
+.catBtn:hover  { color: var(--black); }
 
 .gridWrap { flex: 1; min-width: 0; }
-
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-}
+.grid { display: flex; flex-wrap: wrap; }
 
 .item {
-  width: 33.333%;
-  flex: none;
-  cursor: pointer;
-  transition: opacity 0.2s;
-  background: none;
-  border: none;
-  text-align: left;
-  padding: 0;
+  width: 33.333%; flex: none; cursor: pointer;
+  transition: opacity .2s;
+  background: none; border: none; text-align: left; padding: 0;
 }
-.item:hover { opacity: 0.85; }
+.item:hover { opacity: .85; }
 
 .itemImg {
-  aspect-ratio: 600 / 688;
-  background: var(--gray-100);
-  overflow: hidden;
+  aspect-ratio: 600/688; background: var(--gray-100); overflow: hidden;
 }
 .itemImg img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s var(--ease-spring);
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s var(--ease-spring);
 }
 .item:hover .itemImg img { transform: scale(1.05); }
 
 .itemBody { padding: 14px 10px 28px; }
-.itemTitle {
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: var(--tracking);
-  margin-bottom: 4px;
-  line-height: 1.4;
-}
+.itemTitle { font-size: 14px; font-weight: 500; letter-spacing: var(--tracking); margin-bottom: 4px; line-height: 1.4; }
 .itemCat { font-size: 12px; color: var(--gray-400); letter-spacing: var(--tracking); }
 
 @media (max-width: 900px) { .item { width: 50%; } }
 @media (max-width: 640px) {
   .layout { flex-direction: column; }
   .sidebar {
-    width: 100%;
-    flex-direction: row;
-    overflow-x: auto;
-    padding: 0 var(--px);
-    gap: 28px;
-    position: static;
+    width: 100%; flex-direction: row; overflow-x: auto;
+    padding: 0 var(--px); gap: 28px; position: static;
   }
-  .catBtn { font-size: 18px; white-space: nowrap; }
+  .catBtn { font-size: 14px; white-space: nowrap; }
   .item { width: 50%; }
 }

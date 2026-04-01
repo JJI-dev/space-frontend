@@ -1,5 +1,4 @@
 @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
-@import "tailwindcss";
 
 /* ── Design Tokens ── */
 :root {
@@ -9,14 +8,14 @@
   --gray-200: #e8e8e8;
   --gray-400: #aaaaaa;
   --gray-600: #666666;
-  --accent: #FB4C4C;
-  --accent-hover: #e03a3a;
+  --accent: #5A4FCF;
+  --accent-bg: rgba(108, 92, 231, 0.08);
+  --accent-hover: #4a3fbf;
   --tracking: -0.04em;
   --px: clamp(24px, 4vw, 48px);
   --header-h: 80px;
   --font-body: 'Pretendard', 'Noto Sans KR', sans-serif;
   --footer-clip-h: clamp(80px, 7vw, 130px);
-  --footer-clip-ty: -10%;
   /* Motion */
   --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-snap: cubic-bezier(0.76, 0, 0.24, 1);
@@ -24,14 +23,8 @@
 }
 
 /* ── Reset ── */
-*, *::before, *::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; }
-
 body {
   font-family: var(--font-body);
   background: var(--white);
@@ -40,73 +33,64 @@ body {
   overflow-x: hidden;
   cursor: none;
   -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  min-height: 100dvh;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
+
+main {
+  flex: 1; /* 남는 공간을 모두 차지하도록 설정 */
+  display: flex;
+  flex-direction: column;
+}
+
+html {
+  scrollbar-gutter: stable;
+}
+
 
 a { color: inherit; text-decoration: none; }
 button {
-  background: none;
-  border: none;
-  font-family: var(--font-body);
-  cursor: none;
-  color: inherit;
+  background: none; border: none;
+  font-family: var(--font-body); cursor: none; color: inherit;
 }
-
 @media (max-width: 768px) {
   body { cursor: auto; }
   button { cursor: pointer; }
 }
 
-/* ── Custom Scrollbar ── */
+/* ── Scrollbar ── */
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.15);
-  border-radius: 100px;
-}
-::-webkit-scrollbar-thumb:hover { background: rgba(0, 0, 0, 0.3); }
-* { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,0.15) transparent; }
-
-/* ── Scrollbar hide utility ── */
+::-webkit-scrollbar-thumb { background: rgba(0,0,0,.15); border-radius: 100px; }
+* { scrollbar-width: thin; scrollbar-color: rgba(0,0,0,.15) transparent; }
 .no-scrollbar { scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
 
-/* ── Reveal animations ── */
-.reveal {
-  opacity: 0;
-  transform: translateY(20px);
-  transition:
-    opacity 0.55s var(--ease-spring),
-    transform 0.55s var(--ease-spring);
-}
+/* ── Reveal ── */
+.reveal { opacity: 0; transform: translateY(20px);
+  transition: opacity .55s var(--ease-spring), transform .55s var(--ease-spring); }
 .reveal.visible { opacity: 1; transform: translateY(0); }
-.reveal-delay-1 { transition-delay: 0.08s; }
-.reveal-delay-2 { transition-delay: 0.16s; }
-.reveal-delay-3 { transition-delay: 0.24s; }
-.reveal-delay-4 { transition-delay: 0.32s; }
+.reveal-delay-1 { transition-delay: .08s; }
+.reveal-delay-2 { transition-delay: .16s; }
+.reveal-delay-3 { transition-delay: .24s; }
+.reveal-delay-4 { transition-delay: .32s; }
 
-/* Auto-reveal for page-enter children with .reveal class */
-.page-enter .reveal {
-  animation: revealIn 0.55s var(--ease-spring) both;
-}
-.page-enter .reveal-delay-1 { animation-delay: 0.08s; }
-.page-enter .reveal-delay-2 { animation-delay: 0.16s; }
-.page-enter .reveal-delay-3 { animation-delay: 0.24s; }
-.page-enter .reveal-delay-4 { animation-delay: 0.32s; }
-
+.page-enter .reveal { animation: revealIn .55s var(--ease-spring) both; }
+.page-enter .reveal-delay-1 { animation-delay: .08s; }
+.page-enter .reveal-delay-2 { animation-delay: .16s; }
+.page-enter .reveal-delay-3 { animation-delay: .24s; }
+.page-enter .reveal-delay-4 { animation-delay: .32s; }
 @keyframes revealIn {
   from { opacity: 0; transform: translateY(20px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 
-/* ── Page enter ── */
 @keyframes pageIn {
   from { opacity: 0; transform: translateY(10px); }
   to   { opacity: 1; transform: translateY(0); }
 }
-.page-enter { animation: pageIn 0.35s var(--ease-spring) both; }
+.page-enter { animation: pageIn .35s var(--ease-spring) both; }
 
-/* ── Mobile responsive ── */
-@media (max-width: 480px) {
-  :root { --px: 20px; }
-}
+@media (max-width: 480px) { :root { --px: 20px; } }

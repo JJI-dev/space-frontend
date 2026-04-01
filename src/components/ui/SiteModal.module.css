@@ -1,82 +1,51 @@
 .overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.18);
-  backdrop-filter: blur(4px);
+  position: fixed; inset: 0;
+  /* 배경 없음 */
+  background: transparent;
   z-index: 200;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s;
+  opacity: 0; pointer-events: none;
+  transition: opacity .3s;
 }
 .overlay.open { opacity: 1; pointer-events: all; }
 
 .modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -48%) scale(0.96);
+  position: fixed; top: 50%; left: 50%;
+  transform: translate(-50%, -48%) scale(.96);
   width: 373px;
   background: #fff;
-  border: 1.5px solid rgba(255, 255, 255, 0.5);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  backdrop-filter: blur(12.5px);
+  border: 1.5px solid rgba(0,0,0,.08);
+  box-shadow: 0 8px 40px rgba(0,0,0,.12);
   border-radius: 48px;
   padding: 8px 40px;
   z-index: 201;
-  opacity: 0;
-  pointer-events: none;
-  transition:
-    opacity 0.35s var(--ease-spring),
-    transform 0.35s var(--ease-spring);
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s var(--ease-spring), transform .35s var(--ease-spring);
 }
-.modal.open {
-  opacity: 1;
-  pointer-events: all;
-  transform: translate(-50%, -50%) scale(1);
-}
+.modal.open { opacity: 1; pointer-events: all; transform: translate(-50%,-50%) scale(1); }
 
 .item {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  padding: 28px 3px;
-  width: 100%;
+  display: flex; align-items: center;
+  padding: 28px 3px; width: 100%;
   border-bottom: 1px solid var(--gray-100);
-  cursor: pointer;
-  transition: opacity 0.2s;
-  text-align: left;
+  cursor: pointer; transition: opacity .2s; text-align: left;
 }
 .item:last-child { border-bottom: none; }
-.item:hover { opacity: 0.6; }
+.item:hover { opacity: .6; }
 .item:hover .label { color: var(--black); }
 
-.icon {
-  width: 26px;
-  height: 26px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-  color: var(--black);
-}
-.icon svg { width: 22px; height: 22px; }
-
 .label {
-  font-size: 26px;
+  /* font-size 없음 — 상속 */
+  font-size: 18px;
   font-weight: 400;
   line-height: 124%;
   letter-spacing: var(--tracking);
   color: var(--gray-400);
-  transition: color 0.2s;
+  transition: color .2s;
   text-transform: capitalize;
 }
 
 @media (max-width: 480px) {
-  .modal {
-    width: calc(100vw - 32px);
-    border-radius: 32px;
-    padding: 4px 28px;
-  }
+  .modal { width: calc(100vw - 32px); border-radius: 32px; padding: 4px 28px; }
   .label { font-size: 22px; }
   .item { padding: 22px 3px; }
 }

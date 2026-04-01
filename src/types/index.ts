@@ -26,12 +26,12 @@ export interface LifePost {
 }
 
 // ── Wish ─────────────────────────────────────────────
-export type WishCategory = 'ALL' | 'GOODS' | 'CLOTHES' | 'COSMETICS'
+export type WishCategory = 'All' | 'GOODS' | 'CLOTHES' | 'COSMETICS'
 
 export interface WishItem {
   id: string
   title: string
-  category: Exclude<WishCategory, 'ALL'>
+  category: Exclude<WishCategory, 'All'>
   categoryLabel: string
   imageUrl: string
   price: number
@@ -42,12 +42,12 @@ export interface WishItem {
 
 // ── Archive ───────────────────────────────────────────
 export type ArchiveTab = 'site' | 'article'
-export type ArchiveCategory = 'ALL' | '디자인' | '디자인 토큰' | '에이전시 사이트'
+export type ArchiveCategory = 'All' | '디자인' | '디자인 토큰' | '에이전시 사이트'
 
 export interface ArchiveItem {
   id: string
   tab: ArchiveTab
-  category: Exclude<ArchiveCategory, 'ALL'>
+  category: Exclude<ArchiveCategory, 'All'>
   name: string
   url: string
   desc: string

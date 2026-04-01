@@ -1,47 +1,30 @@
 .pageHeader {
   padding: 48px var(--px) 0;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: flex; align-items: flex-end; justify-content: space-between;
   margin-bottom: 32px;
 }
-.pageTitle {
-  font-size: clamp(28px, 5vw, 48px);
-  font-weight: 700;
-  letter-spacing: -0.05em;
-}
+.pageTitle { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -.05em; }
 
 .filterBar {
   padding: 0 var(--px) 24px;
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  overflow-x: auto;
+  display: flex; align-items: center; gap: 8px; overflow-x: auto;
 }
 .filterBtn {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--gray-400);
-  white-space: nowrap;
-  padding: 4px 0;
-  position: relative;
-  transition: color 0.2s;
+  padding: 6px 14px; border-radius: 100px;
+  font-size: 12px; font-weight: 500;
+  color: var(--gray-400); white-space: nowrap;
+  transition: color .2s, background .2s;
+  /* 밑줄 없음 */
 }
-.filterBtn::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background: var(--black);
-  transform: scaleX(0);
-  transform-origin: left;
-  transition: transform 0.2s;
+.filterBtn:hover { color: var(--black); background: rgba(0,0,0,.04); }
+.filterBtn.active {
+  color: var(--accent);
+  background: var(--accent-bg);
+  font-weight: 600;
+  /* underbar 없음 */
 }
-.filterBtn.active { color: var(--black); }
-.filterBtn.active::after { transform: scaleX(1); }
-.filterBtn:hover { color: var(--black); }
 
-/* Masonry */
+/* Masonry — always 3 columns */
 .grid {
   padding: 0 var(--px) 80px;
   columns: 3;
@@ -49,80 +32,52 @@
 }
 
 .card {
-  break-inside: avoid;
-  margin-bottom: 20px;
-  display: block;
+  break-inside: avoid; margin-bottom: 20px; display: block;
   background: var(--white);
-  border-radius: 12px;
-  overflow: hidden;
-  border: 1px solid var(--gray-200);
+  border-radius: 12px; overflow: hidden;
+  /* 외곽선 없음, 그림자 없음 */
+  border: none;
   cursor: pointer;
-  transition: transform 0.3s var(--ease-spring), box-shadow 0.3s;
-  text-decoration: none;
-  color: inherit;
+  transition: transform .3s var(--ease-spring);
+  text-decoration: none; color: inherit;
 }
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
-}
+/* 새 hover: 이미지 zoom + 아래에서 약간 올라오는 효과 */
+.card:hover { transform: translateY(-4px); }
 
 .cardImg {
-  width: 100%;
-  aspect-ratio: 4 / 3;
-  background: var(--gray-100);
-  overflow: hidden;
+  width: 100%; aspect-ratio: 4/3;
+  background: var(--gray-100); overflow: hidden;
+  border-radius: 10px;
 }
 .cardImg img {
-  width: 100%; height: 100%;
-  object-fit: cover;
-  transition: transform 0.5s var(--ease-spring);
+  width: 100%; height: 100%; object-fit: cover;
+  transition: transform .5s var(--ease-spring);
 }
-.card:hover .cardImg img { transform: scale(1.04); }
+.card:hover .cardImg img { transform: scale(1.06); }
 
-.cardBody { padding: 16px; }
-
+.cardBody { padding: 12px 4px 8px; }
 .cardCat {
-  font-size: 10px;
-  font-weight: 500;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: var(--gray-400);
-  margin-bottom: 6px;
+  font-size: 10px; font-weight: 500; text-transform: uppercase;
+  letter-spacing: .08em; color: var(--gray-400); margin-bottom: 4px;
 }
 .cardCat span { color: var(--black); }
-
 .cardTitle {
-  font-size: 15px;
-  font-weight: 600;
-  letter-spacing: var(--tracking);
-  margin-bottom: 6px;
-  line-height: 1.4;
+  font-size: 14px; font-weight: 600;
+  letter-spacing: var(--tracking); margin-bottom: 4px; line-height: 1.4;
 }
+.cardDate { font-size: 11px; color: var(--gray-400); }
 
-.cardDate {
-  font-size: 11px;
-  color: var(--gray-400);
-}
-
-/* Loading dots */
-.loading {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  padding: 24px;
-}
+/* Loading */
+.loading { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 24px; }
 .loadDot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  background: var(--gray-200);
-  animation: dotPulse 1.2s ease-in-out infinite;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--gray-200); animation: dotPulse 1.2s ease-in-out infinite;
 }
-.loadDot:nth-child(2) { animation-delay: 0.2s; }
-.loadDot:nth-child(3) { animation-delay: 0.4s; }
+.loadDot:nth-child(2) { animation-delay: .2s; }
+.loadDot:nth-child(3) { animation-delay: .4s; }
 @keyframes dotPulse {
-  0%, 80%, 100% { transform: scale(0.8); opacity: 0.4; }
-  40%           { transform: scale(1.2); opacity: 1; }
+  0%,80%,100% { transform: scale(.8); opacity: .4; }
+  40%          { transform: scale(1.2); opacity: 1; }
 }
 
 @media (max-width: 900px) { .grid { columns: 2; } }

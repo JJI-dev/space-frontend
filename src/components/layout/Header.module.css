@@ -1,3 +1,5 @@
+
+/* ── Header ── */
 .header {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -5,68 +7,86 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 20px var(--px);
-  background: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
+  padding: 20px 28px;
+  background: rgba(255,255,255,0.96);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   z-index: 100;
+  /* 헤더 하단 선 없음 */
 }
 
+/* Logo */
 .logo {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 40px; height: 40px;
-  border-radius: 50%;
-  background: transparent;
-  transition: background 0.2s;
-  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: 50%;
+  background: transparent; transition: background .2s; flex-shrink: 0;
 }
-.logo:hover { background: rgba(0, 0, 0, 0.06); }
-.logo svg { height: 20px; width: auto; display: block; }
+.logo:hover { background: rgba(0,0,0,.06); }
+.logo svg { height: 20px; width: auto; display: block; color: var(--black); }
 
+/* Nav — absolutely centered */
 .nav {
   position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  align-items: center;
-  gap: 0;
+  left: 45%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 200px;
 }
-.navLink {
-  padding: 7px 16px;
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 0em;
-  color: var(--gray-600);
-  transition: color 0.2s, background 0.2s;
-  white-space: nowrap;
-}
-.navLink:hover { color: var(--black); background: rgba(0,0,0,0.04); }
-.navLink.active { background: var(--black); color: var(--white); font-weight: 500; }
 
+/* Vertical separator */
+.sep {
+  display: inline-block;
+  width: 1px; height: 50px;
+  background: var(--gray-200);
+  margin: 0 8px;
+  flex-shrink: 0;
+  align-self: center;
+  transform: rotate(-90deg);
+}
+
+.navLink {
+  padding: 7px 12px;
+  border-radius: 100px;
+  font-size: 12px; font-weight: 400;
+  color: var(--gray-600);
+  transition: color .15s, background .15s;
+  white-space: nowrap;
+  letter-spacing: var(--tracking);
+}
+.navLink:hover { color: var(--black); background: rgba(0,0,0,.04); }
+
+/* Active: accent color, NO dark background pill */
+.navLink.active {
+  color: var(--accent);
+  font-weight: 600;
+  background: none;
+}
+
+/* Right */
 .right { display: flex; align-items: center; gap: 8px; }
 
 .contactBtn {
-  padding: 8px 20px;
-  border-radius: 100px;
-  border: 1px solid var(--gray-200);
+  padding: 8px 20px; border-radius: 100px;
+  /* border: 1px solid var(--gray-200); */
   font-size: 12px; font-weight: 500;
-  transition: background 0.2s, border-color 0.2s;
+  transition: background .2s, border-color .2s;
   letter-spacing: var(--tracking);
 }
-.contactBtn:hover { background: rgba(0, 0, 0, 0.04); border-color: var(--gray-400); }
+.contactBtn:hover { background: rgba(0,0,0,.04); border-color: var(--gray-400); }
 
 .hamBtn {
   display: none;
   align-items: center; justify-content: center;
   width: 40px; height: 40px;
+  color: var(--black);
 }
 
+.tokenNav {
+  display: flex; align-items: center; gap: 40px;
+}
+
+/* Mobile menu */
 .mobOverlay {
   position: fixed; inset: 0; z-index: 148;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0,0,0,.4);
 }
 .mobMenu {
   position: fixed; top: 0; right: 0; bottom: 0;
@@ -74,18 +94,17 @@
   background: var(--white); z-index: 149;
   padding: 80px 24px 40px;
   transform: translateX(100%);
-  transition: transform 0.35s var(--ease-spring);
-  display: flex; flex-direction: column; gap: 0;
+  transition: transform .35s var(--ease-spring);
+  display: flex; flex-direction: column;
   border-left: 1px solid var(--gray-200);
 }
 .mobMenu.mobOpen { transform: translateX(0); }
 .mobLink {
   display: block; padding: 16px 0;
   font-size: 18px; font-weight: 500;
-  letter-spacing: var(--tracking); color: var(--gray-600);
+  color: var(--gray-600);
   border-bottom: 1px solid var(--gray-100);
-  text-align: left; transition: color 0.2s;
-  width: 100%;
+  transition: color .2s;
 }
 .mobLink:hover { color: var(--black); }
 
