@@ -16,32 +16,31 @@ export default function LogDetailClient({ post, allPosts }: Props) {
   const prev = allPosts[idx - 1]
   const next = allPosts[idx + 1]
   
-  const [showBackBar, setShowBackBar] = useState(false)
+  // ✨ 플로팅 바 노출 상태
+  const [showFloatingBar, setShowFloatingBar] = useState(false)
+  // ✨ 스크롤 진행률 상태 복구
   const [scrollPercent, setScrollPercent] = useState(0)
 
   useEffect(() => {
-    // 💡 글로벌 메인 헤더 요소를 찾습니다 (보통 <header> 태그)
     const globalHeader = document.querySelector('header')
 
     const handleScroll = () => {
       const currentScrollY = window.scrollY
-
-      // 1. 200px 이상 내리면 백 바(뒤로가기 바) 노출
-      setShowBackBar(currentScrollY > 200)
+      
+      // 1. 200px 이상 스크롤 시 플로팅 바 나타남
+      setShowFloatingBar(currentScrollY > 200)
 
       // 2. 글로벌 헤더 숨기기/보이기 로직
       if (globalHeader) {
         if (currentScrollY > 200) {
-          // 스크롤을 내리면 헤더를 화면 밖으로 밀어냄 (-100%)
           globalHeader.style.transform = 'translateY(-100%)'
           globalHeader.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
         } else {
-          // 다시 맨 위로 올라오면 헤더 복구
           globalHeader.style.transform = 'translateY(0)'
         }
       }
 
-      // 3. 스크롤 진행률(Progress Bar) 계산
+      // 3. ✨ 스크롤 진행률(Progress Bar) 계산 복구
       const height = document.documentElement.scrollHeight - window.innerHeight
       const scrolled = (currentScrollY / height) * 100
       setScrollPercent(scrolled)
@@ -49,7 +48,6 @@ export default function LogDetailClient({ post, allPosts }: Props) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // 4. 등장 애니메이션 (Intersection Observer)
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -65,7 +63,6 @@ export default function LogDetailClient({ post, allPosts }: Props) {
     const revealElements = document.querySelectorAll(`.${styles.revealOnScroll}`)
     revealElements.forEach(el => observer.observe(el))
 
-    // 🧹 클린업: 이 페이지를 떠날 때 다른 페이지에 영향이 없도록 헤더를 강제로 보이게 롤백
     return () => {
       window.removeEventListener('scroll', handleScroll)
       observer.disconnect()
@@ -75,7 +72,15 @@ export default function LogDetailClient({ post, allPosts }: Props) {
     }
   }, [post.id])
 
-  // 본문을 파싱하면서 애니메이션 클래스를 입혀줍니다.
+  const handleCopyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(window.location.href)
+      alert('링크가 복사되었습니다.')
+    } catch (e) {
+      console.error(e)
+    }
+  }
+
   const renderContent = (md: string) => {
     if (!md) return null
     return md.trim().split('\n\n').map((block, i) => {
@@ -96,20 +101,12 @@ export default function LogDetailClient({ post, allPosts }: Props) {
 
   return (
     <>
-      {/* ── Fixed back bar & Progress Bar ── */}
-      <div className={`${styles.backBar} ${showBackBar ? styles.backBarVisible : ''}`}>
-        <div className={styles.progressContainer}>
-          <div 
-            className={styles.progressBar} 
-            style={{ width: `${scrollPercent}%` }} 
-          />
-        </div>
-        <Link href="/log" className={styles.backBtn}>
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-            <path d="M13 7H1M1 7L7 1M1 7L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-          </svg>
-          로그 목록으로
-        </Link>
+      {/* ✨ 상단 스크롤 진행 바 (Progress Bar) 복구 ── */}
+      <div className={styles.progressContainer}>
+        <div 
+          className={styles.progressBar} 
+          style={{ width: `${scrollPercent}%` }} 
+        />
       </div>
 
       {/* ── Hero Thumbnail ── */}
@@ -124,14 +121,42 @@ export default function LogDetailClient({ post, allPosts }: Props) {
       <div className={styles.body}>
         <div className={styles.inner}>
           
-          {/* <Link href="/log" className={`${styles.backBtnInline} ${styles.revealOnScroll}`}>
-            <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-              <path d="M13 7H1M1 7L7 1M1 7L7 13" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            로그 목록으로
-          </Link> */}
+          <aside className={styles.floatingBarContainer}>
+            <div className={`${styles.floatingBar} ${showFloatingBar ? styles.visible : ''}`}>
+              
+              {prev ? (
+                <Link href={`/log/${prev.id}`} className={styles.actionBtn} aria-label="이전 글">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                </Link>
+              ) : (
+                <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
+              )}
 
-          {/* 썸네일에서 이사 온 카테고리와 제목 */}
+              {next ? (
+                <Link href={`/log/${next.id}`} className={styles.actionBtn} aria-label="다음 글">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </Link>
+              ) : (
+                <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
+              )}
+
+              {/* 공유, 좋아요 버튼 주석 처리 유지 */}
+              {/* <button className={styles.actionBtn} onClick={handleShare} aria-label="공유하기">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+              </button> */}
+
+              <button className={styles.actionBtn} onClick={handleCopyLink} aria-label="링크 복사">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+              </button>
+
+              {/* <button className={`${styles.actionBtn} ${isLiked ? styles.liked : ''}`} onClick={handleLike} aria-label="좋아요">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill={isLiked ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+                <span className={styles.likeCount}>{likeCount}</span>
+              </button> */}
+            </div>
+          </aside>
+
+          {/* 타이틀 및 본문 내용 (기존 유지) */}
           <p className={`${styles.category} ${styles.revealOnScroll}`}>{post.category}</p>
           <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{post.title}</h1>
 
@@ -146,13 +171,13 @@ export default function LogDetailClient({ post, allPosts }: Props) {
           </div>
         </div>
 
-        {/* ── Navigation (Prev / Next) ── */}
-        <div className={`${styles.nav} ${styles.revealOnScroll}`}>
+        {/* 하단 내비게이션 주석 처리 유지 */}
+        {/* <div className={`${styles.nav} ${styles.revealOnScroll}`}>
           {prev ? <Link href={`/log/${prev.id}`} className={styles.navLink}>← {prev.title}</Link> : <span />}
           {next ? <Link href={`/log/${next.id}`} className={styles.navLink}>{next.title} →</Link> : <span />}
-        </div>
-      </div>
+        </div> */}
 
+      </div>
       <Footer />
     </>
   )

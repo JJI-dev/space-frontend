@@ -9,6 +9,7 @@ import styles from './Header.module.css'
 const NAV_LINKS = [
   { label: 'Log',     href: '/log' },
   { label: 'Life',    href: '/life' },
+  { label: 'Fav',    href: '/fav' },
   { label: 'Wish',    href: '/wish' },
   { label: 'Archive', href: '/archive' },
 ]

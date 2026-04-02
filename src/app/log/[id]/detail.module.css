@@ -1,203 +1,53 @@
-/* Fixed back bar */
-.backBar {
-  position: fixed; top: var(--header-h); left: 0; right: 0;
-  z-index: 90; padding: 12px var(--px);
-  background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--gray-200);
-  transform: translateY(-100%); opacity: 0;
-  transition: transform .3s var(--ease-spring), opacity .3s;
-}
-.backBar.backBarVisible { transform: translateY(0); opacity: 1; }
-.backBtn {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--gray-600); transition: color .2s;
-}
-.backBtn:hover { color: var(--black); }
+/* 상단 프로그레스 바 & 토스트 */
+.progressContainer { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--gray-100, rgba(0, 0, 0, 0.05)); display: flex; align-items: center; z-index: 1000; }
+.progressBar { height: 100%; background: var(--accent); transition: width 0.1s ease-out; will-change: width; }
+.toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 1100; transition: opacity 0.3s, transform 0.3s; }
+.toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* Hero — height adjusted slightly since title is moved */
-.hero {
-  position: relative; width: 100%;
-  height: 50vh; /* 글씨가 내려가서 높이를 살짝 줄이면 예쁩니다 (기존 70vh) */
-  min-height: 300px;
-  overflow: hidden; background: var(--gray-100);
-}
-.heroImg {
-  width: 100%; height: 100%; object-fit: cover;
-  transition: transform .6s var(--ease-spring);
-}
-.hero:hover .heroImg { transform: scale(1.02); }
+/* Hero 썸네일 영역 */
+.hero { position: relative; width: 100%; height: 50vh; min-height: 300px; overflow: hidden; background: var(--gray-100); }
+.heroImg { width: 100%; height: 100%; object-fit: cover; animation: heroImageScale 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+@keyframes heroImageScale { 0% { transform: scale(1.08); } 100% { transform: scale(1); } }
 .heroPlaceholder { width: 100%; height: 100%; background: var(--gray-100); }
 
-/* ❌ 기존의 .heroGradient, .heroTitle, .heroCat, .heroH1 은 
-  전부 삭제했습니다! 
-*/
+/* 본문 레이아웃 (레이아웃 터짐 방지 핵심 코드) */
+.body { background: var(--white); position: relative; z-index: 1; border-radius: 20px 20px 0 0; margin-top: -32px; min-height: 60vh; }
+.inner { position: relative; padding: 40px var(--px) 0; max-width: 760px; margin: 0 auto; width: 100%; }
 
-/* White body — slides up over the hero on scroll via sticky */
-.body {
-  background: var(--white);
-  position: relative; z-index: 1;
-  border-radius: 20px 20px 0 0;
-  margin-top: -32px; /* overlaps hero bottom */
-  min-height: 60vh;
-  box-shadow: 0 -4px 24px rgba(0,0,0,.06);
-}
+/* 좌측 플로팅 액션 바 */
+.floatingBarContainer { position: absolute; left: -80px; top: 0; height: 100%; }
+.floatingBar { position: sticky; top: 240px; display: flex; flex-direction: column; align-items: center; gap: 24px; opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
+.floatingBar.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.actionBtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: none; border: none; color: var(--gray-600); cursor: pointer; transition: transform 0.2s, color 0.2s; }
+.actionBtn:hover { transform: scale(1.1); color: var(--accent); }
 
-.inner {
-  padding: 40px var(--px) 0;
-  max-width: 760px; margin: 0 auto;
-}
+@media (max-width: 1024px) { .floatingBarContainer { display: none; } }
 
-.backBtnInline {
-  display: inline-flex; align-items: center; gap: 8px;
-  font-size: 12px; color: var(--gray-600);
-  margin-bottom: 32px; transition: color .2s;
-}
-.backBtnInline:hover { color: var(--black); }
+/* 타이포그래피 및 메타 정보 */
+.category { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 12px; }
+.title { font-size: clamp(24px, 4vw, 40px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; color: var(--black); margin-bottom: 24px; }
+.meta { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-200); font-size: 12px; color: var(--gray-400); flex-wrap: wrap; }
+.clickableMeta { cursor: pointer; transition: color 0.2s; }
+.clickableMeta:hover { color: var(--accent); }
+.tag { padding: 2px 8px; border-radius: 100px; background: var(--accent-bg, rgba(251, 76, 76, 0.08)); font-size: 11px; color: var(--accent); }
 
-/* ✨ 썸네일에서 이사 온 제목 디자인 */
-.category {
-  font-size: 11px; font-weight: 500;
-  text-transform: uppercase; letter-spacing: .08em;
-  color: var(--accent); margin-bottom: 12px;
-}
-.title {
-  font-size: clamp(24px, 4vw, 40px); font-weight: 800;
-  letter-spacing: -.04em; line-height: 1.2; color: var(--black);
-  margin-bottom: 24px;
-}
-
-.meta {
-  display: flex; align-items: center; gap: 12px;
-  padding-bottom: 24px; margin-bottom: 32px;
-  border-bottom: 1px solid var(--gray-200);
-  font-size: 12px; color: var(--gray-400); flex-wrap: wrap;
-}
-.tag {
-  padding: 2px 8px; border-radius: 100px;
-  background: var(--accent-bg); font-size: 11px; color: var(--accent);
-}
-
-.content { padding-bottom: 60px; }
-.p { font-size: 16px; line-height: 1.85; letter-spacing: var(--tracking); color: #333; margin-bottom: 24px; }
-.h2 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -.03em; }
-.h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; letter-spacing: -.03em; }
+/* 본문 컨텐츠 */
+.content { padding-bottom: 60px; min-height: 40vh; }
+.p { font-size: 16px; line-height: 1.85; letter-spacing: -0.01em; color: #333; margin-bottom: 24px; }
+.h2 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -0.03em; }
+.h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; letter-spacing: -0.03em; }
+.codeBlock { background: var(--gray-100); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; margin-bottom: 24px; line-height: 1.7; }
 .ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: #333; }
 .ol li { margin-bottom: 8px; }
-.codeBlock {
-  background: var(--gray-100); border-radius: 8px; padding: 16px 20px;
-  font-family: 'Courier New', monospace; font-size: 13px;
-  overflow-x: auto; margin-bottom: 24px; line-height: 1.7;
-}
 
-.nav {
-  display: flex; justify-content: space-between;
-  padding: 32px var(--px); border-top: 1px solid var(--gray-200);
-  flex-wrap: wrap; gap: 16px;
-}
-.navLink {
-  font-size: 13px; color: var(--gray-400); transition: color .2s;
-  letter-spacing: var(--tracking); max-width: 45%;
-}
-.navLink:hover { color: var(--black); }
+/* 하단 네비게이션 (Log, Fav 등) */
+.bottomNav { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--gray-200); padding: 32px 0; margin-top: 40px; }
+.bottomNavLink { font-size: 14px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
+.bottomNavLink:hover { color: var(--black); }
 
-.heroImg {
-  width: 100%; height: 100%; object-fit: cover;
-  /* 살짝 확대된 상태에서 정상 크기로 부드럽게 줄어드는 애니메이션 */
-  animation: heroImageScale 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1);
-}
-@keyframes heroImageScale {
-  0% { transform: scale(1.08); }
-  100% { transform: scale(1); }
-}
-.hero:hover .heroImg { transform: scale(1.02); }
-
-/* ── Scroll Reveal 애니메이션 핵심 코드 ── */
-.revealOnScroll {
-  opacity: 0;
-  /* 아래에서 위로 40px 밀려 올라옴 */
-  transform: translateY(40px);
-  /* 매우 부드러운 easing (애플, 네이버 등 주요 editorial 사이트에서 주로 사용) */
-  transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: opacity, transform;
-}
-
-/* Intersection Observer에 의해 추가될 클래스 */
-.isRevealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* ── 요소별 등장 딜레이 적용 (자연스러운 순서) ── */
-.backBtnInline.revealOnScroll { transition-delay: 0.1s; }
+/* Scroll Reveal */
+.revealOnScroll { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+.isRevealed { opacity: 1; transform: translateY(0); }
 .category.revealOnScroll { transition-delay: 0.15s; }
 .title.revealOnScroll { transition-delay: 0.2s; }
 .meta.revealOnScroll { transition-delay: 0.25s; }
-
-.progressContainer {
-  position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 2px; /* 바의 두께 */
-  background: var(--gray-100);
-  display: flex;
-  align-items: center;
-}
-
-.progressBar {
-  height: 100%;
-  background: var(--accent); /* 테마 강조색 */
-  /* 부드럽게 움직이도록 transition 추가 */
-  transition: width 0.1s ease-out;
-}
-
-/* 퍼센트 숫자를 표시할 경우 스타일 */
-.progressText {
-  position: absolute;
-  right: var(--px);
-  top: 6px;
-  font-size: 10px;
-  font-weight: 600;
-  color: var(--accent);
-  font-family: monospace;
-}
-
-/* ── 기존 Hero 등장 애니메이션 ── */
-.heroImg {
-  width: 100%; height: 100%; object-fit: cover;
-  animation: heroImageScale 1.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-@keyframes heroImageScale {
-  0% { transform: scale(1.1); opacity: 0; }
-  100% { transform: scale(1); opacity: 1; }
-}
-
-/* ── 텍스트 스크롤 등장 애니메이션 ── */
-.revealOnScroll {
-  opacity: 0;
-  transform: translateY(30px);
-  transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), 
-              transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.isRevealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.backBar {
-  position: fixed; 
-  /* 💡 기존 top: var(--header-h) 에서 0으로 변경하여 화면 맨 위로 붙임 */
-  top: 0; 
-  left: 0; right: 0;
-  z-index: 90; padding: 12px var(--px);
-  background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
-  border-bottom: 1px solid var(--gray-200);
-  transform: translateY(-100%); opacity: 0;
-  transition: transform .4s cubic-bezier(0.16, 1, 0.3, 1), opacity .4s;
-}
-.backBar.backBarVisible { 
-  transform: translateY(0); 
-  opacity: 1; 
-}
