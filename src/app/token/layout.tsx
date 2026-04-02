@@ -6,15 +6,48 @@ import { usePathname } from 'next/navigation'
 import Footer from '@/components/layout/Footer'
 import styles from './token.module.css'
 
-// URL 경로와 매칭될 사이드바 데이터
-const NAV_DATA = {
+// 1. TypeScript 타입 정의
+type NavItem = {
+  label: string;
+  href: string;
+  children?: { label: string; href: string }[];
+}
+
+type NavGroup = {
+  group: string;
+  items: NavItem[];
+}
+
+// 2. 사이드바 데이터
+const NAV_DATA: Record<'foundation' | 'components', NavGroup[]> = {
   foundation: [
     {
       group: 'Overview',
       items: [
-        { label: '사이트별 Identity', href: '/token/foundation/identity' },
+        {
+          label: '사이트별 Identity',
+          href: '/token/foundation/identity',
+          children: [
+            { label: 'MO Identity', href: '/token/foundation/identity/mo' },
+            { label: 'NE Identity', href: '/token/foundation/identity/ne' },
+          ]
+        },
         { label: 'Colors', href: '/token/foundation/colors' },
-        { label: 'Padding 패턴', href: '/token/foundation/padding' },
+        { label: 'Header', href: '/token/foundation/header' },
+        { label: 'footer', href: '/token/foundation/footer' },
+      ],
+    },
+    {
+      group: 'test',
+      items: [
+        {
+          label: 'sub test1',
+          href: '', // 💡 페이지 이동 없이 클릭 시 하위 메뉴만 펼쳐집니다.
+          children: [
+            { label: 'test2', href: '/token/foundation/identity/mo' },
+            { label: 'test3', href: '/token/foundation/identity/ne' },
+          ]
+        },
       ],
     },
   ],
@@ -30,16 +63,17 @@ const NAV_DATA = {
 }
 
 export default function TokenLayout({ children }: { children: React.ReactNode }) {
-  const pathname = usePathname() // 현재 주소 가져오기 (ex: /token/foundation/colors)
-  
-  // 주소를 분석해서 현재 탭(foundation 인지 components 인지) 파악
+  const pathname = usePathname()
   const currentTab = pathname.includes('/components') ? 'components' : 'foundation'
   const currentTree = NAV_DATA[currentTab]
 
-  // 그룹 접기/펴기 상태 (기본적으로 다 열어둠)
+  // 메인 그룹(1Depth 상위) 접기/펴기 상태
   const [openGroups, setOpenGroups] = useState<Record<string, boolean>>(
     Object.fromEntries(currentTree.map(g => [g.group, true]))
   )
+
+  // 서브 메뉴(2Depth) 접기/펴기 상태
+  const [openSubMenus, setOpenSubMenus] = useState<Record<string, boolean>>({})
 
   const toggleGroup = (group: string) => {
     setOpenGroups(prev => ({ ...prev, [group]: !prev[group] }))
@@ -47,34 +81,19 @@ export default function TokenLayout({ children }: { children: React.ReactNode })
 
   return (
     <div className="page-enter">
-      {/* ── TOP: 타이틀 및 최상위 탭 ── */}
       <div className={styles.topNavContainer}>
         <h1 className={styles.pageTitle}>Design Token</h1>
         <div className={styles.topTabs}>
-          <Link 
-            href="/token/foundation/identity" 
-            className={`${styles.topTab} ${currentTab === 'foundation' ? styles.topTabActive : ''}`}
-          >
-            Foundation
-          </Link>
-          <Link 
-            href="/token/components/header" 
-            className={`${styles.topTab} ${currentTab === 'components' ? styles.topTabActive : ''}`}
-          >
-            Components
-          </Link>
+          <Link href="/token/foundation/identity" className={`${styles.topTab} ${currentTab === 'foundation' ? styles.topTabActive : ''}`}>Foundation</Link>
+          <Link href="/token/components/header" className={`${styles.topTab} ${currentTab === 'components' ? styles.topTabActive : ''}`}>Components</Link>
         </div>
       </div>
 
       <div className={styles.page}>
-        {/* ── LEFT: 해당 탭의 사이드바 목차 (링크 이동) ── */}
         <nav className={`${styles.sidenav} no-scrollbar`}>
           {currentTree.map(g => (
             <div key={g.group} className={styles.navSection}>
-              <button
-                className={styles.navSectionHeader}
-                onClick={() => toggleGroup(g.group)}
-              >
+              <button className={styles.navSectionHeader} onClick={() => toggleGroup(g.group)}>
                 {g.group}
                 <svg className={`${styles.navChevron} ${openGroups[g.group] ? styles.open : ''}`} viewBox="0 0 12 12" fill="none">
                   <path d="M4 2L8 6L4 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
@@ -83,15 +102,76 @@ export default function TokenLayout({ children }: { children: React.ReactNode })
 
               <div className={`${styles.navItems} ${!openGroups[g.group] ? styles.collapsed : ''}`}>
                 {g.items.map(item => {
-                  const isActive = pathname === item.href
+                  const hasChildren = item.children && item.children.length > 0
+                  
+                  // 1. 링크가 비어있는 폴더 전용 메뉴인지 확인
+                  const isFolderOnly = item.href === ''
+                  
+                  // 2. 상태를 저장할 고유 Key (href가 비어있으면 label을 키로 사용)
+                  const itemKey = isFolderOnly ? item.label : item.href
+
+                  // 3. 부모 메뉴 활성화(하이라이트) 조건 똑똑하게 처리
+                  const isParentActive = isFolderOnly
+                    ? (item.children?.some(child => pathname.startsWith(child.href)) || false)
+                    : pathname.startsWith(item.href)
+
+                  // 현재 열려있는지 여부
+                  const isSubMenuOpen = openSubMenus[itemKey] ?? isParentActive
+
+                  // 4. 토글 함수 통합 (버튼이든 글자든 누르면 발동)
+                  const handleToggle = (e: React.MouseEvent) => {
+                    e.preventDefault()
+                    setOpenSubMenus(prev => ({ ...prev, [itemKey]: !isSubMenuOpen }))
+                  }
+
                   return (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className={`${styles.navLink} ${isActive ? styles.navLinkActive : ''}`}
-                    >
-                      {item.label}
-                    </Link>
+                    <div key={itemKey} className={styles.navLinkWrapper}>
+                      
+                      {/* ✨ 링크 여부에 따라 Link 태그 또는 버튼(div) 렌더링 */}
+                      {isFolderOnly ? (
+                        <div
+                          className={`${styles.navLink} ${isParentActive ? styles.navLinkActive : ''}`}
+                          onClick={handleToggle}
+                          style={{ cursor: 'pointer' }}
+                        >
+                          {item.label}
+                        </div>
+                      ) : (
+                        <Link
+                          href={item.href}
+                          className={`${styles.navLink} ${pathname === item.href ? styles.navLinkActive : ''}`}
+                        >
+                          {item.label}
+                        </Link>
+                      )}
+
+                      {/* ✨ 서브 메뉴 화살표 버튼 (클릭 영역 통합) */}
+                      {hasChildren && (
+                        <button
+                          className={`${styles.subToggleBtn} ${isParentActive ? styles.subToggleBtnActive : ''}`}
+                          onClick={handleToggle}
+                        >
+                          <svg className={`${styles.navChevron} ${isSubMenuOpen ? styles.open : ''}`} viewBox="0 0 12 12" fill="none">
+                            <path d="M4 2L8 6L4 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                        </button>
+                      )}
+
+                      {/* ✨ 서브 메뉴 리스트 영역 */}
+                      {hasChildren && (
+                        <div className={`${styles.subItems} ${!isSubMenuOpen ? styles.collapsed : ''}`}>
+                          {item.children!.map(sub => (
+                            <Link
+                              key={sub.href}
+                              href={sub.href}
+                              className={`${styles.navLinkSub} ${pathname === sub.href ? styles.navLinkSubActive : ''}`}
+                            >
+                              {sub.label}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
                   )
                 })}
               </div>
@@ -99,7 +179,6 @@ export default function TokenLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        {/* ── CENTER & RIGHT: 실제 페이지 내용이 들어가는 자리 ── */}
         {children}
       </div>
       <Footer />
