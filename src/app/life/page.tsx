@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { LIFE_POSTS } from '@/lib/data'
 import type { LifeCategory } from '@/types'
-// import SearchIcon from '@/components/ui/SearchIcon'
 import Footer from '@/components/layout/Footer'
 import styles from './life.module.css'
 
@@ -15,13 +14,18 @@ export default function LifePage() {
   const [cat,    setCat]    = useState<LifeCategory>('All')
   const [loaded, setLoaded] = useState(BATCH)
   const sentinelRef = useRef<HTMLDivElement>(null)
+  // 카테고리 변경 시 grid key를 바꿔 columns CSS 재적용 강제
+  const [gridKey, setGridKey] = useState(0)
 
-  // All categories use same masonry — just filter the data
   const filtered = cat === 'All' ? LIFE_POSTS : LIFE_POSTS.filter(p => p.category === cat)
   const items    = filtered.slice(0, loaded)
   const hasMore  = loaded < filtered.length
 
-  const handleCat = (c: LifeCategory) => { setCat(c); setLoaded(BATCH) }
+  const handleCat = (c: LifeCategory) => {
+    setCat(c)
+    setLoaded(BATCH)
+    setGridKey(k => k + 1)
+  }
 
   useEffect(() => {
     const el = sentinelRef.current
@@ -39,7 +43,6 @@ export default function LifePage() {
       <div className="page-enter">
         <div className={`${styles.pageHeader} reveal`}>
           <h1 className={styles.pageTitle}>Life</h1>
-          {/* <SearchIcon /> */}
         </div>
 
         <div className={`${styles.filterBar} reveal reveal-delay-1 no-scrollbar`}>
@@ -54,8 +57,8 @@ export default function LifePage() {
           ))}
         </div>
 
-        {/* Always render masonry grid — 3 columns */}
-        <div className={`${styles.grid} reveal reveal-delay-2`}>
+        {/* key 변경으로 columns 재계산 강제 */}
+        <div key={gridKey} className={`${styles.grid} reveal reveal-delay-2`}>
           {items.map(post => (
             <Link key={post.id} href={`/life/${post.id}`} className={styles.card}>
               <div className={styles.cardImg}>

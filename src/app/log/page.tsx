@@ -4,8 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { LOG_POSTS } from '@/lib/data'
 import type { LogCategory } from '@/types'
-// import SearchIcon from '@/components/ui/SearchIcon'
 import Footer from '@/components/layout/Footer'
+import { formatDate } from '@/lib/formatDate'
 import styles from './log.module.css'
 
 const CATEGORIES: LogCategory[] = ['All', 'Product', 'Design', 'Tech', 'Study']
@@ -31,7 +31,6 @@ export default function LogPage() {
       <div className="page-enter">
         <div className={`${styles.pageHeader} reveal`}>
           <h1 className={styles.pageTitle}>Log</h1>
-          {/* <SearchIcon /> */}
         </div>
 
         <div className={`${styles.filterBar} reveal reveal-delay-1 no-scrollbar`}>
@@ -56,10 +55,11 @@ export default function LogPage() {
                 }
               </div>
               <div className={styles.body}>
+                {/* accent 컬러 카테고리 */}
                 <p className={styles.category}>{post.category}</p>
                 <h2 className={styles.itemTitle}>{post.title}</h2>
                 <p className={styles.excerpt}>{post.excerpt}</p>
-                <p className={styles.date}>{post.date}</p>
+                <p className={styles.date}>{formatDate(post.date)}</p>
                 <div className={styles.tags}>
                   {post.tags.map(t => <span key={t} className={styles.tag}>{t}</span>)}
                 </div>

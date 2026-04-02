@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Footer from '@/components/layout/Footer'
+import SearchIcon from '@/components/ui/SearchIcon'
 import styles from './fav.module.css'
 
 const FAV_CATEGORIES = {
@@ -37,6 +38,7 @@ export default function FavMainPage() {
       <div className="page-enter">
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Fav</h1>
+          <SearchIcon />
         </div>
 
         <div className={styles.container}>

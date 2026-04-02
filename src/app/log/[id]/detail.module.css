@@ -1,7 +1,7 @@
 /* 상단 프로그레스 바 & 토스트 */
 .progressContainer { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--gray-100, rgba(0, 0, 0, 0.05)); display: flex; align-items: center; z-index: 1000; }
 .progressBar { height: 100%; background: var(--accent); transition: width 0.1s ease-out; will-change: width; }
-.toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 1100; transition: opacity 0.3s, transform 0.3s; }
+.toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 1100; transition: opacity 0.3s, transform 0.3s; white-space: nowrap; }
 .toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
 /* Hero 썸네일 영역 */
@@ -10,7 +10,7 @@
 @keyframes heroImageScale { 0% { transform: scale(1.08); } 100% { transform: scale(1); } }
 .heroPlaceholder { width: 100%; height: 100%; background: var(--gray-100); }
 
-/* 본문 레이아웃 (레이아웃 터짐 방지 핵심 코드) */
+/* 본문 레이아웃 */
 .body { background: var(--white); position: relative; z-index: 1; border-radius: 20px 20px 0 0; margin-top: -32px; min-height: 60vh; }
 .inner { position: relative; padding: 40px var(--px) 0; max-width: 760px; margin: 0 auto; width: 100%; }
 
@@ -20,19 +20,17 @@
 .floatingBar.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
 .actionBtn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; background: none; border: none; color: var(--gray-600); cursor: pointer; transition: transform 0.2s, color 0.2s; }
 .actionBtn:hover { transform: scale(1.1); color: var(--accent); }
-
+.actionBtn:disabled { opacity: 0.3; cursor: default; }
+.actionBtn:disabled:hover { transform: none; color: var(--gray-600); }
 @media (max-width: 1024px) { .floatingBarContainer { display: none; } }
 
 /* 타이포그래피 및 메타 정보 */
 .category { font-size: 11px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.08em; color: var(--accent); margin-bottom: 12px; }
 .title { font-size: clamp(24px, 4vw, 40px); font-weight: 800; letter-spacing: -0.04em; line-height: 1.2; color: var(--black); margin-bottom: 24px; }
 .meta { display: flex; align-items: center; gap: 12px; padding-bottom: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--gray-200); font-size: 12px; color: var(--gray-400); flex-wrap: wrap; }
-.clickableMeta { cursor: pointer; transition: color 0.2s; }
-.clickableMeta:hover { color: var(--accent); }
-.tag { padding: 2px 8px; border-radius: 100px; background: var(--accent-bg, rgba(251, 76, 76, 0.08)); font-size: 11px; color: var(--accent); }
 
 /* 본문 컨텐츠 */
-.content { padding-bottom: 60px; min-height: 40vh; }
+.content { padding-bottom: 60px; min-height: 60vh; }
 .p { font-size: 16px; line-height: 1.85; letter-spacing: -0.01em; color: #333; margin-bottom: 24px; }
 .h2 { font-size: 22px; font-weight: 700; margin: 40px 0 16px; letter-spacing: -0.03em; }
 .h3 { font-size: 18px; font-weight: 600; margin: 32px 0 12px; letter-spacing: -0.03em; }
@@ -40,10 +38,18 @@
 .ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: #333; }
 .ol li { margin-bottom: 8px; }
 
-/* 하단 네비게이션 (Log, Fav 등) */
-.bottomNav { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--gray-200); padding: 32px 0; margin-top: 40px; }
-.bottomNavLink { font-size: 14px; color: var(--gray-400); text-decoration: none; transition: color 0.2s; }
-.bottomNavLink:hover { color: var(--black); }
+/* 태그 섹션 (푸터 위) */
+.tagsSection {
+  padding: 32px var(--px) 40px;
+  display: flex; flex-wrap: wrap; gap: 8px;
+  max-width: 760px; margin: 0 auto;
+}
+.tagChip {
+  padding: 5px 14px; border-radius: 100px;
+  border: 1px solid var(--gray-200);
+  font-size: 12px; color: var(--gray-600);
+  letter-spacing: var(--tracking);
+}
 
 /* Scroll Reveal */
 .revealOnScroll { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }

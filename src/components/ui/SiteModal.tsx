@@ -7,6 +7,7 @@ import styles from './SiteModal.module.css'
 const ITEMS = [
   { label: 'Log',     href: '/log' },
   { label: 'Life',    href: '/life' },
+  { label: 'Fav',    href: '/fav' },
   { label: 'Wish',    href: '/wish' },
   { label: 'Archive', href: '/archive' },
   { label: 'Token',   href: '/token' },
