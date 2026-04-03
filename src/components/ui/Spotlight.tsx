@@ -2,8 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-// ✨ lib/data.ts에서 통합된 데이터를 가져옵니다.
-import { LOG_POSTS, LIFE_POSTS, WISH_ITEMS, ARCHIVE_ITEMS, FAV_POSTS_DATA } from '@/lib/data/index'
+import { LOG_POSTS, LIFE_POSTS, WISH_ITEMS, ARCHIVE_ITEMS, FAV_POSTS_DATA, books} from '@/lib/data/index'
 import styles from './Spotlight.module.css'
 
 interface SearchResult {
@@ -33,6 +32,7 @@ const PAGE_RESULTS: SearchResult[] = [
   { href: '/life',    icon: '✈️', title: 'Life',    sub: 'space.jji.kr/life · 일상, 여행, 끄적임',   tag: 'Page' },
   { href: '/fav',     icon: '💜', title: 'Fav',     sub: 'space.jji.kr/fav · 덕질 기록',            tag: 'Page' },
   { href: '/wish',    icon: '⭐', title: 'Wish',    sub: 'space.jji.kr/wish · 갖고 싶은 것들',       tag: 'Page' },
+  { href: '/book',    icon: '📚', title: 'Book',    sub: 'space.jji.kr/book · 독서 기록, 서평',     tag: 'Page' },
   { href: '/archive', icon: '📦', title: 'Archive', sub: 'space.jji.kr/archive · 사이트, 아티클',    tag: 'Page' },
   { href: '/token',   icon: '🎨', title: 'Token',   sub: 'space.jji.kr/token · 디자인 토큰 정리',    tag: 'Page' },
 ]
@@ -71,6 +71,16 @@ function buildAllResults(): SearchResult[] {
       });
     });
   });
+
+  if (books) {
+    books.forEach(b => results.push({
+      href: `/book/${b.id}`,
+      icon: '📚',
+      title: b.title,
+      sub: `Book · ${b.category} · ${b.author}${b.publisher ? ` · ${b.publisher}` : ''}`,
+      tag: 'Book',
+    }))
+  }
 
   // WISH
   WISH_ITEMS.forEach(w => results.push({

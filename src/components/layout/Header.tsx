@@ -11,6 +11,7 @@ const NAV_LINKS = [
   { label: 'Life',    href: '/life' },
   { label: 'Fav',    href: '/fav' },
   { label: 'Wish',    href: '/wish' },
+  { label: 'Book',    href: '/book' },
   { label: 'Archive', href: '/archive' },
 ]
 

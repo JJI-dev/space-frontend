@@ -25,6 +25,7 @@ export interface LifePost {
   content: string
 }
 
+
 // ── Wish ─────────────────────────────────────────────
 export type WishCategory = 'All' | 'GOODS' | 'CLOTHES' | 'COSMETICS'
 
@@ -38,6 +39,24 @@ export interface WishItem {
   link: string
   reason: string
   isGot: boolean
+}
+
+// ── Book ─────────────────────────────────────────────
+export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발';
+export type BookType = '리뷰' | '위시';
+
+export interface Book {
+  id: string;
+  title: string;
+  author: string;
+  publisher?: string;
+  readDate?: string; // yyyy.mm.dd
+  rating?: number; // 1~5
+  summary?: string; // 한줄요약
+  type: BookType;
+  category: BookCategory;
+  coverUrl: string;
+  content?: string; // 상세 내용 (MDX 등)
 }
 
 // ── Archive ───────────────────────────────────────────

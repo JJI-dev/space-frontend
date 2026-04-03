@@ -1,0 +1,67 @@
+.pageHeader {
+    padding: 48px var(--px) 0;
+    display: flex; align-items: flex-end; justify-content: space-between;
+    margin-bottom: 32px;
+  }
+  .pageTitle { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -.05em; color: var(--black); }
+  
+  .layout {
+    padding: 0 var(--px) 80px;
+    display: flex; gap: 0; align-items: flex-start;
+  }
+  
+  /* Sidebar */
+  .sidebar {
+    width: 180px; flex-shrink: 0;
+    display: flex; flex-direction: column; gap: 10px;
+    position: sticky; top: calc(var(--header-h) + 24px); height: fit-content;
+    padding-right: 24px;
+  }
+  .catBtn {
+    font-size: 14px; font-weight: 400;
+    letter-spacing: var(--tracking); color: var(--gray-400);
+    text-align: left; transition: color .2s;
+    padding: 4px 0;
+  }
+  .catBtn.active { color: var(--black); font-weight: 600; }
+  .catBtn:hover  { color: var(--black); }
+  
+  .content { flex: 1; min-width: 0; }
+  
+  /* Tabs (리뷰 / 위시) */
+  .tabs { display: flex; gap: 8px; margin-bottom: 32px; }
+  .tab {
+    padding: 8px 24px; border-radius: 100px;
+    font-size: 13px; font-weight: 600;
+    background: var(--gray-100); color: var(--gray-400);
+    transition: background .2s, color .2s;
+  }
+  .tab:hover { color: var(--black); }
+  .tabActive { background: var(--black) !important; color: var(--white) !important; }
+  
+  /* Grid & Card */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 40px 20px;
+  }
+  .card { display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
+  .coverWrap {
+    width: 100%; aspect-ratio: 2/3; background: var(--gray-100);
+    border-radius: 4px; overflow: hidden; margin-bottom: 12px;
+  }
+  .cover { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
+  .card:hover .cover { transform: scale(1.05); }
+  
+  .bookTitle { font-size: 15px; font-weight: 600; color: var(--black); margin-bottom: 4px; letter-spacing: var(--tracking); }
+  .bookAuthor { font-size: 13px; color: var(--gray-500); margin-bottom: 6px; }
+  .bookCat { font-size: 12px; color: var(--accent); font-weight: 600; }
+  
+  .empty { grid-column: 1 / -1; padding: 60px 0; text-align: center; color: var(--gray-400); font-size: 14px; }
+  
+  @media (max-width: 768px) {
+    .layout { flex-direction: column; gap: 24px; }
+    .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 0; gap: 20px; position: static; }
+    .catBtn { white-space: nowrap; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; }
+  }

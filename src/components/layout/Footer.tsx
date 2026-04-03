@@ -5,6 +5,7 @@ const PAGES = [
   { label: 'Log',     href: '/log' },
   { label: 'Life',    href: '/life' },
   { label: 'Wish',    href: '/wish' },
+  { label: 'Book',    href: '/book' },
   { label: 'Archive', href: '/archive' },
   { label: 'Token',   href: '/token' },
 ]
