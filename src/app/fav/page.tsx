@@ -2,13 +2,13 @@
 
 import Link from 'next/link'
 import Footer from '@/components/layout/Footer'
-import SearchIcon from '@/components/ui/SearchIcon'
+// import SearchIcon from '@/components/ui/SearchIcon'
 import styles from './fav.module.css'
 
 const FAV_CATEGORIES = {
   Game: [
     { name: '이리', slug: 'iri', active: true },
-    { name: '엘소드', slug: 'elsword', active: false },
+    { name: '엘소드', slug: 'elsword', active: true },
     { name: '스타레일', slug: 'starrail', active: false },
     { name: '메이플', slug: 'maple', active: false },
     { name: '던파', slug: 'dnf', active: false },
@@ -17,7 +17,7 @@ const FAV_CATEGORIES = {
     { name: '포켓몬', slug: 'pokemon', active: false },
   ],
   Animation: [
-    { name: '페스페', slug: 'fsf', active: false },
+    { name: '페스페', slug: 'fsf', active: true },
     { name: '리제로', slug: 'rezero', active: false },
     { name: '흑집사', slug: 'blackbutler', active: false },
     { name: '마기', slug: 'magi', active: false },
@@ -38,7 +38,7 @@ export default function FavMainPage() {
       <div className="page-enter">
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>Fav</h1>
-          <SearchIcon />
+          {/* <SearchIcon /> */}
         </div>
 
         <div className={styles.container}>

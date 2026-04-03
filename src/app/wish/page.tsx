@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { WISH_ITEMS } from '@/lib/data'
+import { WISH_ITEMS } from '@/lib/data/index'
 import type { WishCategory } from '@/types'
 // import SearchIcon from '@/components/ui/SearchIcon'
 import WishModal from './WishModal'

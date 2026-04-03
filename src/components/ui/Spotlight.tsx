@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
-import { LOG_POSTS, LIFE_POSTS, WISH_ITEMS, ARCHIVE_ITEMS } from '@/lib/data'
+// ✨ lib/data.ts에서 통합된 데이터를 가져옵니다.
+import { LOG_POSTS, LIFE_POSTS, WISH_ITEMS, ARCHIVE_ITEMS, FAV_POSTS_DATA } from '@/lib/data/index'
 import styles from './Spotlight.module.css'
 
 interface SearchResult {
@@ -13,9 +14,24 @@ interface SearchResult {
   tag: string
 }
 
+// ✨ 카테고리 이름을 판별하는 헬퍼 함수
+const getCategoryName = (seriesKey: string) => {
+  const categories = {
+    Game: ['iri', 'elsword', 'starrail', 'maple', 'dnf', 'loa', 'genshin', 'pokemon'],
+    Animation: ['fsf', 'rezero', 'blackbutler', 'magi', 'hanako', 'apothecary', '86', 'inuyasha'],
+    Webtoon: ['kubera', 'ropan']
+  };
+
+  if (categories.Game.includes(seriesKey)) return 'Game';
+  if (categories.Animation.includes(seriesKey)) return 'Animation';
+  if (categories.Webtoon.includes(seriesKey)) return 'Webtoon';
+  return 'Fav';
+};
+
 const PAGE_RESULTS: SearchResult[] = [
   { href: '/log',     icon: '📝', title: 'Log',     sub: 'space.jji.kr/log · 디자인, 개발 기록',     tag: 'Page' },
-  { href: '/life',    icon: '💚', title: 'Life',    sub: 'space.jji.kr/life · 일상, 여행, 끄적임',   tag: 'Page' },
+  { href: '/life',    icon: '✈️', title: 'Life',    sub: 'space.jji.kr/life · 일상, 여행, 끄적임',   tag: 'Page' },
+  { href: '/fav',     icon: '💜', title: 'Fav',     sub: 'space.jji.kr/fav · 덕질 기록',            tag: 'Page' },
   { href: '/wish',    icon: '⭐', title: 'Wish',    sub: 'space.jji.kr/wish · 갖고 싶은 것들',       tag: 'Page' },
   { href: '/archive', icon: '📦', title: 'Archive', sub: 'space.jji.kr/archive · 사이트, 아티클',    tag: 'Page' },
   { href: '/token',   icon: '🎨', title: 'Token',   sub: 'space.jji.kr/token · 디자인 토큰 정리',    tag: 'Page' },
@@ -24,6 +40,7 @@ const PAGE_RESULTS: SearchResult[] = [
 function buildAllResults(): SearchResult[] {
   const results: SearchResult[] = [...PAGE_RESULTS]
 
+  // LOG
   LOG_POSTS.forEach(p => results.push({
     href: `/log/${p.id}`,
     icon: '📝',
@@ -32,14 +49,30 @@ function buildAllResults(): SearchResult[] {
     tag: 'Log',
   }))
 
+  // LIFE
   LIFE_POSTS.forEach(p => results.push({
     href: `/life/${p.id}`,
-    icon: '💚',
+    icon: '✈️',
     title: p.title,
     sub: `Life · ${p.category} · ${p.sub}`,
     tag: 'Life',
   }))
 
+  // ✨ FAV: 객체 형태인 FAV_POSTS_DATA를 순회하며 추가합니다.
+  Object.entries(FAV_POSTS_DATA).forEach(([series, posts]) => {
+    const parentCat = getCategoryName(series);
+    posts.forEach(p => {
+      results.push({
+        href: `/fav/${series}/${p.id}`,
+        icon: '💜',
+        title: p.title,
+        sub: `${parentCat} · ${series} · ${p.sub}`,
+        tag: parentCat,
+      });
+    });
+  });
+
+  // WISH
   WISH_ITEMS.forEach(w => results.push({
     href: '/wish',
     icon: '⭐',
@@ -48,6 +81,7 @@ function buildAllResults(): SearchResult[] {
     tag: 'Wish',
   }))
 
+  // ARCHIVE
   ARCHIVE_ITEMS.forEach(a => results.push({
     href: a.url.startsWith('http') ? a.url : '/archive',
     icon: '📦',

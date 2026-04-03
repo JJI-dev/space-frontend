@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { ARCHIVE_ITEMS } from '@/lib/data'
+import { ARCHIVE_ITEMS } from '@/lib/data/index'
 import type { ArchiveTab, ArchiveCategory } from '@/types'
 import SearchIcon from '@/components/ui/SearchIcon'
 import Footer from '@/components/layout/Footer'

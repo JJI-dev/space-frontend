@@ -35,19 +35,20 @@
 /* Masonry — always 3 columns */
 .grid {
   padding: 0 var(--px) 80px;
-  columns: 3;
-  column-gap: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px 20px; /* row-gap 24px, column-gap 20px */
 }
 
 .card {
-  break-inside: avoid; margin-bottom: 20px; display: block;
   background: var(--white);
   border-radius: 12px; overflow: hidden;
-  /* 외곽선 없음, 그림자 없음 */
   border: none;
   cursor: pointer;
   transition: transform .3s var(--ease-spring);
   text-decoration: none; color: inherit;
+  display: flex;
+  flex-direction: column;
 }
 /* 새 hover: 이미지 zoom + 아래에서 약간 올라오는 효과 */
 .card:hover { transform: translateY(-4px); }

@@ -1,0 +1,81 @@
+import { LogPost } from '@/types'
+
+export const LOG_POSTS: LogPost[] = [
+    {
+      id: '1',
+      category: 'Design',
+      title: '제작기 #1',
+      excerpt: '자유도와 안정성을 동시에 잡는 방법: 샐러드게임 DSL을 소개합니다. 컴포넌트 시스템 설계부터 토큰 관리까지 전반적인 내용을 다룹니다.',
+      date: '2025-12-01',
+      tags: ['#추천', '#DSL'],
+      content: `
+  ## 들어가며
+  디자인 시스템을 만들면서 가장 어려웠던 점은 자유도와 안정성의 균형이었습니다.
+  
+  ## 본론
+  샐러드게임 DSL은 이 문제를 해결하기 위해 고안된 방법론입니다.
+  
+  ### 핵심 개념
+  1. 토큰 레이어 분리
+  2. 컴포넌트 합성 패턴
+  3. 변형 제약 시스템
+  
+  ## 마무리
+  이 방법론을 도입한 후 디자인-개발 협업 속도가 눈에 띄게 향상되었습니다.
+      `,
+    },
+    {
+      id: '2',
+      category: 'Design',
+      title: 'SmileMe (이모티콘 제작 플랫폼)',
+      excerpt: '자유도와 안정성을 동시에 잡는 방법: 샐러드게임 DSL을 소개합니다. 뷰티카메라 SDK와 AI 감정분석 기술을 활용한 차별화된 UX 구현.',
+      date: '2025-11-15',
+      tags: ['#추천', '#UX'],
+      content: `## SmileMe 프로젝트 소개\n\n이모티콘 제작 플랫폼 SmileMe의 UX 설계 과정을 공유합니다.\n\n## 핵심 기능\n\n- AI 감정 분석\n- 실시간 프리뷰\n- 원클릭 배포`,
+    },
+    {
+      id: '3',
+      category: 'Tech',
+      title: 'Next.js App Router 마이그레이션 후기',
+      excerpt: 'Pages Router에서 App Router로 전환하면서 겪은 것들. RSC, 스트리밍, 레이아웃 중첩 패턴 정리.',
+      date: '2025-11-01',
+      tags: ['#Tech', '#Next.js'],
+      content: `## 마이그레이션 배경\n\nPages Router의 한계를 느끼고 App Router로 전환을 결정했습니다.\n\n## 주요 변경점\n\n- 레이아웃 중첩\n- 서버 컴포넌트 활용\n- 스트리밍 렌더링`,
+    },
+    {
+      id: '4',
+      category: 'Study',
+      title: '타입스크립트 타입 체조 입문',
+      excerpt: '조건부 타입, infer, 템플릿 리터럴 타입으로 유틸리티 타입 직접 만들어보기.',
+      date: '2025-10-20',
+      tags: ['#Study', '#TypeScript'],
+      content: `## 타입 체조란?\n\n복잡한 타입 연산을 통해 TypeScript의 타입 시스템을 극한까지 활용하는 기법입니다.\n\n## 기초 예제\n\n\`\`\`ts\ntype MyReadonly<T> = { readonly [K in keyof T]: T[K] }\n\`\`\``,
+    },
+    {
+      id: '5',
+      category: 'Product',
+      title: '사이드 프로젝트 회고',
+      excerpt: '6개월 간의 사이드 프로젝트를 마무리하면서 느낀 것들. 기술 선택, 일정 관리, 런칭까지.',
+      date: '2025-10-05',
+      tags: ['#회고', '#Product'],
+      content: `## 프로젝트 개요\n\n6개월간 혼자 진행한 사이드 프로젝트의 회고입니다.\n\n## 잘한 점\n\n- 초기에 MVP 범위를 확실히 정한 것\n- 주 1회 회고 진행\n\n## 아쉬운 점\n\n- 마케팅 계획 부재\n- 디자인에 너무 많은 시간 투자`,
+    },
+    {
+      id: '6',
+      category: 'Design',
+      title: '디자인 시스템 구축기',
+      excerpt: 'Figma Variables와 코드 토큰을 싱크 맞추는 방법. 실제 프로덕션에서 적용한 방법론.',
+      date: '2025-09-18',
+      tags: ['#Design', '#System'],
+      content: `## 배경\n\nFigma와 코드 사이의 싱크 문제를 해결하기 위해 디자인 토큰 시스템을 구축했습니다.`,
+    },
+    {
+      id: '7',
+      category: 'Tech',
+      title: 'Framer Motion 애니메이션 패턴',
+      excerpt: '페이지 전환, stagger, 제스처 기반 인터랙션 패턴 모음.',
+      date: '2025-09-01',
+      tags: ['#Tech', '#Animation'],
+      content: `## 패턴 모음\n\nFramer Motion을 활용한 다양한 애니메이션 패턴을 정리했습니다.`,
+    },
+  ]

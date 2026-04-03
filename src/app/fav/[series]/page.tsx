@@ -6,17 +6,35 @@ import Footer from '@/components/layout/Footer'
 import SearchIcon from '@/components/ui/SearchIcon'
 import { formatDate } from '@/lib/formatDate'
 import styles from './list.module.css'
+// ✨ 1. 데이터를 lib/data에서 가져옵니다!
+import { FAV_POSTS_DATA } from '@/lib/data/index'
 
-export const DUMMY_POSTS = [
-  { id: '1', title: '가넷x케네스', sub: '둘이 컬파맞는다', tag: '#츄라이', date: '2026-03-23' },
-  { id: '2', title: '아야x유키',   sub: '귀여운 조합',     tag: '#츄라이', date: '2026-02-14' },
-  { id: '3', title: '현우x매그너스', sub: '근육과 근육',    tag: '#츄라이', date: '2026-01-10' },
-  { id: '4', title: '혜진x쇼이치', sub: '분위기 맛집',     tag: '#츄라이', date: '2025-12-25' },
-]
+const getCategoryName = (seriesKey: string) => {
+  const categories = {
+    Game: ['iri', 'elsword', 'starrail', 'maple', 'dnf', 'loa', 'genshin', 'pokemon'],
+    Animation: ['fsf', 'rezero', 'blackbutler', 'magi', 'hanako', 'apothecary', '86', 'inuyasha'],
+    Webtoon: ['kubera', 'ropan']
+  };
+
+  if (categories.Game.includes(seriesKey)) return 'Game';
+  if (categories.Animation.includes(seriesKey)) return 'Animation';
+  if (categories.Webtoon.includes(seriesKey)) return 'Webtoon';
+  return 'Fav';
+};
 
 export default function FavSeriesPage({ params }: { params: Promise<{ series: string }> }) {
   const resolvedParams = use(params)
-  const seriesName = resolvedParams.series === 'iri' ? '이리' : resolvedParams.series
+  const seriesKey = resolvedParams.series
+
+  const parentCategory = getCategoryName(seriesKey);
+
+  // ✨ 2. 하드코딩된 변수 대신 가져온 FAV_POSTS_DATA를 사용합니다.
+  const seriesPosts = FAV_POSTS_DATA[seriesKey as keyof typeof FAV_POSTS_DATA] || []
+
+  const seriesName = 
+    seriesKey === 'iri' ? '이리' : 
+    seriesKey === 'elsword' ? '엘소드' : 
+    seriesKey === 'fsf' ? '페스페' : seriesKey
 
   useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
@@ -35,28 +53,32 @@ export default function FavSeriesPage({ params }: { params: Promise<{ series: st
     <>
       <div className="page-enter">
         <div className={styles.pageHeader}>
-          <h1 className={styles.pageTitle}>Fav/Game — {seriesName}</h1>
+          <h1 className={styles.pageTitle}>{parentCategory} — {seriesName}</h1>
           <SearchIcon />
         </div>
 
         <div className={styles.gridContainer}>
           <div className={styles.grid}>
-            {DUMMY_POSTS.map((post, i) => (
-              <Link
-                key={post.id}
-                href={`/fav/${resolvedParams.series}/${post.id}`}
-                className={`${styles.card} ${styles.revealOnScroll}`}
-                style={{ transitionDelay: `${i * 0.1}s` }}
-              >
-                <div className={styles.cardImg} />
-                <div className={styles.cardBody}>
-                  <h3 className={styles.cardTitle}>{post.title}</h3>
-                  <p className={styles.cardSub}>{post.sub}</p>
-                  <p className={styles.cardDate}>{formatDate(post.date)}</p>
-                  <span className={styles.cardTag}>{post.tag}</span>
-                </div>
-              </Link>
-            ))}
+            {seriesPosts.length === 0 ? (
+              <p style={{ color: 'var(--gray-400)', gridColumn: '1 / -1' }}>아직 등록된 연성이 없습니다.</p>
+            ) : (
+              seriesPosts.map((post, i) => (
+                <Link
+                  key={post.id}
+                  href={`/fav/${seriesKey}/${post.id}`}
+                  className={`${styles.card} ${styles.revealOnScroll}`}
+                  style={{ transitionDelay: `${i * 0.1}s` }}
+                >
+                  <div className={styles.cardImg} />
+                  <div className={styles.cardBody}>
+                    <h3 className={styles.cardTitle}>{post.title}</h3>
+                    <p className={styles.cardSub}>{post.sub}</p>
+                    <p className={styles.cardDate}>{formatDate(post.date)}</p>
+                    <span className={styles.cardTag}>{post.tag}</span>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
         </div>
       </div>

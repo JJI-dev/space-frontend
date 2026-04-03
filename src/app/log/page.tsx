@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { LOG_POSTS } from '@/lib/data'
+import { LOG_POSTS } from '@/lib/data/index'
 import type { LogCategory } from '@/types'
 import Footer from '@/components/layout/Footer'
 import { formatDate } from '@/lib/formatDate'

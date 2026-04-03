@@ -1,149 +1,86 @@
-'use client'
-
-import { useState, useEffect, use } from 'react'
+import fs from 'fs'
+import path from 'path'
+import matter from 'gray-matter'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import { FAV_POSTS_DATA } from '@/lib/data/index'
 import Link from 'next/link'
-import Footer from '@/components/layout/Footer'
-import { useViewCount } from '@/lib/useViewCount'
-import { formatDate } from '@/lib/formatDate'
+import FavDetailClient from './FavDetailClient'
 import styles from './detail.module.css'
-import { DUMMY_POSTS } from '../page'
 
-export default function FavDetailPage({ params }: { params: Promise<{ series: string, id: string }> }) {
-  const resolvedParams = use(params)
+export default async function FavDetailPage({ params }: { params: Promise<{ series: string, id: string }> }) {
+  const resolvedParams = await params
+  const { series, id } = resolvedParams
 
-  const viewCount = useViewCount('fav', `${resolvedParams.series}_${resolvedParams.id}`)
+  // 1. 해당 장르(series)의 데이터 찾기
+  const seriesPosts = FAV_POSTS_DATA[series as keyof typeof FAV_POSTS_DATA] || []
+  const currentIndex = seriesPosts.findIndex(p => p.id === id)
+  const current = seriesPosts[currentIndex]
 
-  const [scrollPercent,   setScrollPercent]   = useState(0)
-  const [showFloatingBar, setShowFloatingBar] = useState(false)
-  const [isDrawerOpen,    setIsDrawerOpen]    = useState(false)
-  const [toastMsg,        setToastMsg]        = useState('')
-  const [showToast,       setShowToast]       = useState(false)
-
-  const currentIndex = DUMMY_POSTS.findIndex(p => p.id === resolvedParams.id)
-  const prevPost = currentIndex > 0 ? DUMMY_POSTS[currentIndex - 1] : null
-  const nextPost = currentIndex < DUMMY_POSTS.length - 1 ? DUMMY_POSTS[currentIndex + 1] : null
-  const current  = DUMMY_POSTS[currentIndex]
-
-  const triggerToast = (msg: string) => {
-    setToastMsg(msg); setShowToast(true)
-    setTimeout(() => setShowToast(false), 2500)
+  // 데이터 없으면 에러 화면 렌더링
+  if (!current) {
+    return (
+      <div style={{ padding: '200px 0', textAlign: 'center', minHeight: '60vh' }}>
+        <h2 style={{ fontSize: '24px', marginBottom: '16px' }}>페이지를 찾을 수 없습니다</h2>
+        <Link href={`/fav/${series}`} style={{ color: 'var(--accent)', textDecoration: 'underline' }}>
+          목록으로 돌아가기
+        </Link>
+      </div>
+    )
   }
 
-  useEffect(() => {
-    const globalHeader = document.querySelector('header') as HTMLElement | null
+  const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null
+  const nextPost = currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null
+  const seriesName = series === 'iri' ? '이리' : series === 'elsword' ? '엘소드' : series === 'fsf' ? '페스페' : series
 
-    const handleScroll = () => {
-      const y = window.scrollY
-      setShowFloatingBar(y > 200)
-      if (globalHeader) {
-        globalHeader.style.transform  = y > 200 ? 'translateY(-100%)' : 'translateY(0)'
-        globalHeader.style.transition = 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-      }
-      const height = document.documentElement.scrollHeight - window.innerHeight
-      setScrollPercent((y / height) * 100)
-    }
+  // 2. ✨ MDX 파일 읽어오기 (핵심: content/fav/iri/1.mdx)
+  const filePath = path.join(process.cwd(), 'content/fav', series, `${id}.mdx`)
+  
+  let fileContent = ''
+  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
+  catch(e) { 
+    return (
+      <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="9" y1="15" x2="15" y2="15"></line>
+          </svg>
+        </div>
+        <h2 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.04em', marginBottom: '12px', color: 'var(--black)' }}>
+          앗! 아직 연성 파일이 없어요.
+        </h2>
+        <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
+          열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
+          <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
+            content/fav/{series}/{id}.mdx
+          </code>
+        </p>
+        
+        {/* ✨ 자바스크립트 이벤트 대신 CSS 클래스로 호버 애니메이션 적용! */}
+        <Link href={`/fav/${series}`} className={styles.backBtn}>
+          목록으로 돌아가기
+        </Link>
+      </div>
+    ) 
+  }
+  const { content } = matter(fileContent)
 
-    window.addEventListener('scroll', handleScroll, { passive: true })
-    return () => {
-      window.removeEventListener('scroll', handleScroll)
-      if (globalHeader) globalHeader.style.transform = 'translateY(0)'
-    }
-  }, [resolvedParams.id])
-
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href)
-      .then(() => triggerToast('링크 복사가 완료되었습니다!'))
+  const components = {
+    p: (props: any) => <p className={styles.revealOnScroll} {...props} />,
+    // 꾸미고 싶은 태그 맵핑
   }
 
   return (
-    <>
-      {/* Progress bar */}
-      <div className={styles.progressContainer}>
-        <div className={styles.progressBar} style={{ width: `${scrollPercent}%` }} />
-      </div>
-
-      {/* Toast */}
-      <div className={`${styles.toast} ${showToast ? styles.toastVisible : ''}`}>{toastMsg}</div>
-
-      {/* Hero placeholder */}
-      <div className={`${styles.hero} page-enter`}>
-        <div className={styles.heroPlaceholder} />
-      </div>
-
-      {/* Body */}
-      <div className={styles.body}>
-        <div className={styles.inner}>
-
-          {/* Floating bar */}
-          <aside className={styles.floatingBarContainer}>
-            <div className={`${styles.floatingBar} ${showFloatingBar ? styles.visible : ''}`}>
-              {prevPost
-                ? <Link href={`/fav/${resolvedParams.series}/${prevPost.id}`} className={styles.actionBtn} aria-label="이전 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
-                : <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
-              }
-              {nextPost
-                ? <Link href={`/fav/${resolvedParams.series}/${nextPost.id}`} className={styles.actionBtn} aria-label="다음 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
-                : <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
-              }
-              <button className={styles.actionBtn} onClick={handleCopyLink} aria-label="링크 복사">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-              </button>
-              <button className={styles.actionBtn} onClick={() => setIsDrawerOpen(true)} aria-label="목록">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-              </button>
-            </div>
-          </aside>
-
-          {/* 카테고리 */}
-          <p className={styles.category}>이리</p>
-
-          {/* 제목 */}
-          <h1 className={styles.title}>{current?.title ?? '가넷 x 케네스'}</h1>
-
-          {/* 날짜 · 조회수 */}
-          <div className={styles.meta}>
-            <span>{formatDate(current?.date ?? '2026-03-23')}</span>
-            <span>·</span>
-            <span>조회 {viewCount}</span>
-          </div>
-
-          {/* 본문 placeholder */}
-          <div className={styles.contentPlaceholder}></div>
-        </div>
-      </div>
-
-      {/* 태그 — 푸터 위 */}
-      {current?.tag && (
-        <div className={styles.tagsSection}>
-          <span className={styles.tagChip}>{current.tag}</span>
-        </div>
-      )}
-
-      <Footer />
-
-      {/* Drawer overlay */}
-      <div className={`${styles.drawerOverlay} ${isDrawerOpen ? styles.open : ''}`} onClick={() => setIsDrawerOpen(false)} />
-      <aside className={`${styles.drawer} ${isDrawerOpen ? styles.open : ''}`}>
-        <div className={styles.drawerHeader}>
-          <h2>목록</h2>
-          <button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}>
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--black)" strokeWidth="1.5"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          </button>
-        </div>
-        <p className={styles.drawerSub}>Frame 2610516</p>
-        <div className={styles.drawerList}>
-          {DUMMY_POSTS.map(item => (
-            <Link key={item.id} href={`/fav/${resolvedParams.series}/${item.id}`} className={styles.drawerItem}>
-              <div className={styles.drawerImg} />
-              <div className={styles.drawerItemBody}>
-                <h4>{item.title}</h4>
-                <p>{item.sub}</p>
-                <span>{item.tag}</span>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </aside>
-    </>
+    <FavDetailClient 
+      seriesKey={series} 
+      seriesName={seriesName} 
+      current={current} 
+      prevPost={prevPost} 
+      nextPost={nextPost} 
+      seriesPosts={seriesPosts}
+    >
+      <MDXRemote source={content} components={components} />
+    </FavDetailClient>
   )
 }

@@ -30,8 +30,10 @@
 }
 .input::placeholder { color: var(--gray-400); }
 
-.results { max-height: 360px; overflow-y: auto; }
-
+.results { max-height: 400px; overflow-y: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;}
+.results::-webkit-scrollbar { 
+  display: none; 
+}
 .resultItem {
   width: 100%; display: flex; align-items: center; gap: 14px;
   padding: 14px 20px; text-align: left;

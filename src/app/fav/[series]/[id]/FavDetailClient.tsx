@@ -2,31 +2,39 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import type { LifePost } from '@/types'
 import Footer from '@/components/layout/Footer'
 import { formatDate } from '@/lib/formatDate'
 import styles from './detail.module.css'
 
 interface Props {
-  post: LifePost
-  allPosts: LifePost[]
-  children?: React.ReactNode
+  seriesKey: string;
+  seriesName: string;
+  current: any;
+  prevPost: any;
+  nextPost: any;
+  seriesPosts: any[];
+  children?: React.ReactNode;
 }
 
-export default function LifeDetailClient({ post, allPosts, children}: Props) {
-  const idx  = allPosts.findIndex(p => p.id === post.id)
-  const prev = allPosts[idx - 1]
-  const next = allPosts[idx + 1]
-
-  const [viewCount, setViewCount] = useState<number>(0)
-  const [showFloatingBar, setShowFloatingBar] = useState(false)
+export default function FavDetailClient({ 
+  seriesKey, 
+  seriesName, 
+  current, 
+  prevPost, 
+  nextPost, 
+  seriesPosts, 
+  children 
+}: Props) {
+  const [viewCount,       setViewCount]       = useState<number>(0)
   const [scrollPercent,   setScrollPercent]   = useState(0)
+  const [showFloatingBar, setShowFloatingBar] = useState(false)
+  const [isDrawerOpen,    setIsDrawerOpen]    = useState(false)
   const [toastMsg,        setToastMsg]        = useState('')
   const [showToast,       setShowToast]       = useState(false)
-  const [isDrawerOpen,    setIsDrawerOpen]    = useState(false)
 
   const triggerToast = (msg: string) => {
-    setToastMsg(msg); setShowToast(true)
+    setToastMsg(msg)
+    setShowToast(true)
     setTimeout(() => setShowToast(false), 2500)
   }
 
@@ -46,8 +54,8 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // ✨ Vercel KV 진짜 조회수 연동
-    const dateKey = `life_date_v2_${post.id}`
+    // Vercel KV 진짜 조회수 연동
+    const dateKey = `fav_date_v2_${seriesKey}_${current.id}`
     const today = new Date().toDateString()
     const hasVisitedToday = localStorage.getItem(dateKey) === today
 
@@ -55,8 +63,8 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        type: 'life',
-        id: post.id,
+        type: `fav_${seriesKey}`,
+        id: current.id,
         increment: !hasVisitedToday
       })
     })
@@ -92,7 +100,7 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
       observer.disconnect()
       if (globalHeader) globalHeader.style.transform = 'translateY(0)'
     }
-  }, [post.id])
+  }, [current.id, seriesKey])
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -107,17 +115,17 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
 
       <div className={`${styles.toast} ${showToast ? styles.toastVisible : ''}`}>{toastMsg}</div>
 
-      <div className="page-enter">
-        <div className={styles.wrap}>
+      <div className={`page-enter ${styles.body}`}>
+        <div className={styles.inner}>
 
           <aside className={styles.floatingBarContainer}>
             <div className={`${styles.floatingBar} ${showFloatingBar ? styles.visible : ''}`}>
-              {prev
-                ? <Link href={`/life/${prev.id}`} className={styles.actionBtn} aria-label="이전 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
+              {prevPost
+                ? <Link href={`/fav/${seriesKey}/${prevPost.id}`} className={styles.actionBtn} aria-label="이전 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
                 : <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>
               }
-              {next
-                ? <Link href={`/life/${next.id}`} className={styles.actionBtn} aria-label="다음 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
+              {nextPost
+                ? <Link href={`/fav/${seriesKey}/${nextPost.id}`} className={styles.actionBtn} aria-label="다음 글"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
                 : <button className={styles.actionBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>
               }
               <button className={styles.actionBtn} onClick={handleCopyLink} aria-label="링크 복사">
@@ -129,35 +137,29 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
             </div>
           </aside>
 
-          <p className={`${styles.category} ${styles.revealOnScroll}`}>{post.category}</p>
-          <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{post.title}</h1>
-
+          <p className={`${styles.category} ${styles.revealOnScroll}`}>{seriesName}</p>
+          <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{current.title}</h1>
           <div className={`${styles.meta} ${styles.revealOnScroll}`}>
-            <span>{formatDate(post.sub)}</span>
+            <span>{formatDate(current.date)}</span>
             <span>·</span>
             <span>조회 {viewCount}</span>
           </div>
 
           <div className={`${styles.heroImg} ${styles.revealOnScroll}`}>
-            {post.thumb
-              ? <img src={post.thumb} alt={post.title} />
+            {current.thumb 
+              ? <img src={current.thumb} alt={current.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> 
               : <div className={styles.heroPlaceholder}><span>Thumbnail</span></div>
             }
           </div>
 
-          <div className={styles.content}>
-            {/* {post.content.split('\n\n').map((p, i) => (
-              <p key={i} className={styles.revealOnScroll}>{p}</p>
-            ))} */}
+          {/* ✨ 본문 출력 부분 (서버 컴포넌트에서 넘겨준 MDXRemote) */}
+          <div className={`${styles.content} ${styles.revealOnScroll}`}>
             {children}
           </div>
 
-          {/* 태그 영역 - 본문 래퍼 내부 위치 */}
-          {post.tags && post.tags.length > 0 && (
+          {current.tag && (
             <div className={`${styles.tagsSection} ${styles.revealOnScroll}`}>
-              {post.tags.map(t => (
-                <span key={t} className={styles.tagChip}>{t}</span>
-              ))}
+              <span className={styles.tagChip}>{current.tag}</span>
             </div>
           )}
 
@@ -176,17 +178,16 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
           </button>
         </div>
         <p className={styles.drawerSub}></p>
-        
         <div className={styles.drawerList}>
-          {allPosts.map(item => (
-            <Link key={item.id} href={`/life/${item.id}`} className={styles.drawerItem}>
+          {seriesPosts.map(item => (
+            <Link key={item.id} href={`/fav/${seriesKey}/${item.id}`} className={styles.drawerItem}>
               <div className={styles.drawerImg}>
                 {item.thumb ? <img src={item.thumb} alt="" style={{width:'100%', height:'100%', objectFit:'cover', borderRadius:8}}/> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)', borderRadius:8}}/>}
               </div>
               <div className={styles.drawerItemBody}>
                 <h4>{item.title}</h4>
-                <p>{item.sub}</p>
-                <span>{item.category}</span>
+                <p style={{ display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.sub}</p>
+                <span>{item.tag}</span>
               </div>
             </Link>
           ))}

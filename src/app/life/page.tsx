@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { LIFE_POSTS } from '@/lib/data'
+import { LIFE_POSTS } from '@/lib/data/index'
 import type { LifeCategory } from '@/types'
 import Footer from '@/components/layout/Footer'
 import styles from './life.module.css'
@@ -26,6 +26,7 @@ export default function LifePage() {
     setLoaded(BATCH)
     setGridKey(k => k + 1)
   }
+  
 
   useEffect(() => {
     const el = sentinelRef.current
