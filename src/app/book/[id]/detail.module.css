@@ -27,7 +27,7 @@ display: flex; gap: 80px; align-items: flex-start;
 /* Main Content */
 .mainContent { flex: 1; max-width: 720px; }
 .metaArea { display: flex; gap: 40px; margin-bottom: 80px; }
-.coverImg { width: 200px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); aspect-ratio: 2/3; object-fit: cover; }
+.coverImg { width: 250px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); aspect-ratio: 2/3; object-fit: cover; }
 .metaInfo { display: flex; flex-direction: column; justify-content: center; }
 .title { font-size: 36px; font-weight: 800; color: var(--black); margin-bottom: 8px; letter-spacing: -.02em; }
 .author { font-size: 16px; color: var(--gray-600); margin-bottom: 16px; }

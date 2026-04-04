@@ -127,8 +127,10 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
               <span className={styles.catBadge}>#{book.category}</span>
               
               {book.publisher && <div className={styles.metaRow}><span className={styles.metaLabel}>출판사</span><span className={styles.metaValue}>{book.publisher}</span></div>}
+              {book.readDate && <div className={styles.metaRow}><span className={styles.metaLabel}>시작 날짜</span><span className={styles.metaValue}>{formatDate(book.startDate)}</span></div>}
               {book.readDate && <div className={styles.metaRow}><span className={styles.metaLabel}>읽은 날짜</span><span className={styles.metaValue}>{formatDate(book.readDate)}</span></div>}
               {book.rating && <div className={styles.metaRow}><span className={styles.metaLabel}>평가</span><span className={styles.metaValue}>{'⭐'.repeat(book.rating)}</span></div>}
+              {book.summary && <div className={styles.metaRow}><span className={styles.metaLabel}>첫인상</span><span className={styles.metaValue}>{book.firstImpression}</span></div>}
               {book.summary && <div className={styles.metaRow}><span className={styles.metaLabel}>한줄요약</span><span className={styles.metaValue}>{book.summary}</span></div>}
             </div>
           </div>

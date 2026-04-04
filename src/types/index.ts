@@ -42,7 +42,7 @@ export interface WishItem {
 }
 
 // ── Book ─────────────────────────────────────────────
-export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발';
+export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발' | '인문' | '과학';
 export type BookType = '리뷰' | '위시';
 
 export interface Book {
@@ -50,9 +50,11 @@ export interface Book {
   title: string;
   author: string;
   publisher?: string;
+  startDate?: string; // yyyy.mm.dd
   readDate?: string; // yyyy.mm.dd
   rating?: number; // 1~5
   summary?: string; // 한줄요약
+  firstImpression?: string; //첫인상
   type: BookType;
   category: BookCategory;
   coverUrl: string;

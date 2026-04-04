@@ -7,7 +7,7 @@ import { BookCategory, BookType } from '@/types'
 import Footer from '@/components/layout/Footer'
 import styles from './list.module.css'
 
-const CATEGORIES: BookCategory[] = ['All', '기술', '디자인', '기획', '문학', '소설', '자기계발']
+const CATEGORIES: BookCategory[] = ['All', '기술', '디자인', '기획', '문학', '소설', '자기계발', '인문', '과학']
 
 export default function BookListClient() {
   const [activeCategory, setActiveCategory] = useState<BookCategory>('All')
