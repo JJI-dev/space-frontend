@@ -6,6 +6,9 @@ import CursorAnimation from '@/components/ui/CursorAnimation'
 export const metadata: Metadata = {
   title: 'Space | JJI',
   description: 'Log, Life, Wish, Archive, Token — JJI Space',
+  alternates: {
+    canonical: 'https://space.jji.kr',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
