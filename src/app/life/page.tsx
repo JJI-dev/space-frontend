@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { LIFE_POSTS } from '@/lib/data/index'
 import type { LifeCategory } from '@/types'
 import Footer from '@/components/layout/Footer'
+import { formatDate } from '@/lib/formatDate' // ✨ formatDate 임포트 추가
 import styles from './life.module.css'
 
 const CATEGORIES: LifeCategory[] = ['All', 'Travel', 'Hot spot', 'Diary']
@@ -14,10 +15,17 @@ export default function LifePage() {
   const [cat,    setCat]    = useState<LifeCategory>('All')
   const [loaded, setLoaded] = useState(BATCH)
   const sentinelRef = useRef<HTMLDivElement>(null)
-  // 카테고리 변경 시 grid key를 바꿔 columns CSS 재적용 강제
   const [gridKey, setGridKey] = useState(0)
 
-  const filtered = cat === 'All' ? LIFE_POSTS : LIFE_POSTS.filter(p => p.category === cat)
+  const sortedPosts = [...LIFE_POSTS].sort((a, b) => {
+    const dateA = new Date(a.sub).getTime();
+    const dateB = new Date(b.sub).getTime();
+    if (dateA === dateB) return Number(b.id) - Number(a.id);
+    return dateB - dateA;
+  });
+
+  const filtered = cat === 'All' ? sortedPosts : sortedPosts.filter(p => p.category === cat)
+  
   const items    = filtered.slice(0, loaded)
   const hasMore  = loaded < filtered.length
 
@@ -26,7 +34,6 @@ export default function LifePage() {
     setLoaded(BATCH)
     setGridKey(k => k + 1)
   }
-  
 
   useEffect(() => {
     const el = sentinelRef.current
@@ -58,7 +65,6 @@ export default function LifePage() {
           ))}
         </div>
 
-        {/* key 변경으로 columns 재계산 강제 */}
         <div key={gridKey} className={`${styles.grid} reveal reveal-delay-2`}>
           {items.map(post => (
             <Link key={post.id} href={`/life/${post.id}`} className={styles.card}>
@@ -70,7 +76,8 @@ export default function LifePage() {
                   <span>{post.category}</span>
                 </p>
                 <h3 className={styles.cardTitle}>{post.title}</h3>
-                <p className={styles.cardDate}>{post.sub}</p>
+                {/* ✨ formatDate 함수로 날짜 감싸기 */}
+                <p className={styles.cardDate}>{formatDate(post.sub)}</p>
               </div>
             </Link>
           ))}

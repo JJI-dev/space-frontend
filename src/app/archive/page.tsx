@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { ARCHIVE_ITEMS } from '@/lib/data/index'
 import type { ArchiveTab, ArchiveCategory } from '@/types'
-import SearchIcon from '@/components/ui/SearchIcon'
+// import SearchIcon from '@/components/ui/SearchIcon'
 import Footer from '@/components/layout/Footer'
 import styles from './archive.module.css'
 
@@ -48,7 +48,7 @@ export default function ArchivePage() {
       <div className="page-enter">
         <div className={`${styles.pageHeader} reveal`}>
           <h1 className={styles.pageTitle}>Archive</h1>
-          <SearchIcon />
+          {/* <SearchIcon /> */}
         </div>
 
         <div className={`${styles.layout} reveal reveal-delay-1`}>

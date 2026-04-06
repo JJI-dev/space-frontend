@@ -8,6 +8,7 @@ import BookDetailClient from './BookDetailClient'
 import styles from './detail.module.css'
 
 export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
+  // 1. params를 await로 풉니다.
   const resolvedParams = await params
   const book = books.find(p => p.id === resolvedParams.id)
   
@@ -20,22 +21,30 @@ export default async function BookDetailPage({ params }: { params: Promise<{ id:
   try {
     fileContent = fs.readFileSync(filePath, 'utf8');
   } catch(e) { 
-    const currentId = book ? book.id : '알수없음';
+    // ✨ 파일 읽기 실패 시 예쁜 404 페이지 렌더링 (params.id -> book.id로 변경)
     return (
-      <div className={`page-enter ${styles.notFound}`}>
-        <div className={styles.iconWrap}>
+      <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
+        <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
           <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--gray-400)" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
             <polyline points="14 2 14 8 20 8"></polyline>
             <line x1="9" y1="15" x2="15" y2="15"></line>
           </svg>
         </div>
-        <h2 className={styles.notFoundTitle}>앗! 아직 파일이 없어요.</h2>
-        <p className={styles.notFoundDesc}>
+        <h2 style={{ fontSize: '24px', fontWeight: '800', letterSpacing: '-0.04em', marginBottom: '12px', color: 'var(--black)' }}>
+          앗! 아직 연성 파일이 없어요.
+        </h2>
+        <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
-          <code className={styles.code}>content/book/{currentId}.mdx</code>
+          <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
+            content/book/{book.id}.mdx
+          </code>
         </p>
-        <Link href="/book" className={styles.backBtn}>목록으로 돌아가기</Link>
+        
+        {/* ✨ 자바스크립트 이벤트 대신 CSS 클래스로 호버 애니메이션 적용! */}
+        <Link href={`/book`} className={styles.backBtn}>
+          목록으로 돌아가기
+        </Link>
       </div>
     ) 
   }

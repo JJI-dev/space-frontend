@@ -19,6 +19,12 @@ export default function BookListClient() {
     return matchCategory && matchType;
   })
 
+  .sort((a, b) => {
+    if (!a.readDate) return 1; 
+    if (!b.readDate) return -1;
+    return new Date(b.readDate).getTime() - new Date(a.readDate).getTime();
+  });
+
   return (
     <>
       <div className="page-enter">

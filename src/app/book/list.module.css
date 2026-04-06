@@ -63,5 +63,5 @@
     .layout { flex-direction: column; gap: 24px; }
     .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 0; gap: 20px; position: static; }
     .catBtn { white-space: nowrap; }
-    .grid { grid-template-columns: repeat(2, 1fr); gap: 32px 16px; }
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   }

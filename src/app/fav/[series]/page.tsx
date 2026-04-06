@@ -3,16 +3,15 @@
 import { use, useEffect } from 'react'
 import Link from 'next/link'
 import Footer from '@/components/layout/Footer'
-import SearchIcon from '@/components/ui/SearchIcon'
+// import SearchIcon from '@/components/ui/SearchIcon'
 import { formatDate } from '@/lib/formatDate'
 import styles from './list.module.css'
-// ✨ 1. 데이터를 lib/data에서 가져옵니다!
 import { FAV_POSTS_DATA } from '@/lib/data/index'
 
 const getCategoryName = (seriesKey: string) => {
   const categories = {
     Game: ['iri', 'elsword', 'starrail', 'maple', 'dnf', 'loa', 'genshin', 'pokemon'],
-    Animation: ['fsf', 'rezero', 'blackbutler', 'magi', 'hanako', 'apothecary', '86', 'inuyasha'],
+    Animation: ['fsf', 'rezero', 'blackbutler', 'magi', 'hanako', 'apothecary', '86', 'inuyasha', 'fairytail'],
     Webtoon: ['kubera', 'ropan']
   };
 
@@ -27,9 +26,15 @@ export default function FavSeriesPage({ params }: { params: Promise<{ series: st
   const seriesKey = resolvedParams.series
 
   const parentCategory = getCategoryName(seriesKey);
-
-  // ✨ 2. 하드코딩된 변수 대신 가져온 FAV_POSTS_DATA를 사용합니다.
   const seriesPosts = FAV_POSTS_DATA[seriesKey as keyof typeof FAV_POSTS_DATA] || []
+
+  const sortedPosts = [...seriesPosts].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    
+    if (dateA === dateB) return Number(b.id) - Number(a.id); 
+    return dateB - dateA; 
+  });
 
   const seriesName = 
     seriesKey === 'iri' ? '이리' : 
@@ -54,7 +59,7 @@ export default function FavSeriesPage({ params }: { params: Promise<{ series: st
       <div className="page-enter">
         <div className={styles.pageHeader}>
           <h1 className={styles.pageTitle}>{parentCategory} — {seriesName}</h1>
-          <SearchIcon />
+          {/* <SearchIcon /> */}
         </div>
 
         <div className={styles.gridContainer}>
@@ -62,7 +67,7 @@ export default function FavSeriesPage({ params }: { params: Promise<{ series: st
             {seriesPosts.length === 0 ? (
               <p style={{ color: 'var(--gray-400)', gridColumn: '1 / -1' }}>아직 등록된 연성이 없습니다.</p>
             ) : (
-              seriesPosts.map((post, i) => (
+              sortedPosts.map((post, i) => (
                 <Link
                   key={post.id}
                   href={`/fav/${seriesKey}/${post.id}`}

@@ -25,7 +25,10 @@ export default function Footer() {
         <div>
           <p className={styles.colHead}>Me</p>
           <div className={styles.links}>
-            <span className={styles.link}>space</span>
+            <a href="/" className={styles.link}>space</a>
+            <a href="https://jji.kr" className={styles.link}>jji</a>
+            <a href="https://ne.jji.kr" className={styles.link}>ne</a>
+            <a href="https://mo.jji.kr" className={styles.link}>mo</a>
           </div>
         </div>
         <div>

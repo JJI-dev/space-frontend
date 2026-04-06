@@ -15,7 +15,16 @@ export default function LogPage() {
   const [cat,  setCat]  = useState<LogCategory>('All')
   const [page, setPage] = useState(1)
 
-  const filtered = cat === 'All' ? LOG_POSTS : LOG_POSTS.filter(p => p.category === cat)
+  // const filtered = cat === 'All' ? LOG_POSTS : LOG_POSTS.filter(p => p.category === cat)
+
+  const sortedPosts = [...LOG_POSTS].sort((a, b) => {
+    const dateA = new Date(a.date).getTime();
+    const dateB = new Date(b.date).getTime();
+    if (dateA === dateB) return Number(b.id) - Number(a.id);
+    return dateB - dateA;
+  });
+
+  const filtered = cat === 'All' ? sortedPosts : sortedPosts.filter(p => p.category === cat)
   const total    = Math.ceil(filtered.length / PER_PAGE)
   const items    = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
 

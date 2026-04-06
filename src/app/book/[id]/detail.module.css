@@ -1,30 +1,20 @@
-/* 404 에러 화면 */
-.notFound {
-display: flex; flex-direction: column; align-items: center; justify-content: center;
-min-height: 70vh; text-align: center; padding: 0 var(--px);
-}
-.iconWrap {
-width: 64px; height: 64px; border-radius: 50%; background: var(--gray-100);
-display: flex; align-items: center; justify-content: center; margin-bottom: 24px;
-}
-.notFoundTitle { font-size: 24px; font-weight: 800; letter-spacing: -0.04em; margin-bottom: 12px; color: var(--black); }
-.notFoundDesc { color: var(--gray-400); font-size: 15px; line-height: 1.6; margin-bottom: 32px; }
-.code { font-size: 12px; background: var(--gray-100); padding: 4px 8px; border-radius: 6px; margin-top: 12px; display: inline-block; color: var(--gray-600); }
-.backBtn { background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 600; transition: opacity 0.2s; }
-.backBtn:hover { opacity: 0.8; }
+.progressContainer { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--gray-100); display: flex; align-items: center; z-index: 1000; }
+.progressBar { height: 100%; background: var(--black); transition: width 0.1s ease-out; will-change: width; }
+.toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; opacity: 0; pointer-events: none; z-index: 1100; transition: 0.3s; }
+.toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* 디테일 레이아웃 */
-.detailLayout {
-max-width: 1200px; margin: 0 auto; padding: 120px var(--px);
-display: flex; gap: 80px; align-items: flex-start;
-}
+/* 레이아웃 */
+.detailLayout { max-width: 1200px; margin: 0 auto; padding: 120px var(--px); display: flex; gap: 80px; align-items: flex-start; }
+.mainContentWrapper { flex: 1; display: flex; gap: 80px; align-items: flex-start; min-width: 0; }
 
-/* Left Nav */
-.leftNav { position: sticky; top: 120px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; }
-.navBtn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-400); transition: 0.2s; }
+/* 📌 데스크톱 플로팅 바 (Book 고유 좌측 패널) */
+.leftNav { position: sticky; top: 240px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; opacity: 0; transform: translateY(20px); pointer-events: none; transition: 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+.leftNav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
+.navBtn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-400); transition: 0.2s; background: none; border: none; cursor: pointer; }
 .navBtn:hover { background: var(--gray-100); color: var(--black); }
+.navBtn:disabled { opacity: 0.3; cursor: default; }
 
-/* Main Content */
+/* 메인 컨텐츠 & Book 메타 */
 .mainContent { flex: 1; max-width: 720px; }
 .metaArea { display: flex; gap: 40px; margin-bottom: 80px; }
 .coverImg { width: 250px; flex-shrink: 0; border-radius: 8px; box-shadow: 0 4px 24px rgba(0,0,0,0.08); aspect-ratio: 2/3; object-fit: cover; }
@@ -36,90 +26,65 @@ display: flex; gap: 80px; align-items: flex-start;
 .metaLabel { width: 60px; color: var(--gray-400); font-weight: 600; flex-shrink: 0; }
 .metaValue { color: var(--black); font-weight: 500; }
 
-/* Right TOC */
-.toc {
-width: 200px;
-flex-shrink: 0;
-padding: 40px 16px 80px;
-position: sticky;
-top: var(--header-h);
-/* height: calc(100vh - var(--header-h)); */
-overflow-y: auto;
-}
-.tocTitle {
-font-size: 10px; font-weight: 600; text-transform: uppercase;
-letter-spacing: .12em; color: var(--gray-400); margin-bottom: 12px;
-padding: 0 8px;
-}
-.tocGroup { margin-bottom: 16px; }
-.tocLink {
-display: block; width: 100%; padding: 6px 8px;
-font-size: 12px; color: var(--gray-400);
-letter-spacing: var(--tracking); border-radius: 4px;
-transition: color .15s, background .15s; text-align: left;
-background: none; border: none; font-family: var(--font-body); cursor: pointer;
-}
+/* TOC */
+.toc { width: 200px; flex-shrink: 0; padding: 40px 16px 80px; position: sticky; top: var(--header-h); }
+.tocTitle { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: .12em; color: var(--gray-400); margin-bottom: 12px; padding: 0 8px; }
+.tocLink { display: block; width: 100%; padding: 6px 8px; font-size: 12px; color: var(--gray-400); letter-spacing: var(--tracking); border-radius: 4px; transition: 0.15s; text-align: left; background: none; border: none; font-family: var(--font-body); cursor: pointer; }
 .tocLink:hover { color: var(--black); background: var(--gray-100); }
 
-/* MDX Styling */
-/* .h2 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; color: var(--black); margin-bottom: 24px;}
-.p { font-size: 16px; line-height: 1.8; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; } */
-.content { padding-bottom: 32px; min-height: 60vh; }
-.p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; ord-break: keep-all; }
+/* 본문 */
+.content { padding-bottom: 32px; min-height: 60vh; font-size: 16px; line-height: 1.85; word-break: keep-all; }
+
+/* ✨ 스크롤 애니메이션 추가 (Life 통일) */
+.revealOnScroll { opacity: 0; transform: translateY(40px); transition: 0.9s cubic-bezier(0.16, 1, 0.3, 1); will-change: opacity, transform; }
+.isRevealed { opacity: 1; transform: translateY(0); }
+.metaArea.revealOnScroll { transition-delay: 0.1s; }
+.content.revealOnScroll { transition-delay: 0.2s; }
+.toc.revealOnScroll { transition-delay: 0.3s; }
+
+/* 📱 모바일 & 태블릿 */
+@media (max-width: 1024px) { 
+  .detailLayout { padding-bottom: 140px !important; display: block; padding-top: 80px; }
+  .mainContentWrapper { flex-direction: column; gap: 40px; display: flex; }
+  .toc { display: none; }
+
+  /* 캡슐 플로팅 바 (완벽 통일) */
+  .leftNav { 
+    position: fixed !important; top: auto !important; bottom: 32px !important; left: 50% !important;
+    width: max-content !important; min-width: auto !important; max-width: 90vw !important;
+    display: flex !important; flex-direction: row !important; align-items: center !important;
+    background: rgba(255, 255, 255, 0.95) !important; backdrop-filter: blur(12px) !important; 
+    border: 1px solid rgba(0, 0, 0, 0.05) !important; border-radius: 100px !important; 
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04) !important; 
+    padding: 10px 24px !important; gap: 20px !important; z-index: 9999 !important;
+    transform: translateX(-50%) translateY(20px) !important; pointer-events: none !important;
+  }
+  .leftNav.visible { opacity: 1 !important; transform: translateX(-50%) translateY(0) !important; pointer-events: auto !important; }
+}
+
+@media (max-width: 600px) {
+  .metaArea { flex-direction: column; gap: 24px; align-items: center; text-align: center; }
+  .coverImg { width: 180px; }
+  .metaRow { justify-content: center; }
+}
+
+/* 드로어 */
+.drawerOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; }
+.drawerOverlay.open { opacity: 1; pointer-events: auto; }
+.drawer { scrollbar-width: none; position: fixed; top: 80px; bottom: 20px; right: 20px; width: 400px; max-width: calc(100vw - 40px); background: #fff; border-radius: 24px; z-index: 2001; padding: 32px; transform: translateX(120%); transition: 0.4s; overflow-y: auto; }
+.drawer.open { transform: translateX(0); }
+.drawerHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.drawerHeader h2 { font-size: 32px; font-weight: 800; }
+.drawerList { display: flex; flex-direction: column; gap: 24px; }
+.drawerItem { display: flex; gap: 16px; text-decoration: none; color: inherit; }
+.drawerImg { width: 100px; height: 100px; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
+.drawerItemBody { display: flex; flex-direction: column; padding-top: 4px; }
+
+.p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; }
 .h1 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; letter-spacing: -0.04em; }
 .h2 { font-size: 24px; font-weight: 700; margin: 60px 0 24px; letter-spacing: -0.04em; }
 .h3 { font-size: 20px; font-weight: 600; margin: 62px 0 24px; letter-spacing: -0.04em; }
 .codeBlock { background: var(--gray-100); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; margin-bottom: 24px; line-height: 1.7; }
-.ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: #333; }
+.ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: var(--gray-600); }
 .ol li { margin-bottom: 8px; }
-
-
-/* ✨ 플로팅 바 (스크롤 시 나타나도록 수정) */
-.leftNav { 
-position: sticky; top: 120px; display: flex; flex-direction: column; gap: 16px; flex-shrink: 0; 
-opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity 0.4s, transform 0.4s;
-}
-.leftNav.visible { opacity: 1; transform: translateY(0); pointer-events: auto; }
-.navBtn { width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-400); transition: 0.2s; background: none; border: none; cursor: pointer; }
-.navBtn:hover { background: var(--gray-100); color: var(--black); }
-.navBtn:disabled { opacity: 0.3; cursor: default; }
-.navBtn:disabled:hover { background: none; color: var(--gray-400); }
-
-
-/* ✨ 상단 프로그레스 바 & 토스트 */
-.progressContainer { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--gray-100); display: flex; align-items: center; z-index: 1000; }
-.progressBar { height: 100%; background: var(--black); transition: width 0.1s ease-out; will-change: width; }
-.toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 1100; transition: opacity 0.3s, transform 0.3s; white-space: nowrap; }
-.toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-/* ✨ 목록 드로어 모달 */
-.drawerOverlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.3); z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s; }
-.drawerOverlay.open { opacity: 1; pointer-events: auto; }
-.drawer { scrollbar-width: none; -ms-overflow-style: none; position: fixed; top: 80px; bottom: -20px; right: 16px; width: 420px; max-width: calc(100vw - 32px); background: var(--white); border-radius: 20px; z-index: 2001; padding: 32px; transform: translateX(120%); transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.1); }
-.drawer::-webkit-scrollbar { display: none; }
-.drawer.open { transform: translateX(0); }
-.drawerHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.drawerHeader h2 { font-size: 32px; font-weight: 800; letter-spacing: -0.04em; }
-.closeBtn { background: var(--gray-100); border: none; width: 36px; height: 36px; border-radius: 8px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: background 0.2s; }
-.closeBtn:hover { background: var(--gray-200); }
-
-.drawerList { display: flex; flex-direction: column; gap: 24px; }
-.drawerItem { display: flex; gap: 16px; text-decoration: none; color: inherit; cursor: pointer; transition: transform 0.2s; }
-.drawerItem:hover { transform: translateX(-4px); }
-.drawerItem:hover h4 { color: var(--accent); }
-.drawerImg { width: 100px; height: 100px; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
-.drawerItemBody { display: flex; flex-direction: column; padding-top: 4px; }
-.drawerItemBody h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; transition: color 0.2s; }
-.drawerItemBody p { font-size: 13px; color: var(--gray-400); margin-bottom: auto; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.drawerItemBody span { font-size: 12px; color: var(--accent); }
-
-@media (max-width: 1024px) {
-.toc { display: none; }
-.detailLayout { gap: 40px; }
-}
-@media (max-width: 768px) {
-.detailLayout { flex-direction: column; padding: 60px var(--px); }
-.leftNav { display: none; }
-.metaArea { flex-direction: column; align-items: flex-start; gap: 24px; }
-}
 

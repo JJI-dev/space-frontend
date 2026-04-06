@@ -50,7 +50,7 @@
 
 @media (max-width: 900px) { .item { width: 50%; } }
 @media (max-width: 640px) {
-  .layout { flex-direction: column; }
+  .layout { flex-direction: column; gap: 16px; }
   .sidebar {
     width: 100%; flex-direction: row; overflow-x: auto;
     padding: 0 var(--px); gap: 28px; position: static;

@@ -89,5 +89,9 @@
   40%          { transform: scale(1.2); opacity: 1; }
 }
 
-@media (max-width: 900px) { .grid { columns: 2; } }
-@media (max-width: 480px) { .grid { columns: 1; } }
+@media (max-width: 900px) { 
+  .grid { grid-template-columns: repeat(2, 1fr); } 
+}
+@media (max-width: 600px) { 
+  .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
+}

@@ -30,7 +30,7 @@
 }
 .input::placeholder { color: var(--gray-400); }
 
-.results { max-height: 400px; overflow-y: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;}
+.results { max-height: 500px; overflow-y: auto; padding-bottom: 8px; scrollbar-width: none; -ms-overflow-style: none;}
 .results::-webkit-scrollbar { 
   display: none; 
 }

@@ -1,0 +1,277 @@
+/* src/app/fan/ask/ask.module.css */
+
+.heroArea {
+    background: linear-gradient(135deg, var(--accent, #ff4b4b), #ff7676);
+    padding: 80px 20px 100px;
+    text-align: center;
+    color: white;
+  }
+  .heroTitle {
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: -0.04em;
+    margin-bottom: 8px;
+  }
+  .heroSub {
+    font-size: 15px;
+    opacity: 0.9;
+  }
+  
+  .container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 0 var(--px) 80px;
+    margin-top: -60px; /* 카드를 위로 끌어올림 */
+    position: relative;
+    z-index: 10;
+  }
+  
+  .card {
+    background: var(--white);
+    border-radius: 24px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
+    padding: 40px 32px 32px;
+    position: relative;
+  }
+  
+  /* 프로필 이미지 둥둥 뜨게 */
+  .profileWrap {
+    position: absolute;
+    top: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 80px;
+    background: var(--white);
+    border-radius: 50%;
+    padding: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+.profileImg {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain; 
+    background: var(--gray-100);
+  }
+  
+  .cardHeader {
+    text-align: center;
+    margin-top: 16px;
+    margin-bottom: 24px;
+  }
+  .cardHeader h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--black);
+  }
+  
+  /* 입력 폼 */
+  .formArea {
+    background: #f9f9fa;
+    border-radius: 16px;
+    border: 1px solid var(--gray-100);
+    padding: 16px;
+    transition: border-color 0.2s;
+  }
+  .formArea:focus-within {
+    border-color: var(--accent);
+  }
+  
+  .textarea {
+    width: 100%;
+    height: 140px;
+    background: transparent;
+    border: none;
+    resize: none;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--black);
+    outline: none;
+    font-family: inherit;
+  }
+  .textarea::placeholder {
+    color: var(--gray-400);
+  }
+  
+  .formFooter {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 12px;
+    border-top: 1px solid var(--gray-200);
+    padding-top: 12px;
+  }
+  
+  .charCount {
+    font-size: 13px;
+    color: var(--gray-400);
+  }
+  
+  .submitBtn {
+    background: var(--accent, #ff4b4b);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 100px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .submitBtn:hover:not(:disabled) {
+    opacity: 0.9;
+    transform: translateY(-2px);
+  }
+  .submitBtn:disabled {
+    background: var(--gray-200);
+    color: var(--gray-400);
+    cursor: not-allowed;
+  }
+  
+  /* 완료 상태 */
+  .successState {
+    text-align: center;
+    padding: 40px 0 20px;
+  }
+  .successIcon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    animation: bounce 1s infinite alternate;
+  }
+  .successState h3 {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .successState p {
+    color: var(--gray-600);
+    margin-bottom: 24px;
+  }
+  .resetBtn {
+    background: var(--gray-100);
+    color: var(--black);
+    border: none;
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .resetBtn:hover {
+    background: var(--gray-200);
+  }
+  
+  /* 토스트 */
+  .toast {
+    position: fixed;
+    bottom: 40px; /* 하단에서 40px 띄움 */
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: var(--black);
+    color: var(--white);
+    padding: 12px 24px;
+    border-radius: 100px;
+    font-size: 14px;
+    font-weight: 500;
+    opacity: 0;
+    pointer-events: none;
+    z-index: 1100;
+    transition: opacity 0.3s, transform 0.3s;
+    white-space: nowrap;
+  }
+  
+  /* 토스트가 보일 때 상태 */
+  .toastVisible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to { transform: translateY(-10px); }
+  }
+
+  .messageList {
+    margin-top: 60px;
+  }
+  .listTitle {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gray-400);
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  .messageItem {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+    border: 1px solid var(--gray-100);
+  }
+  .messageContent {
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--black);
+    margin-bottom: 12px;
+    word-break: break-all;
+  }
+  .messageDate {
+    font-size: 11px;
+    color: var(--gray-400);
+  }
+
+  /* ✨ 1. 비밀번호 & 보내기 버튼 그룹 */
+.actionGroup {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  .pwInput {
+    width: 80px;
+    padding: 10px 12px;
+    border-radius: 100px;
+    border: 1px solid var(--gray-200);
+    background: var(--white);
+    font-size: 13px;
+    outline: none;
+    text-align: center;
+    transition: border-color 0.2s;
+  }
+  .pwInput:focus {
+    border-color: var(--accent);
+  }
+  
+  /* ✨ 2. 메시지 하단 (날짜와 삭제 버튼 영역) */
+  .messageFooter {
+    display: flex;
+    justify-content: space-between; /* 날짜는 왼쪽, 삭제버튼은 오른쪽 끝으로 */
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--gray-100); /* 살짝 점선 그어줘서 분리감 주기 */
+  }
+  
+  .messageDate {
+    font-size: 12px;
+    color: var(--gray-400);
+  }
+  
+  /* ✨ 3. 삭제 버튼 디자인 (예쁜 뱃지 스타일) */
+  .deleteBtn {
+    background: rgba(255, 75, 75, 0.08); /* 연한 빨간색 배경 */
+    border: none;
+    color: #ff4b4b;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 100px;
+    transition: all 0.2s ease;
+  }
+  
+  .deleteBtn:hover {
+    background: rgba(255, 75, 75, 0.15); /* 마우스 올리면 살짝 진해짐 */
+    transform: translateY(-1px);
+  }

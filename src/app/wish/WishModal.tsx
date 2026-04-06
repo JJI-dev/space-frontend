@@ -13,19 +13,36 @@ interface Props {
 export default function WishModal({ item, onClose }: Props) {
   useEffect(() => {
     document.body.style.overflow = 'hidden'
-    const fn = (e: KeyboardEvent) => { if (e.key === 'Escape') onClose() }
-    window.addEventListener('keydown', fn)
+    
+    window.history.pushState({ modal: 'wish' }, '')
+
+    const handlePopState = () => {
+      onClose() 
+    }
+    window.addEventListener('popstate', handlePopState)
+
+    const handleKeyDown = (e: KeyboardEvent) => { 
+ 
+      if (e.key === 'Escape') window.history.back() 
+    }
+    window.addEventListener('keydown', handleKeyDown)
+
     return () => {
       document.body.style.overflow = ''
-      window.removeEventListener('keydown', fn)
+      window.removeEventListener('popstate', handlePopState)
+      window.removeEventListener('keydown', handleKeyDown)
     }
   }, [onClose])
 
+  const handleManualClose = () => {
+    window.history.back()
+  }
+
   return createPortal(
     <div className={styles.overlay}>
-      <div className={styles.bg} onClick={onClose} />
+      <div className={styles.bg} onClick={handleManualClose} />
       <div className={styles.panel}>
-        <button className={styles.back} onClick={onClose} aria-label="닫기">←</button>
+        <button className={styles.back} onClick={handleManualClose} aria-label="닫기">←</button>
 
         <div className={styles.img}>
           <img src={item.imageUrl} alt={item.title} />

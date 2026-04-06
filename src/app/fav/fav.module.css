@@ -29,7 +29,25 @@
 .navLinkDisabled {
   font-size: 14px; font-weight: 400; color: var(--gray-400); cursor: not-allowed;
 }
+.askLink {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--accent); /* 포인트 컬러 */
+  background: var(--accent-bg ); /* 연한 포인트 컬러 배경 */
+  padding: 8px 16px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 20px;
+}
 
+.askLink:hover {
+  /* background: rgba(222, 222, 222, 0.2); */
+  transform: translateY(-2px);
+}
 @media (max-width: 900px) {
   .container { flex-direction: column; gap: 40px; }
   .introBox { width: 100%; }
