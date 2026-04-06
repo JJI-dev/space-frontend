@@ -40,11 +40,50 @@
   transition: all 0.2s ease;
   display: flex;
   align-items: center;
-  gap: 4px;
   margin-top: 20px;
 }
+.askLink2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: #666; /* 포인트 컬러 */
+  background: var(--gray-100 ); /* 연한 포인트 컬러 배경 */
+  padding: 8px 16px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
 
-.askLink:hover {
+.askLink3 {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(251, 76, 76); /* 포인트 컬러 */
+  background: rgb(251, 76, 76, 0.08); /* 연한 포인트 컬러 배경 */
+  padding: 8px 16px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+.askLink4 {
+  font-size: 13px;
+  font-weight: 700;
+  color: rgb(58, 134, 255); /* 포인트 컬러 */
+  background: rgb(58, 134, 255, 0.08); /* 연한 포인트 컬러 배경 */
+  padding: 8px 16px;
+  border-radius: 100px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  margin-top: 5px;
+}
+
+.askLink:hover, .askLink2:hover, .askLink3:hover, .askLink4:hover {
   /* background: rgba(222, 222, 222, 0.2); */
   transform: translateY(-2px);
 }

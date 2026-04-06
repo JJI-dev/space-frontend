@@ -64,9 +64,33 @@ export default function FavMainPage() {
               <p>이세계 스마트폰 이런거 안받습니다 똥중에 탑티어</p>
               
             </div>
+            
             <Link href="/fav/ask" className={styles.askLink}>
               리퀘박스 💌
             </Link>
+
+            <div className="!mt-5">
+              <Link href="/d" className={styles.askLink2}>
+                낙서, 사담 🗣️
+              </Link> 
+              <Link href="/d" className={styles.askLink2}>
+                쿠베라계 🍛
+              </Link>
+              <Link href="/d" className={styles.askLink2}>
+                페스페계 🏆
+              </Link>
+            </div>
+            
+            <div className='flex !mt-5'>
+              <Link href="/d" className={styles.askLink3}>
+              ne 창작계 🎨
+              </Link>
+              <Link href="/d" className={styles.askLink4}>
+              mo 작업계 🎧
+              </Link>
+            </div>
+            
+           
           </div>
         
 

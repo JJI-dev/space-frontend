@@ -23,8 +23,8 @@ export default function CursorAnimation() {
     }
 
     const animate = () => {
-      rx += (mx - rx) * 0.12
-      ry += (my - ry) * 0.12
+      rx += (mx - rx) * 0.3
+      ry += (my - ry) * 0.3
       ring.style.left = rx + 'px'
       ring.style.top  = ry + 'px'
       raf = requestAnimationFrame(animate)
@@ -83,6 +83,17 @@ export default function CursorAnimation() {
         .cursor-ring.hovered { width: 50px; height: 50px; }
         @media (max-width: 768px) {
           .cursor-dot, .cursor-ring { display: none !important; }
+        }
+
+        @media (max-width: 1024px) {
+          .cursor-dot, .cursor-ring { display: none !important; }
+        }
+
+        /* ✨ 데스크톱에서는 기본 커서(화살표, 손모양 등)를 전부 숨김! */
+        @media (min-width: 1025px) {
+          body, a, button, [role="button"], input, textarea, select, [data-cursor-hover], * {
+            cursor: none !important;
+          }
         }
       `}</style>
     </>
