@@ -30,7 +30,7 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
 
   const prevPost = currentIndex > 0 ? seriesPosts[currentIndex - 1] : null
   const nextPost = currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null
-  const seriesName = series === 'iri' ? '이리' : series === 'elsword' ? '엘소드' : series === 'fsf' ? '페스페' : series
+  const seriesName = series === 'iri' ? '이터널리턴' : series === 'elsword' ? '엘소드' : series === 'fsf' ? '페스페' : series
 
   // 2. ✨ MDX 파일 읽어오기 (핵심: content/fav/iri/1.mdx)
   const filePath = path.join(process.cwd(), 'content/fav', series, `${id}.mdx`)

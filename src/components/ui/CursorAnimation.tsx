@@ -81,12 +81,12 @@ export default function CursorAnimation() {
         }
         .cursor-dot.hovered  { width: 3px; height: 3px; }
         .cursor-ring.hovered { width: 50px; height: 50px; }
-        @media (max-width: 768px) {
-          .cursor-dot, .cursor-ring { display: none !important; }
-        }
+        // @media (max-width: 768px) {
+        //   .cursor-dot, .cursor-ring { display: none !important; }
+        // }
 
         @media (max-width: 1024px) {
-          .cursor-dot, .cursor-ring { display: none !important; }
+          // .cursor-dot, .cursor-ring { display: none !important; }
         }
 
         /* ✨ 데스크톱에서는 기본 커서(화살표, 손모양 등)를 전부 숨김! */

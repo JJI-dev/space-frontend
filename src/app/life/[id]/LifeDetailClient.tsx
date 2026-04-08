@@ -26,12 +26,13 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
   const [showToast,       setShowToast]       = useState(false)
   const [isDrawerOpen,    setIsDrawerOpen]    = useState(false)
 
+  const [toc, setToc] = useState<{ id: string; text: string }[]>([])
+
   const triggerToast = (msg: string) => {
     setToastMsg(msg); setShowToast(true)
     setTimeout(() => setShowToast(false), 2500)
   }
 
-  // 1. 스크롤 및 조회수 연동
   useEffect(() => {
     setMounted(true)
     const globalHeader = document.querySelector('header') as HTMLElement | null
@@ -73,10 +74,8 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
     }
   }, [post?.id])
 
-  // 2. ✨ 투명도 0으로 갇히는 문제 해결 (렌더링 후 관찰자 실행)
   useEffect(() => {
-    if (!mounted) return; // 요소가 그려진 후에만 작동
-
+    if (!mounted) return;
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -88,17 +87,42 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
       },
       { rootMargin: '0px 0px -10% 0px', threshold: 0 }
     )
-
-    // 약간의 딜레이를 주어 children(MDX) 렌더링까지 완벽히 기다림
     const timer = setTimeout(() => {
       document.querySelectorAll(`.${styles.revealOnScroll}`).forEach(el => observer.observe(el))
     }, 100)
-
-    return () => {
-      clearTimeout(timer)
-      observer.disconnect()
-    }
+    return () => { clearTimeout(timer); observer.disconnect() }
   }, [mounted, post?.id])
+
+  useEffect(() => {
+    const getHeadings = () => {
+      const contentArea = document.querySelector(`.${styles.content}`);
+      if (!contentArea) return;
+
+      const headings = Array.from(contentArea.querySelectorAll('h2'));
+      const tocData = headings.map((heading, index) => {
+        if (!heading.id) {
+          const generatedId = heading.textContent 
+            ? `${heading.textContent.trim().replace(/\s+/g, '-')}-${index}` 
+            : `heading-${index}`;
+          heading.id = generatedId;
+        }
+        return { id: heading.id, text: heading.textContent || '' };
+      });
+      setToc(tocData);
+    };
+
+    const tocTimer = setTimeout(getHeadings, 150);
+    return () => clearTimeout(tocTimer);
+  }, [children]);
+
+  const scrollTo = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      const offset = 100
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' })
+    }
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => triggerToast('링크 복사가 완료되었습니다!'))
@@ -114,7 +138,8 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
       <div className={`${styles.toast} ${showToast ? styles.toastVisible : ''}`}>{toastMsg}</div>
 
       <div className={styles.wrap}>
-        {/* ✨ 1. 플로팅 바를 transform 애니메이션 영향을 안 받는 최상단으로 분리 */}
+        
+        {/* 1. 왼쪽 플로팅 바 */}
         <aside className={styles.floatingBarContainer}>
           <div className={`${styles.floatingBar} ${showFloatingBar ? styles.visible : ''}`}>
             {prev ? <Link href={`/life/${prev.id}`} className={styles.actionBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
@@ -126,8 +151,8 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
           </div>
         </aside>
 
-        {/* 2. 본문에만 애니메이션을 부여하여 고정 요소를 방해하지 않음 */}
-        <div>
+        {/* 2. 중앙 본문 */}
+        <div className={styles.mainContentWrapper}>
           <p className={`${styles.category} ${styles.revealOnScroll}`}>{post.category}</p>
           <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{post.title}</h1>
           <div className={`${styles.meta} ${styles.revealOnScroll}`}>
@@ -135,7 +160,7 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
           </div>
 
           <div className={`${styles.heroImg} ${styles.revealOnScroll}`}>
-            {post.thumb ? <img src={post.thumb} alt={post.title} /> : <div className={styles.heroPlaceholder}><span>Thumbnail</span></div>}
+            {post.thumb || post.thumbnail ? <img src={post.thumb || post.thumbnail} alt={post.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className={styles.heroPlaceholder}><span>Thumbnail</span></div>}
           </div>
 
           <div className={`${styles.content} ${styles.revealOnScroll}`}>{children}</div>
@@ -146,17 +171,54 @@ export default function LifeDetailClient({ post, allPosts, children}: Props) {
             </div>
           )}
         </div>
+
+        {/* ✨ 3. 우측 목차 영역 (투명 레일 감싸기) */}
+        <div className={styles.tocWrapper}>
+          <aside className={`${styles.toc} ${styles.revealOnScroll} no-scrollbar`}>
+            <p className={styles.tocTitle}>On This Page</p>
+            <div className={styles.tocGroup}>
+              {toc.length > 0 ? (
+                toc.map((item) => (
+                  <button 
+                    key={item.id} 
+                    onClick={() => scrollTo(item.id)} 
+                    className={styles.tocLink}
+                  >
+                    {item.text}
+                  </button>
+                ))
+              ) : (
+                <p style={{ fontSize: '12px', color: 'var(--gray-400)', padding: '0 8px' }}>목차가 없습니다.</p>
+              )}
+            </div>
+          </aside>
+        </div>
+
       </div>
       <Footer />
-      {/* ... 드로어 코드 ... */}
+      
+      {/* 서랍장 */}
       <div className={`${styles.drawerOverlay} ${isDrawerOpen ? styles.open : ''}`} onClick={() => setIsDrawerOpen(false)} />
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.open : ''}`}>
-        <div className={styles.drawerHeader}><h2>목록</h2><button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+        <div className={styles.drawerHeader}>
+          <h2>목록</h2>
+          <button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.closeIcon}>
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line1} />
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line2} />
+            </svg>
+          </button>
+        </div>
         <div className={styles.drawerList}>
           {allPosts.map(item => (
             <Link key={item.id} href={`/life/${item.id}`} className={styles.drawerItem}>
-              <div className={styles.drawerImg}>{item.thumb && <img src={item.thumb} alt="" style={{width:'100%', height:'100%', objectFit:'cover', borderRadius:8}}/>}</div>
-              <div className={styles.drawerItemBody}><h4>{item.title}</h4><p>{item.sub}</p><span>{item.category}</span></div>
+              <div className={styles.drawerImg}>
+                {(item.thumb || item.thumbnail) ? <img src={item.thumb || item.thumbnail} alt="" /> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)'}}/>}
+              </div>
+              <div className={styles.drawerItemBody}>
+                <h4>{item.title}</h4>
+                <p>{item.category}</p>
+              </div>
             </Link>
           ))}
         </div>

@@ -146,12 +146,36 @@ export default function LogDetailClient({ post, allPosts, children }: Props) {
       {/* 목록 드로어 */}
       <div className={`${styles.drawerOverlay} ${isDrawerOpen ? styles.open : ''}`} onClick={() => setIsDrawerOpen(false)} />
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.open : ''}`}>
-        <div className={styles.drawerHeader}><h2>목록</h2><button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--black)" strokeWidth="1.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+        <div className={styles.drawerHeader}>
+          <h2>목록</h2>
+          <button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.closeIcon}>
+              {/* 선 2개를 겹쳐두고 호버 시 각각 45도, -45도로 회전시킵니다 */}
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line1} />
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line2} />
+            </svg>
+          </button>
+        </div>
         <div className={styles.drawerList}>
           {allPosts.map(item => (
             <Link key={item.id} href={`/log/${item.id}`} className={styles.drawerItem}>
-              <div className={styles.drawerImg}>{item.thumb ? <img src={item.thumb} alt="" style={{width:'100%', height:'100%', objectFit:'cover', borderRadius:8}}/> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)', borderRadius:8}}/>}</div>
-              <div className={styles.drawerItemBody}><h4>{item.title}</h4><p style={{ display: '-webkit-box', WebkitLineClamp: 1, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>{item.excerpt}</p><span>{item.category}</span></div>
+              
+              {/* ✨ 인라인 스타일 제거! (CSS의 확대 애니메이션이 먹히도록) */}
+              <div className={styles.drawerImg}>
+                {item.thumb ? (
+                  <img src={item.thumb} alt="" />
+                ) : (
+                  <div style={{ width: '100%', height: '100%', background: 'var(--gray-100)' }} />
+                )}
+              </div>
+
+              {/* ✨ 텍스트 스타일 정리 (CSS에서 1줄 말줄임 처리 완료) */}
+              <div className={styles.drawerItemBody}>
+                <h4>{item.title}</h4>
+                {/* excerpt 대신 category나 깔끔한 서브 텍스트를 넣는 것이 포트폴리오 감성에 맞습니다 */}
+                <p>{item.category}</p>
+              </div>
+
             </Link>
           ))}
         </div>

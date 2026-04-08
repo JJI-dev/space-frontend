@@ -25,18 +25,22 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
   const [toastMsg, setToastMsg] = useState('')
   const [showToast, setShowToast] = useState(false)
 
+  // ✨ 목차(TOC) 데이터를 담을 상태
+  const [toc, setToc] = useState<{ id: string; text: string }[]>([])
+
   const triggerToast = (msg: string) => {
     setToastMsg(msg); setShowToast(true)
     setTimeout(() => setShowToast(false), 2500)
   }
 
+  // 1. 기존 스크롤 및 등장 애니메이션 이벤트
   useEffect(() => {
     setMounted(true)
     const globalHeader = document.querySelector('header')
     
     const handleScroll = () => {
       const y = window.scrollY
-      setShowFloatingBar(y > 200) // Life와 동일하게 200px부터 등장
+      setShowFloatingBar(y > 200) 
 
       if (globalHeader) {
         globalHeader.style.transform = y > 200 ? 'translateY(-100%)' : 'translateY(0)'
@@ -49,7 +53,6 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
 
     window.addEventListener('scroll', handleScroll, { passive: true })
 
-    // ✨ Life처럼 스크롤 애니메이션(revealOnScroll) 옵저버 추가
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -73,6 +76,36 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
       if (globalHeader) globalHeader.style.transform = 'translateY(0)'
     }
   }, [book?.id])
+
+  // ✨ 2. 무적의 MDX 목차(TOC) 자동 추출 로직 (플러그인 없어도 강제 생성!)
+  useEffect(() => {
+    const getHeadings = () => {
+      // article 본문 안에 있는 h2만 콕 집어서 가져옵니다.
+      const article = document.querySelector('article');
+      if (!article) return;
+
+      const headings = Array.from(article.querySelectorAll('h2'));
+      
+      const tocData = headings.map((heading, index) => {
+        // id가 없다면 텍스트를 변환해서 강제로 id를 부여합니다!
+        if (!heading.id) {
+          const generatedId = heading.textContent?.trim().replace(/\s+/g, '-') || `heading-${index}`;
+          heading.id = generatedId;
+        }
+        
+        return {
+          id: heading.id,
+          text: heading.textContent || '', 
+        };
+      });
+
+      setToc(tocData);
+    };
+
+    // DOM이 완전히 그려질 때까지 150ms 대기 후 실행
+    const tocTimer = setTimeout(getHeadings, 150);
+    return () => clearTimeout(tocTimer);
+  }, [children]);
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href)
@@ -98,7 +131,6 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
       <div className={`${styles.toast} ${showToast ? styles.toastVisible : ''}`}>{toastMsg}</div>
 
       <div className={styles.detailLayout}>
-        {/* 데스크톱용 플로팅 바 */}
         <aside className={`${styles.leftNav} ${showFloatingBar ? styles.visible : ''}`}>
           {prev ? <Link href={`/book/${prev.id}`} className={styles.navBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
                 : <button className={styles.navBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>}
@@ -108,10 +140,8 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
           <button className={styles.navBtn} onClick={() => setIsDrawerOpen(true)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
         </aside>
 
-        {/* 본문 래퍼 */}
         <div className={`page-enter ${styles.mainContentWrapper}`}>
           <main className={styles.mainContent}>
-            {/* Book 정보 영역 (애니메이션 적용) */}
             <div className={`${styles.metaArea} ${styles.revealOnScroll}`}>
               {book.coverUrl && <img src={book.coverUrl} alt={book.title} className={styles.coverImg} />}
               <div className={styles.metaInfo}>
@@ -128,17 +158,28 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
               </div>
             </div>
             
-            {/* 본문 MDX 영역 (애니메이션 적용) */}
             <article className={`${styles.content} ${styles.revealOnScroll}`}>
               {children}
             </article>
           </main>
 
-          {/* 우측 TOC */}
+          {/* ✨ 우측 목차 영역 (자동 생성) */}
           <aside className={`${styles.toc} ${styles.revealOnScroll} no-scrollbar`}>
             <p className={styles.tocTitle}>On This Page</p>
             <div className={styles.tocGroup}>
-              <button onClick={() => scrollTo('review')} className={styles.tocLink}>후기</button>
+              {toc.length > 0 ? (
+                toc.map((item) => (
+                  <button 
+                    key={item.id} 
+                    onClick={() => scrollTo(item.id)} 
+                    className={styles.tocLink}
+                  >
+                    {item.text}
+                  </button>
+                ))
+              ) : (
+                <p style={{ fontSize: '13px', color: '#8B95A1' }}>작성된 목차가 없습니다.</p>
+              )}
             </div>
           </aside>
         </div>
@@ -146,14 +187,28 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
 
       <Footer/>
 
+      {/* 서랍장 (Book) */}
       <div className={`${styles.drawerOverlay} ${isDrawerOpen ? styles.open : ''}`} onClick={() => setIsDrawerOpen(false)} />
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.open : ''}`}>
-        <div className={styles.drawerHeader}><h2>목록</h2><button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+        <div className={styles.drawerHeader}>
+          <h2>목록</h2>
+          <button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.closeIcon}>
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line1} />
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line2} />
+            </svg>
+          </button>
+        </div>
         <div className={styles.drawerList}>
           {allBooks.map(item => (
             <Link key={item.id} href={`/book/${item.id}`} className={styles.drawerItem}>
-              <div className={styles.drawerImg}>{item.coverUrl ? <img src={item.coverUrl} alt="" style={{width:'100%', height:'100%', objectFit:'cover', borderRadius:8}}/> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)', borderRadius:8}}/>}</div>
-              <div className={styles.drawerItemBody}><h4>{item.title}</h4>{item.summary && <p>{item.summary}</p>}<span>#{item.category}</span></div>
+              <div className={styles.drawerImg}>
+                {item.coverUrl ? <img src={item.coverUrl} alt="" /> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)'}}/>}
+              </div>
+              <div className={styles.drawerItemBody}>
+                <h4>{item.title}</h4>
+                <p>{item.category}</p>
+              </div>
             </Link>
           ))}
         </div>

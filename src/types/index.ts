@@ -13,7 +13,7 @@ export interface LogPost {
 }
 
 // ── Life ─────────────────────────────────────────────
-export type LifeCategory = 'All' | 'Travel' | 'Hot spot' | 'Diary'
+export type LifeCategory = 'All' | 'Travel' | 'Hot spot' | 'Diary'| 'Game'
 
 export interface LifePost {
   id: string
@@ -21,6 +21,7 @@ export interface LifePost {
   sub: string   // date string
   title: string
   thumb?: string
+  thumbnail?: string
   tags: string[]
   content: string
 }
@@ -42,7 +43,7 @@ export interface WishItem {
 }
 
 // ── Book ─────────────────────────────────────────────
-export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발' | '인문' | '과학';
+export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발' | '인문' | '과학' | 'SF' | '추리';
 export type BookType = '리뷰' | '위시';
 
 export interface Book {

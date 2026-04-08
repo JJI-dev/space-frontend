@@ -1,5 +1,5 @@
 .progressContainer { position: fixed; top: 0; left: 0; width: 100%; height: 2px; background: var(--gray-100); display: flex; align-items: center; z-index: 1000; }
-.progressBar { height: 100%; background: var(--black); transition: width 0.1s ease-out; will-change: width; }
+.progressBar { height: 100%; background: var(--accent); transition: width 0.1s ease-out; will-change: width; }
 .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; opacity: 0; pointer-events: none; z-index: 1100; transition: 0.3s; }
 .toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
@@ -68,17 +68,6 @@
   .metaRow { justify-content: center; }
 }
 
-/* 드로어 */
-.drawerOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; }
-.drawerOverlay.open { opacity: 1; pointer-events: auto; }
-.drawer { scrollbar-width: none; position: fixed; top: 80px; bottom: 20px; right: 20px; width: 400px; max-width: calc(100vw - 40px); background: #fff; border-radius: 24px; z-index: 2001; padding: 32px; transform: translateX(120%); transition: 0.4s; overflow-y: auto; }
-.drawer.open { transform: translateX(0); }
-.drawerHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.drawerHeader h2 { font-size: 32px; font-weight: 800; }
-.drawerList { display: flex; flex-direction: column; gap: 24px; }
-.drawerItem { display: flex; gap: 16px; text-decoration: none; color: inherit; }
-.drawerImg { width: 100px; height: 100px; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
-.drawerItemBody { display: flex; flex-direction: column; padding-top: 4px; }
 
 .p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; }
 .h1 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; letter-spacing: -0.04em; }
@@ -88,3 +77,53 @@
 .ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: var(--gray-600); }
 .ol li { margin-bottom: 8px; }
 
+
+
+/* ==============================================================
+   ✨ 서랍장(Drawer) 모달 업그레이드 (천천히 닫힘 + 사진 확대)
+============================================================== */
+/* 1. 뒷배경 어둡게 */
+.drawerOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s; }
+.drawerOverlay.open { opacity: 1; pointer-events: auto; }
+
+/* 2. 모달 백그라운드 */
+.drawer { 
+  position: fixed; top: 60%; right: 20px; 
+  height: 90vh; width: 440px; max-width: calc(100vw - 40px); 
+  background: #fff; border-radius: 24px; z-index: 10001; padding: 0 32px; 
+  transform: translateY(100vh); 
+  /* ✨ 닫힐 때(내려갈 때) 속도를 0.8초로 부드럽게 늦춤 */
+  transition: transform 2.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 2.3s;
+  overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; 
+}
+.drawer::-webkit-scrollbar { display: none; }
+.drawer.open { transform: translateY(-50%); box-shadow: -10px 10px 40px rgba(0,0,0,0.08); transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.2s}
+
+/* 3. 헤더 (Sticky) */
+.drawerHeader { position: sticky; top: 0; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 32px 0 16px; z-index: 10; }
+.drawerHeader h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.04em; margin: 0; color: var(--black); }
+
+/* 닫기 버튼 및 애니메이션 */
+.closeBtn { width: 44px; height: 44px; background: var(--gray-100); border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; color: var(--gray-500); cursor: pointer; transition: 0.3s; }
+.closeBtn:hover { background: var(--gray-200); color: var(--black); }
+.closeIcon .line1, .closeIcon .line2 { transform-origin: 12px 12px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.closeBtn:hover .closeIcon .line1 { transform: rotate(45deg); }
+.closeBtn:hover .closeIcon .line2 { transform: rotate(-45deg); }
+
+/* 4. 초기 스크롤 공백 */
+.drawerList { display: flex; flex-direction: column; gap: 32px; padding-top: 60px; padding-bottom: 80px; }
+
+/* ✨ 5. 아이템 디자인 (오파시티 제거, 사진 확대 효과 추가) */
+.drawerItem { display: flex; gap: 20px; text-decoration: none; color: inherit; align-items: center; transition: 0.3s; }
+/* .drawerItem:hover { transform: translateY(-3px); } 오파시티 제거! 위로만 살짝 뜸 */
+
+.drawerImg { width: 140px; aspect-ratio: 4 / 3; height: auto; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
+
+/* ✨ 사진 부드럽게 확대되는 애니메이션 (Book 리스트처럼) */
+.drawerImg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.drawerItem:hover .drawerImg img { transform: scale(1.08); } 
+
+/* 텍스트 디자인 */
+.drawerItemBody { display: flex; flex-direction: column; gap: 6px; }
+.drawerItemBody h4 { font-size: 16px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.4; color: var(--black); margin: 0; word-break: keep-all; }
+.drawerItemBody p { font-size: 12px; font-weight: 500; color: var(--gray-400); margin: 0; text-transform: uppercase; letter-spacing: -0.04em; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }

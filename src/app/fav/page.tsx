@@ -70,22 +70,22 @@ export default function FavMainPage() {
             </Link>
 
             <div className="!mt-5">
-              <Link href="/d" className={styles.askLink2}>
+              <Link href="https://x.com/Ram_jjine" className={styles.askLink2}>
                 낙서, 사담 🗣️
               </Link> 
-              <Link href="/d" className={styles.askLink2}>
+              <Link href="http://x.com/Jine_Nim" className={styles.askLink2}>
                 쿠베라계 🍛
               </Link>
-              <Link href="/d" className={styles.askLink2}>
+              <Link href="https://x.com/GOOGI_Nim" className={styles.askLink2}>
                 페스페계 🏆
               </Link>
             </div>
             
             <div className='flex !mt-5'>
-              <Link href="/d" className={styles.askLink3}>
+              <Link href="https://x.com/jji__ne" className={styles.askLink3}>
               ne 창작계 🎨
               </Link>
-              <Link href="/d" className={styles.askLink4}>
+              <Link href="https://x.com/jji__mo" className={styles.askLink4}>
               mo 작업계 🎧
               </Link>
             </div>

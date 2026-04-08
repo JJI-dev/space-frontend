@@ -19,6 +19,8 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
   const [toastMsg, setToastMsg] = useState('')
   const [showToast, setShowToast] = useState(false)
 
+  const [toc, setToc] = useState<{ id: string; text: string }[]>([])
+
   const triggerToast = (msg: string) => {
     setToastMsg(msg); setShowToast(true)
     setTimeout(() => setShowToast(false), 2500)
@@ -65,10 +67,8 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
     }
   }, [current?.id, seriesKey])
 
-  // ✨ 투명도 0 갇힘 해결
   useEffect(() => {
     if (!mounted) return;
-
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach(entry => {
@@ -80,16 +80,42 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
       },
       { rootMargin: '0px 0px -10% 0px', threshold: 0 }
     )
-
     const timer = setTimeout(() => {
       document.querySelectorAll(`.${styles.revealOnScroll}`).forEach(el => observer.observe(el))
     }, 100)
-
-    return () => {
-      clearTimeout(timer)
-      observer.disconnect()
-    }
+    return () => { clearTimeout(timer); observer.disconnect() }
   }, [mounted, current?.id])
+
+  useEffect(() => {
+    const getHeadings = () => {
+      const contentArea = document.querySelector(`.${styles.content}`);
+      if (!contentArea) return;
+
+      const headings = Array.from(contentArea.querySelectorAll('h2'));
+      const tocData = headings.map((heading, index) => {
+        if (!heading.id) {
+          const generatedId = heading.textContent 
+            ? `${heading.textContent.trim().replace(/\s+/g, '-')}-${index}` 
+            : `heading-${index}`;
+          heading.id = generatedId;
+        }
+        return { id: heading.id, text: heading.textContent || '' };
+      });
+      setToc(tocData);
+    };
+
+    const tocTimer = setTimeout(getHeadings, 150);
+    return () => clearTimeout(tocTimer);
+  }, [children]);
+
+  const scrollTo = (id: string) => {
+    const element = document.getElementById(id)
+    if (element) {
+      const offset = 100
+      const elementPosition = element.getBoundingClientRect().top + window.scrollY
+      window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' })
+    }
+  }
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href).then(() => triggerToast('링크 복사가 완료되었습니다!'))
@@ -106,7 +132,7 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
 
       <div className={styles.wrap}>
         
-        {/* ✨ 플로팅 바 분리 (고정 박힘 해결) */}
+        {/* 1. 왼쪽 플로팅 바 */}
         <aside className={styles.floatingBarContainer}>
           <div className={`${styles.floatingBar} ${showFloatingBar ? styles.visible : ''}`}>
             {prevPost ? <Link href={`/fav/${seriesKey}/${prevPost.id}`} className={styles.actionBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
@@ -118,7 +144,8 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
           </div>
         </aside>
 
-        <div>
+        {/* 2. 중앙 본문 */}
+        <div className={styles.mainContentWrapper}>
           <p className={`${styles.category} ${styles.revealOnScroll}`}>{seriesName}</p>
           <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{current.title}</h1>
           <div className={`${styles.meta} ${styles.revealOnScroll}`}>
@@ -126,7 +153,7 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
           </div>
 
           <div className={`${styles.heroImg} ${styles.revealOnScroll}`}>
-            {current.thumb ? <img src={current.thumb} alt={current.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className={styles.heroPlaceholder}><span>Thumbnail</span></div>}
+            {current.thumbnail ? <img src={current.thumbnail} alt={current.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} /> : <div className={styles.heroPlaceholder}><span>Thumbnail</span></div>}
           </div>
 
           <div className={`${styles.content} ${styles.revealOnScroll}`}>{children}</div>
@@ -137,16 +164,57 @@ export default function FavDetailClient({ seriesKey, seriesName, current, prevPo
             </div>
           )}
         </div>
+
+        {/* 3. 우측 목차 영역 */}
+        <div className={styles.tocWrapper}>
+          <aside className={`${styles.toc} ${styles.revealOnScroll} no-scrollbar`}>
+            <p className={styles.tocTitle}>On This Page</p>
+            <div className={styles.tocGroup}>
+              {toc.length > 0 ? (
+                toc.map((item) => (
+                  <button 
+                    key={item.id} 
+                    onClick={() => scrollTo(item.id)} 
+                    className={styles.tocLink}
+                  >
+                    {item.text}
+                  </button>
+                ))
+              ) : (
+                <p style={{ fontSize: '12px', color: 'var(--gray-400)', padding: '0 8px' }}>목차가 없습니다.</p>
+              )}
+            </div>
+          </aside>
+        </div>
+
       </div>
       <Footer />
+      
+      {/* =========================================================
+          ✨ 서랍장(Drawer) 모달 업그레이드 (포트폴리오 디자인)
+      ========================================================= */}
+      {/* 서랍장 (Fav) */}
       <div className={`${styles.drawerOverlay} ${isDrawerOpen ? styles.open : ''}`} onClick={() => setIsDrawerOpen(false)} />
       <aside className={`${styles.drawer} ${isDrawerOpen ? styles.open : ''}`}>
-        <div className={styles.drawerHeader}><h2>목록</h2><button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><line x1="5" y1="12" x2="19" y2="12"/></svg></button></div>
+        <div className={styles.drawerHeader}>
+          <h2>목록</h2>
+          <button onClick={() => setIsDrawerOpen(false)} className={styles.closeBtn}>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className={styles.closeIcon}>
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line1} />
+              <line x1="5" y1="12" x2="19" y2="12" className={styles.line2} />
+            </svg>
+          </button>
+        </div>
         <div className={styles.drawerList}>
           {seriesPosts.map(item => (
             <Link key={item.id} href={`/fav/${seriesKey}/${item.id}`} className={styles.drawerItem}>
-              <div className={styles.drawerImg}>{item.thumb && <img src={item.thumb} alt="" style={{width:'100%', height:'100%', objectFit:'cover', borderRadius:8}}/>}</div>
-              <div className={styles.drawerItemBody}><h4>{item.title}</h4><p>{item.date}</p></div>
+              <div className={styles.drawerImg}>
+                {item.thumbnail ? <img src={item.thumbnail} alt="" /> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)'}}/>}
+              </div>
+              <div className={styles.drawerItemBody}>
+                <h4>{item.title}</h4>
+                <p>{item.sub}</p>
+              </div>
             </Link>
           ))}
         </div>

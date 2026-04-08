@@ -4,10 +4,21 @@
 .toast { position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%) translateY(20px); background: var(--black); color: var(--white); padding: 12px 24px; border-radius: 100px; font-size: 14px; font-weight: 500; opacity: 0; pointer-events: none; z-index: 1100; transition: opacity 0.3s, transform 0.3s; white-space: nowrap; }
 .toast.toastVisible { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-/* 본문 레이아웃 */
-.wrap { position: relative; padding: 40px var(--px) 0; max-width: 760px; margin: 0 auto; width: 100%; }
+/* ✨ 본문 레이아웃 (Book 페이지처럼 760px 중앙 고정!) */
+.wrap { 
+  position: relative; 
+  max-width: 760px; /* 중앙 정렬의 절대 기준점 */
+  margin: 0 auto; 
+  padding: 40px var(--px) 0;
+  width: 100%; 
+  display: block; /* Flex 해제 */
+}
 
-/* ✨ 웹(데스크톱) 플로팅 바 완벽 고정 */
+.mainContentWrapper {
+  width: 100%;
+}
+
+/* 웹(데스크톱) 플로팅 바 완벽 고정 */
 .floatingBarContainer { position: absolute; left: -80px; top: 0; bottom: 0; z-index: 100; }
 .floatingBar { position: sticky; top: 240px; display: flex; flex-direction: column; align-items: center; gap: 24px; opacity: 0; transform: translateY(20px); pointer-events: none; transition: opacity 0.4s, transform 0.4s; }
 .floatingBar.visible { opacity: 1 !important; transform: translateY(0) !important; pointer-events: auto !important; }
@@ -15,9 +26,57 @@
 .actionBtn:hover { background: var(--gray-100); color: var(--black); }
 .actionBtn:disabled { opacity: 0.3; cursor: default; }
 
-/* 📱 모바일 & 태블릿 하단 캡슐 플로팅 바 (화면 고정 보장) */
+/* ✨ 우측 목차 (Book의 위치 + sticky 효과의 완벽 결합) */
+.tocWrapper {
+  position: absolute;
+  top: 0;
+  bottom: 0; 
+  right: -240px; /* 본문에서 40px 떨어지고 200px 너비 차지 */
+  width: 200px;
+  pointer-events: none; /* 투명 기둥 간섭 방지 */
+}
+.toc { 
+  position: sticky; 
+  top: var(--header-h, 100px); 
+  width: 200px; 
+  padding: 40px 16px 80px; 
+  pointer-events: auto; /* 버튼 클릭 복구 */
+}
+.tocTitle { 
+  font-size: 10px; 
+  font-weight: 600; 
+  text-transform: uppercase; 
+  letter-spacing: .12em; 
+  color: var(--gray-400); 
+  margin-bottom: 12px; 
+  padding: 0 8px; 
+}
+.tocGroup { display: flex; flex-direction: column; gap: 4px; }
+.tocLink { 
+  display: block; 
+  width: 100%; 
+  padding: 6px 8px; 
+  font-size: 12px; 
+  color: var(--gray-400); 
+  letter-spacing: var(--tracking, -0.02em); 
+  border-radius: 4px; 
+  transition: 0.15s; 
+  text-align: left; 
+  background: none; 
+  border: none; 
+  font-family: var(--font-body, inherit); 
+  cursor: pointer; 
+}
+.tocLink:hover { 
+  color: var(--black); 
+  background: var(--gray-100); 
+}
+
+/* 📱 모바일 & 태블릿 하단 캡슐 플로팅 바 및 목차 숨김 */
 @media (max-width: 1024px) { 
   .wrap { padding-bottom: 140px !important; }
+  .tocWrapper { display: none; } /* 화면 좁아지면 레일째로 숨김 */
+  
   .floatingBarContainer { position: static !important; width: 0 !important; height: 0 !important; }
   .floatingBar { 
     position: fixed !important; top: auto !important; bottom: 32px !important; left: 50% !important;
@@ -44,26 +103,68 @@
 .tagsSection { padding: 0 0 80px 0; display: flex; flex-wrap: wrap; gap: 8px; }
 .tagChip { padding: 5px 14px; border-radius: 100px; border: 1px solid var(--gray-200); font-size: 12px; color: var(--gray-600); }
 
+/* ✨ MDX 본문 스타일링 (태그 타겟팅) */
+.content p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; }
+.content h1 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; letter-spacing: -0.04em; }
+.content h2 { font-size: 24px; font-weight: 700; margin: 60px 0 24px; letter-spacing: -0.04em; }
+.content h3 { font-size: 20px; font-weight: 600; margin: 62px 0 24px; letter-spacing: -0.04em; }
+.content pre, .content code { background: var(--gray-100); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; margin-bottom: 24px; line-height: 1.7; }
+.content ol, .content ul { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: var(--gray-600);}
+.content li { margin-bottom: 8px; }
+.content img { max-width: 100%; border-radius: 12px; margin: 24px 0; }
+
 /* 애니메이션 및 드로어 */
 .revealOnScroll { opacity: 0; transform: translateY(40px); transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1); }
 .isRevealed { opacity: 1 !important; transform: translateY(0) !important; }
-.drawerOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.3); z-index: 2000; opacity: 0; pointer-events: none; transition: 0.3s; }
+
+
+
+
+/* ==============================================================
+   ✨ 서랍장(Drawer) 모달 업그레이드 (천천히 닫힘 + 사진 확대)
+============================================================== */
+/* 1. 뒷배경 어둡게 */
+.drawerOverlay { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 10000; opacity: 0; pointer-events: none; transition: 0.5s; }
 .drawerOverlay.open { opacity: 1; pointer-events: auto; }
-.drawer { position: fixed; top: 80px; bottom: 20px; right: 20px; width: 400px; max-width: calc(100vw - 40px); background: #fff; border-radius: 20px; z-index: 2001; padding: 32px; transform: translateX(120%); transition: 0.4s; overflow-y: auto; }
-.drawer.open { transform: translateX(0); }
-.drawerHeader { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
-.drawerHeader h2 { font-size: 32px; font-weight: 800; }
-.drawerList { display: flex; flex-direction: column; gap: 24px; }
-.drawerItem { display: flex; gap: 16px; text-decoration: none; color: inherit; }
-.drawerImg { width: 100px; height: 100px; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
-.drawerItemBody { display: flex; flex-direction: column; padding-top: 4px; }
-.drawerItemBody h4 { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
 
+/* 2. 모달 백그라운드 */
+.drawer { 
+  position: fixed; top: 60%; right: 20px; 
+  height: 90vh; width: 440px; max-width: calc(100vw - 40px); 
+  background: #fff; border-radius: 24px; z-index: 10001; padding: 0 32px; 
+  transform: translateY(100vh); 
+  /* ✨ 닫힐 때(내려갈 때) 속도를 0.8초로 부드럽게 늦춤 */
+  transition: transform 2.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 2.3s;
+  overflow-y: auto; -ms-overflow-style: none; scrollbar-width: none; 
+}
+.drawer::-webkit-scrollbar { display: none; }
+.drawer.open { transform: translateY(-50%); box-shadow: -10px 10px 40px rgba(0,0,0,0.08); transition: transform 1.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 1.2s}
 
-.p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; }
-.h1 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; letter-spacing: -0.04em; }
-.h2 { font-size: 24px; font-weight: 700; margin: 60px 0 24px; letter-spacing: -0.04em; }
-.h3 { font-size: 20px; font-weight: 600; margin: 62px 0 24px; letter-spacing: -0.04em; }
-.codeBlock { background: var(--gray-100); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; margin-bottom: 24px; line-height: 1.7; }
-.ol { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: var(--gray-600);}
-.ol li { margin-bottom: 8px; }
+/* 3. 헤더 (Sticky) */
+.drawerHeader { position: sticky; top: 0; background: #fff; display: flex; justify-content: space-between; align-items: center; padding: 32px 0 16px; z-index: 10; }
+.drawerHeader h2 { font-size: 28px; font-weight: 600; letter-spacing: -0.04em; margin: 0; color: var(--black); }
+
+/* 닫기 버튼 및 애니메이션 */
+.closeBtn { width: 44px; height: 44px; background: var(--gray-100); border-radius: 8px; border: none; display: flex; align-items: center; justify-content: center; color: var(--gray-500); cursor: pointer; transition: 0.3s; }
+.closeBtn:hover { background: var(--gray-200); color: var(--black); }
+.closeIcon .line1, .closeIcon .line2 { transform-origin: 12px 12px; transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
+.closeBtn:hover .closeIcon .line1 { transform: rotate(45deg); }
+.closeBtn:hover .closeIcon .line2 { transform: rotate(-45deg); }
+
+/* 4. 초기 스크롤 공백 */
+.drawerList { display: flex; flex-direction: column; gap: 32px; padding-top: 60px; padding-bottom: 80px; }
+
+/* ✨ 5. 아이템 디자인 (오파시티 제거, 사진 확대 효과 추가) */
+.drawerItem { display: flex; gap: 20px; text-decoration: none; color: inherit; align-items: center; transition: 0.3s; }
+/* .drawerItem:hover { transform: translateY(-3px); } 오파시티 제거! 위로만 살짝 뜸 */
+
+.drawerImg { width: 140px; aspect-ratio: 4 / 3; height: auto; background: var(--gray-100); border-radius: 8px; flex-shrink: 0; overflow: hidden; }
+
+/* ✨ 사진 부드럽게 확대되는 애니메이션 (Book 리스트처럼) */
+.drawerImg img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); }
+.drawerItem:hover .drawerImg img { transform: scale(1.08); } 
+
+/* 텍스트 디자인 */
+.drawerItemBody { display: flex; flex-direction: column; gap: 6px; }
+.drawerItemBody h4 { font-size: 16px; font-weight: 600; letter-spacing: -0.04em; line-height: 1.4; color: var(--black); margin: 0; word-break: keep-all; }
+.drawerItemBody p { font-size: 12px; font-weight: 500; color: var(--gray-400); margin: 0; text-transform: uppercase; letter-spacing: -0.04em; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }

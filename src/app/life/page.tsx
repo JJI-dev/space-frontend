@@ -8,7 +8,7 @@ import Footer from '@/components/layout/Footer'
 import { formatDate } from '@/lib/formatDate' // ✨ formatDate 임포트 추가
 import styles from './life.module.css'
 
-const CATEGORIES: LifeCategory[] = ['All', 'Travel', 'Hot spot', 'Diary']
+const CATEGORIES: LifeCategory[] = ['All', 'Travel', 'Hot spot', 'Diary', 'Game']
 const BATCH = 6
 
 export default function LifePage() {
