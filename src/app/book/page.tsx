@@ -62,7 +62,7 @@ export default function BookListClient() {
 
             <div className={styles.grid}>
               {filteredBooks.map(book => (
-                <Link href={`/book/${book.id}`} key={book.id} className={styles.card}>
+                <Link href={`/book/${book.slug}`} key={book.id} className={styles.card}>
                   <div className={styles.coverWrap}>
                     <img src={book.coverUrl} alt={book.title} className={styles.cover} />
                   </div>

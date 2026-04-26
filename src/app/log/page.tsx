@@ -56,7 +56,7 @@ export default function LogPage() {
 
         <div className={`${styles.list} reveal reveal-delay-2`}>
           {items.map(post => (
-            <Link key={post.id} href={`/log/${post.id}`} className={styles.item}>
+            <Link key={post.id} href={`/log/${post.slug}`} className={styles.item}>
               <div className={styles.thumb}>
                 {post.thumb
                   ? <img src={post.thumb} alt={post.title} />

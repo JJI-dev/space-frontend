@@ -7,13 +7,52 @@ import Link from 'next/link'
 import FavDetailClient from './FavDetailClient'
 import styles from './detail.module.css'
 
-export default async function FavDetailPage({ params }: { params: Promise<{ series: string, id: string }> }) {
+export function generateStaticParams() {
+  return Object.entries(FAV_POSTS_DATA).flatMap(([seriesKey, posts]) =>
+    posts.map((post: any) => ({ series: seriesKey, slug: post.slug ?? post.id }))
+  )
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ series: string; slug: string }> }) {
+  const { series, slug } = await params
+  const seriesPosts: any[] = (FAV_POSTS_DATA as any)[series] || []
+  const current = seriesPosts.find(p => (p.slug ?? p.id) === slug)
+  if (!current) return {}
+
+  const baseUrl = 'https://space.jji.kr'
+  const url = `${baseUrl}/fav/${series}/${current.slug ?? current.id}`
+  const description = (current.sub || current.tag || '').trim() || current.title
+  const image = current.thumbnail
+
+  return {
+    title: current.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: current.title,
+      description,
+      url,
+      siteName: 'JJI',
+      images: image ? [{ url: image, alt: current.title }] : undefined,
+      locale: 'ko_KR',
+      type: 'article',
+    },
+    twitter: {
+      card: image ? 'summary_large_image' : 'summary',
+      title: current.title,
+      description,
+      images: image ? [image] : undefined,
+    },
+  }
+}
+
+export default async function FavDetailPage({ params }: { params: Promise<{ series: string, slug: string }> }) {
   const resolvedParams = await params
-  const { series, id } = resolvedParams
+  const { series, slug } = resolvedParams
 
   // 1. 해당 장르(series)의 데이터 찾기
   const seriesPosts = FAV_POSTS_DATA[series as keyof typeof FAV_POSTS_DATA] || []
-  const currentIndex = seriesPosts.findIndex(p => p.id === id)
+  const currentIndex = seriesPosts.findIndex((p: any) => (p.slug ?? p.id) === slug)
   const current = seriesPosts[currentIndex]
 
   // 데이터 없으면 에러 화면 렌더링
@@ -33,7 +72,7 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
   const seriesName = series === 'iri' ? '이터널리턴' : series === 'elsword' ? '엘소드' : series === 'fsf' ? '페스페' : series
 
   // 2. ✨ MDX 파일 읽어오기 (핵심: content/fav/iri/1.mdx)
-  const filePath = path.join(process.cwd(), 'content/fav', series, `${id}.mdx`)
+  const filePath = path.join(process.cwd(), 'content/fav', series, `${current.id}.mdx`)
   
   let fileContent = ''
   try { fileContent = fs.readFileSync(filePath, 'utf8') } 
@@ -53,7 +92,7 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/fav/{series}/{id}.mdx
+            content/fav/{series}/{current.id}.mdx
           </code>
         </p>
         

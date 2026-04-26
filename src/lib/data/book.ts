@@ -3,6 +3,7 @@ import { Book } from '@/types';
 export const books: Book[] = [
   {
     id: '1',
+    slug: 'nocturne',
     title: '절창',
     author: '구병모',
     publisher: '문학동네',
@@ -17,6 +18,7 @@ export const books: Book[] = [
   },
   {
     id: '2',
+    slug: 'pavane-for-a-dead-princess',
     title: '죽은 왕녀를 위한 파반느',
     author: '박민규',
     publisher: '위즈덤하우스',
@@ -30,6 +32,7 @@ export const books: Book[] = [
   },
   {
     id: '3',
+    slug: 'goethe-said-everything',
     title: '괴테는 모든것을 말했다',
     author: '스즈키 유이',
     publisher: '리프',
@@ -42,6 +45,7 @@ export const books: Book[] = [
   },
   {
     id: '4',
+    slug: 'the-genuine',
     title: '혼모노',
     author: '성해나',
     publisher: '창비',
@@ -55,6 +59,7 @@ export const books: Book[] = [
   },
   {
     id: '5',
+    slug: 'yuls-gaze',
     title: '율의 시선',
     author: '김민서',
     publisher: '창비',
@@ -68,6 +73,7 @@ export const books: Book[] = [
   },
   {
     id: '6',
+    slug: 'contradiction',
     title: '모순',
     author: '양귀자',
     publisher: '쓰다',
@@ -81,6 +87,7 @@ export const books: Book[] = [
   },
   {
     id: '7',
+    slug: 'the-stranger',
     title: '이방인',
     author: '알베르 카뮈',
     publisher: '민음사',
@@ -94,6 +101,7 @@ export const books: Book[] = [
   },
   {
     id: '8',
+    slug: 'a-thousand-blues',
     title: '천개의 파랑',
     author: '천선란',
     publisher: '허블',
@@ -107,6 +115,7 @@ export const books: Book[] = [
   },
   {
     id: '9',
+    slug: 'moss-forest',
     title: '이끼숲',
     author: '천선란',
     publisher: '자이언트북다',
@@ -120,6 +129,7 @@ export const books: Book[] = [
   },
   {
     id: '10',
+    slug: 'the-future-came-early',
     title: '먼저 온 미래',
     author: '장강명',
     publisher: '민음사',
@@ -133,6 +143,7 @@ export const books: Book[] = [
   },
   {
     id: '11',
+    slug: 'a-theory-of-everyone',
     title: '모든 사람에 대한 이론',
     author: '이하진',
     publisher: '열림원',
@@ -146,6 +157,7 @@ export const books: Book[] = [
   },
   {
     id: '12',
+    slug: 'what-happened-to-melon',
     title: '멜론은 어쩌다',
     author: '아밀',
     publisher: '비체',
@@ -159,6 +171,7 @@ export const books: Book[] = [
   },
   {
     id: '13',
+    slug: 'am-i-the-only-one-uncomfortable',
     title: '이 장면, 나만 불편한가요?',
     author: '태지원',
     publisher: '(주)자음과모음',
@@ -172,6 +185,7 @@ export const books: Book[] = [
   },
   {
     id: '14',
+    slug: 'humming',
     title: '허밍',
     author: '최정원',
     publisher: '창비',
@@ -185,6 +199,7 @@ export const books: Book[] = [
   },
   {
     id: '15',
+    slug: 'ice-tree-forest',
     title: '얼음나무 숲',
     author: '하지은',
     publisher: '황금가지',
@@ -198,6 +213,7 @@ export const books: Book[] = [
   },
   {
     id: '16',
+    slug: 'rusty-moon',
     title: '녹슨달',
     author: '하지은',
     publisher: '달다',
@@ -211,6 +227,7 @@ export const books: Book[] = [
   },
   {
     id: '17',
+    slug: 'holes',
     title: '구덩이',
     author: '루이스 쌔커',
     publisher: '창비청소년문학',
@@ -224,11 +241,13 @@ export const books: Book[] = [
   },
   {
     id: '18',
+    slug: 'second-ending',
     title: '두 번째 엔딩',
-    author: '김려령',
+    author: '김려령 배미주 이현 김중미 손원평 구병모 이희영 백온유',
     publisher: '창비',
-    readDate: '',
-    rating: 3,
+    startDate: '2026.04.23',
+    readDate: '2026.04.23',
+    rating: 2,
     type: '리뷰',
     firstImpression: '루프물? 주인공이 후회한 짓한거 되돌리기',
     summary: '기존 원작 속에 다루지 못한 뒷이야기 펼치기',
@@ -237,6 +256,7 @@ export const books: Book[] = [
   },
   {
     id: '19',
+    slug: 'penguins-have-long-legs-too',
     title: '펭귄도 사실 롱다리다',
     author: '이지유',
     publisher: '웃는돌고래',
@@ -250,6 +270,7 @@ export const books: Book[] = [
   },
   {
     id: '20',
+    slug: 'nine',
     title: '나인',
     author: '천선란',
     publisher: '창비',
@@ -263,6 +284,7 @@ export const books: Book[] = [
   },
   {
     id: '21',
+    slug: 'grapefruit-apricot-club',
     title: '자몽 살구 클럽',
     author: '천로로',
     publisher: '어센틱',
@@ -276,6 +298,7 @@ export const books: Book[] = [
   },
   {
     id: '22',
+    slug: 'the-house-without-a-child',
     title: '아이가 없는 집 ',
     author: '알렉스 안도릴',
     publisher: '서평',
@@ -290,6 +313,7 @@ export const books: Book[] = [
   },
   {
     id: '23',
+    slug: 'moonlight-detective',
     title: '달빛수사',
     author: '연여름',
     publisher: '황금가지',
@@ -304,6 +328,7 @@ export const books: Book[] = [
   },
   {
     id: '24',
+    slug: 'the-greenhouse-at-the-end-of-the-earth',
     title: '지구 끝의 온실',
     author: '김초엽',
     publisher: '자이언트북스',
@@ -318,6 +343,7 @@ export const books: Book[] = [
   },
   {
     id: '25',
+    slug: 'the-tragedy-of-i',
     title: 'I의 비극',
     author: '요네자와 호노부',
     publisher: '내 친구의 서재',
@@ -332,6 +358,7 @@ export const books: Book[] = [
   },
   {
     id: '26',
+    slug: 'torrent',
     title: '급류',
     author: '정대건',
     publisher: '민음사',
@@ -346,6 +373,7 @@ export const books: Book[] = [
   },
   {
     id: '27',
+    slug: 'and-then-there-were-none',
     title: '그리고 아무도 없었다',
     author: '애거서 크리스티',
     publisher: '자이언트북스',
@@ -360,6 +388,7 @@ export const books: Book[] = [
   },
   {
     id: '28',
+    slug: 'the-murder-of-roger-ackroyd',
     title: '애크로이드 살인사건',
     author: '애거서 크리스티',
     publisher: '황금가지',
@@ -374,6 +403,7 @@ export const books: Book[] = [
   },
   {
     id: '29',
+    slug: 'tales-of-the-tangier-coffeehouse-1',
     title: '커피점 탈레랑의 사건 수첩 1',
     author: '오카자키 다쿠마',
     publisher: '자이언트북스',
@@ -388,6 +418,7 @@ export const books: Book[] = [
   },
   {
     id: '30',
+    slug: 'the-future-of-adults',
     title: '어른의 미래',
     author: '편혜영',
     publisher: '문학동네',
@@ -402,6 +433,7 @@ export const books: Book[] = [
   },
   {
     id: '31',
+    slug: 'reversible',
     title: '돌이킬 수 있는',
     author: '문목하',
     publisher: '아작',
@@ -416,6 +448,7 @@ export const books: Book[] = [
   },
   {
     id: '32',
+    slug: 'stakes',
     title: '말뚝들',
     author: '김홍',
     publisher: '한겨레출판',
@@ -430,6 +463,7 @@ export const books: Book[] = [
   },
   {
     id: '33',
+    slug: 'lisianthus',
     title: '리시안셔스',
     author: '연여름',
     publisher: '황금가지',
@@ -442,36 +476,39 @@ export const books: Book[] = [
     category: 'SF',
     coverUrl: 'https://image.yes24.com/goods/108406100/XL',
   },
-    {
+  {
     id: '34',
+    slug: 'ash-and-foam',
     title: '재와 물거품',
     author: '김청귤',
     publisher: '리더스원',
-    startDate: '2026. 04. 15',
-    readDate: '202. 10. 09',
+    startDate: '2026. 04. 25',
+    readDate: '2026. 04. 25',
     rating: 3,
     type: '리뷰',
-    firstImpression: '',
+    firstImpression: '주인공이 헛짓거리하다 배드엔딩한 책',
+    summary: '물불이 서로 사랑하는 안티테제 디즈니 엘리멘탈같은 느낌',
+    category: '소설',
+    coverUrl: '/book/2.png',
+  },
+  {
+    id: '35',
+    slug: 'the-invasion-of-first-love',
+    title: '첫사랑의 침공',
+    author: '권혁일',
+    publisher: '황금가지',
+    startDate: '2026. 04. 25',
+    readDate: '2026. 04. 25',
+    rating: 4,
+    type: '리뷰',
+    firstImpression: '로봇과 인간의 러브스토리',
     summary: '아름다운 이야기였어',
     category: 'SF',
     coverUrl: '/book/1.png',
   },
   {
-    id: '35',
-    title: '첫사랑의 침공',
-    author: '권혁일',
-    publisher: '황금가지',
-    startDate: '2026. 04. 08',
-    readDate: '2025. 10. 09',
-    rating: 3,
-    type: '리뷰',
-    firstImpression: '로봇과 인간의 러브스토리',
-    summary: '아름다운 이야기였어',
-    category: 'SF',
-    coverUrl: '/book/2.png',
-  },
-    {
     id: '36',
+    slug: 'double-click',
     title: '더블클릭',
     author: '알간지',
     publisher: '생각정원',
@@ -486,6 +523,7 @@ export const books: Book[] = [
   },
   {
     id: '37',
+    slug: 'from-the-viewpoint',
     title: '시선으로부터',
     author: '정세랑',
     publisher: '문학동네',
@@ -500,4 +538,5 @@ export const books: Book[] = [
   },
 ];
 
-export const getBook = (id: string) => books.find(b => b.id === id);
+export const getBook = (slug: string) => books.find(b => b.slug === slug);
+export const getBookById = (id: string) => books.find(b => b.id === id);

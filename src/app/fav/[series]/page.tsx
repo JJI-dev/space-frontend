@@ -69,7 +69,7 @@ export default function FavSeriesPage({ params }: { params: Promise<{ series: st
               sortedPosts.map((post, i) => (
                 <Link
                   key={post.id}
-                  href={`/fav/${seriesKey}/${post.id}`}
+                  href={`/fav/${seriesKey}/${post.slug ?? post.id}`}
                   className={`${styles.card} ${styles.revealOnScroll}`}
                   style={{ transitionDelay: `${i * 0.1}s` }}
                 >

@@ -3,6 +3,7 @@ import { LogPost } from '@/types'
 export const LOG_POSTS: LogPost[] = [
     {
       id: '1',
+      slug: 'making-space-1',
       category: 'Design',
       title: '제작기 #1',
       excerpt: '자유도와 안정성을 동시에 잡는 방법: 샐러드게임 DSL을 소개합니다. 컴포넌트 시스템 설계부터 토큰 관리까지 전반적인 내용을 다룹니다.',

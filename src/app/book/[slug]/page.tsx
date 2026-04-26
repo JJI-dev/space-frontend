@@ -4,15 +4,50 @@ import Link from 'next/link'
 import matter from 'gray-matter'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { books } from '@/lib/data/book' 
+import { notFound } from 'next/navigation'
 import BookDetailClient from './BookDetailClient'
 import styles from './detail.module.css'
 
-export default async function BookDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  // 1. params를 await로 풉니다.
-  const resolvedParams = await params
-  const book = books.find(p => p.id === resolvedParams.id)
+export function generateStaticParams() {
+  return books.map(b => ({ slug: b.slug }))
+}
+
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const book = books.find(b => b.slug === slug)
+  if (!book) return {}
+
+  const baseUrl = 'https://space.jji.kr'
+  const url = `${baseUrl}/book/${book.slug}`
+  const description = (book.firstImpression || '').trim() || book.title
+
+  return {
+    title: book.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: book.title,
+      description,
+      url,
+      siteName: 'JJI',
+      images: book.coverUrl ? [{ url: book.coverUrl, alt: book.title }] : undefined,
+      locale: 'ko_KR',
+      type: 'article',
+    },
+    twitter: {
+      card: book.coverUrl ? 'summary_large_image' : 'summary',
+      title: book.title,
+      description,
+      images: book.coverUrl ? [book.coverUrl] : undefined,
+    },
+  }
+}
+
+export default async function BookDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const book = books.find(b => b.slug === slug)
   
-  if (!book) return <div>404 Not Found</div>
+  if (!book) notFound()
 
   const fileName = book.id;
   const filePath = path.join(process.cwd(), 'content/book', `${fileName}.mdx`);

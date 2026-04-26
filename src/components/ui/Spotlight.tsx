@@ -42,7 +42,7 @@ function buildAllResults(): SearchResult[] {
 
   // LOG
   LOG_POSTS.forEach(p => results.push({
-    href: `/log/${p.id}`,
+    href: `/log/${p.slug}`,
     icon: '📝',
     title: p.title,
     sub: `Log · ${p.category} · ${p.date}`,
@@ -51,7 +51,7 @@ function buildAllResults(): SearchResult[] {
 
   // LIFE
   LIFE_POSTS.forEach(p => results.push({
-    href: `/life/${p.id}`,
+    href: `/life/${p.slug}`,
     icon: '✈️',
     title: p.title,
     sub: `Life · ${p.category} · ${p.sub}`,
@@ -63,7 +63,7 @@ function buildAllResults(): SearchResult[] {
     const parentCat = getCategoryName(series);
     posts.forEach(p => {
       results.push({
-        href: `/fav/${series}/${p.id}`,
+        href: `/fav/${series}/${(p as any).slug ?? p.id}`,
         icon: '💜',
         title: p.title,
         sub: `${parentCat} · ${series} · ${p.sub}`,
@@ -74,7 +74,7 @@ function buildAllResults(): SearchResult[] {
 
   if (books) {
     books.forEach(b => results.push({
-      href: `/book/${b.id}`,
+      href: `/book/${b.slug}`,
       icon: '📚',
       title: b.title,
       sub: `Book · ${b.category} · ${b.author}${b.publisher ? ` · ${b.publisher}` : ''}`,

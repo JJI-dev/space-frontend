@@ -3,6 +3,7 @@ export type LogCategory = 'All' | 'Product' | 'Design' | 'Tech' | 'Study'
 
 export interface LogPost {
   id: string
+  slug: string
   category: Exclude<LogCategory, 'All'>
   title: string
   excerpt: string
@@ -17,6 +18,7 @@ export type LifeCategory = 'All' | 'Travel' | 'Hot spot' | 'Diary'| 'Game'
 
 export interface LifePost {
   id: string
+  slug: string
   category: Exclude<LifeCategory, 'All'>
   sub: string   // date string
   title: string
@@ -32,6 +34,7 @@ export type WishCategory = 'All' | 'GOODS' | 'CLOTHES' | 'COSMETICS'
 
 export interface WishItem {
   id: string
+  slug: string
   title: string
   category: Exclude<WishCategory, 'All'>
   categoryLabel: string
@@ -48,6 +51,7 @@ export type BookType = '리뷰' | '위시';
 
 export interface Book {
   id: string;
+  slug: string;
   title: string;
   author: string;
   publisher?: string;

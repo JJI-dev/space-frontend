@@ -3,24 +3,65 @@ import path from 'path'
 import Link from 'next/link'
 import matter from 'gray-matter'
 import { MDXRemote } from 'next-mdx-remote/rsc'
-import { LIFE_POSTS } from '@/lib/data/index'
+import { LOG_POSTS } from '@/lib/data/index' 
 import { notFound } from 'next/navigation'
-import LifeDetailClient from './LifeDetailClient'
+import LogDetailClient from './LogDetailClient'
 import styles from './detail.module.css'
 
 export function generateStaticParams() {
-  return LIFE_POSTS.map(p => ({ id: p.id }))
+  return LOG_POSTS.map(p => ({ slug: p.slug }))
 }
 
-export default async function LifeDetailPage({ params }: { params: Promise<{ id: string }> }) {
-  const { id } = await params
-  const post = LIFE_POSTS.find(p => p.id === id)
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  const post = LOG_POSTS.find(p => p.slug === slug)
+  if (!post) return {}
+
+  const baseUrl = 'https://space.jji.kr'
+  const url = `${baseUrl}/log/${post.slug}`
+  const description = (post.excerpt || '').trim() || post.title
+
+  return {
+    title: post.title,
+    description,
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title,
+      description,
+      url,
+      siteName: 'JJI',
+      images: post.thumb ? [{ url: post.thumb, alt: post.title }] : undefined,
+      locale: 'ko_KR',
+      type: 'article',
+    },
+    twitter: {
+      card: post.thumb ? 'summary_large_image' : 'summary',
+      title: post.title,
+      description,
+      images: post.thumb ? [post.thumb] : undefined,
+    },
+  }
+}
+
+export default async function LogDetailPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params
+  
+ //기존 데이터에서 메타데이터(제목, 날짜, 썸네일 등) 가져오기
+  const post = LOG_POSTS.find(p => p.slug === slug)
+  
   if (!post) notFound()
 
-  const filePath = path.join(process.cwd(), 'content/life', `${post.id}.mdx`)
-  let fileContent = ''
-  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
-  catch(e) { 
+ 
+  const fileName = post.id;
+  const filePath = path.join(process.cwd(), 'content/log', `${fileName}.mdx`);
+  
+  let fileContent = '';
+  try {
+    fileContent = fs.readFileSync(filePath, 'utf8');
+  } catch(e) { 
+    // Log 페이지에서는 id 변수명에 따라 post.id 혹은 resolvedParams.id 를 사용합니다.
+    const currentId = post ? post.id : '알수없음';
+
     return (
       <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
         <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
@@ -36,32 +77,30 @@ export default async function LifeDetailPage({ params }: { params: Promise<{ id:
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/life/{id}.mdx
+            content/log/{currentId}.mdx
           </code>
         </p>
         
-        {/* ✨ 주소가 /life 로 수정되었습니다! */}
-        <Link href="/life" className={styles.backBtn}>
+        {/* ✨ 주소가 /log 로 수정되었습니다! */}
+        <Link href="/log" className={styles.backBtn}>
           목록으로 돌아가기
         </Link>
       </div>
     ) 
   }
-
+  
   const { content } = matter(fileContent)
-
   const components = {
     h2: (props: any) => <h2 className={`${styles.h2} ${styles.revealOnScroll}`} {...props} />,
     h3: (props: any) => <h3 className={`${styles.h3} ${styles.revealOnScroll}`} {...props} />,
     p: (props: any) => <p className={`${styles.p} ${styles.revealOnScroll}`} {...props} />,
     ol: (props: any) => <ol className={`${styles.ol} ${styles.revealOnScroll}`} {...props} />,
     pre: (props: any) => <pre className={`${styles.codeBlock} ${styles.revealOnScroll}`} {...props} />,
-    
   }
 
   return (
-    <LifeDetailClient post={post} allPosts={LIFE_POSTS}>
+    <LogDetailClient post={post} allPosts={LOG_POSTS}>
       <MDXRemote source={content} components={components} />
-    </LifeDetailClient>
+    </LogDetailClient>
   )
 }

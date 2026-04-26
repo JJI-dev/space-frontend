@@ -132,9 +132,9 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
 
       <div className={styles.detailLayout}>
         <aside className={`${styles.leftNav} ${showFloatingBar ? styles.visible : ''}`}>
-          {prev ? <Link href={`/book/${prev.id}`} className={styles.navBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
+          {prev ? <Link href={`/book/${prev.slug}`} className={styles.navBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></Link>
                 : <button className={styles.navBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M19 12H5M12 19l-7-7 7-7"/></svg></button>}
-          {next ? <Link href={`/book/${next.id}`} className={styles.navBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
+          {next ? <Link href={`/book/${next.slug}`} className={styles.navBtn}><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></Link>
                 : <button className={styles.navBtn} disabled><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg></button>}
           <button className={styles.navBtn} onClick={handleCopyLink}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></button>
           <button className={styles.navBtn} onClick={() => setIsDrawerOpen(true)}><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
@@ -201,7 +201,7 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
         </div>
         <div className={styles.drawerList}>
           {allBooks.map(item => (
-            <Link key={item.id} href={`/book/${item.id}`} className={styles.drawerItem}>
+            <Link key={item.id} href={`/book/${item.slug}`} className={styles.drawerItem}>
               <div className={styles.drawerImg}>
                 {item.coverUrl ? <img src={item.coverUrl} alt="" /> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)'}}/>}
               </div>

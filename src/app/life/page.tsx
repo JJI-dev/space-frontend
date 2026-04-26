@@ -67,7 +67,7 @@ export default function LifePage() {
 
         <div key={gridKey} className={`${styles.grid} reveal reveal-delay-2`}>
           {items.map(post => (
-            <Link key={post.id} href={`/life/${post.id}`} className={styles.card}>
+            <Link key={post.id} href={`/life/${post.slug}`} className={styles.card}>
               <div className={styles.cardImg}>
                 {post.thumb && <img src={post.thumb} alt={post.title} />}
               </div>

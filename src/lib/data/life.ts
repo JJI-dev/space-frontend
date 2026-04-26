@@ -1,7 +1,7 @@
 import { LifePost } from '@/types'
 
 export const LIFE_POSTS: LifePost[] = [
-    { id: '1', category: 'Travel', sub: '2025-12-12', title: '여행갔다왔당', tags: ['UI', 'UI UX'], content: '여행 좋아용. 이번 여행은 정말 좋았다. 날씨도 좋고 음식도 맛있었다.' },
+    { id: '1', slug: 'trip-recap', category: 'Travel', sub: '2025-12-12', title: '여행갔다왔당', tags: ['UI', 'UI UX'], content: '여행 좋아용. 이번 여행은 정말 좋았다. 날씨도 좋고 음식도 맛있었다.' },
     // { id: '2', category: 'Diary', sub: '2025-12-01', title: '오늘의 끄적임', tags: ['일상'], content: '오늘은 날씨가 정말 좋았다. 카페에서 작업하다가 산책도 했다.' },
     // { id: '3', category: 'Hot spot', sub: '2025-11-20', title: '요즘 자주 가는 카페', tags: ['카페', 'Hot spot'], content: '성수동에 새로 생긴 카페. 분위기가 너무 좋아서 자주 가게 됐다.' },
     // { id: '4', category: 'Travel', sub: '2025-11-05', title: '제주 2박 3일', tags: ['Travel', '제주'], content: '바람이 많이 불었지만 그래서 더 좋았다. 흑돼지도 먹고 한라봉도 먹고.' },

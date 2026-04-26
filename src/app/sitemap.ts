@@ -33,8 +33,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (FAV_POSTS_DATA) {
     Object.entries(FAV_POSTS_DATA).forEach(([seriesKey, posts]) => {
       posts.forEach((post) => {
+        const postSlug = (post as any).slug ?? post.id
         favRoutes.push({
-          url: `${baseUrl}/fav/${seriesKey}/${post.id}`, // 예: /fav/iri/1
+          url: `${baseUrl}/fav/${seriesKey}/${postSlug}`,
           lastModified: new Date(post.date || new Date()), 
           changeFrequency: 'daily',
           priority: 0.7,
@@ -49,7 +50,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (LIFE_POSTS) {
     LIFE_POSTS.forEach((post) => {
       lifeRoutes.push({
-        url: `${baseUrl}/life/${post.id}`, // 예: /life/1
+        url: `${baseUrl}/life/${post.slug}`, // 예: /life/trip-recap
         lastModified: new Date(post.sub || new Date()), 
         changeFrequency: 'daily',
         priority: 0.7,
@@ -62,7 +63,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (books) {
     books.forEach((book) => {
       bookRoutes.push({
-        url: `${baseUrl}/book/${book.id}`,
+        url: `${baseUrl}/book/${book.slug}`,
         lastModified: new Date(book.readDate || book.startDate || new Date()), 
         changeFrequency: 'weekly',
         priority: 0.6,
@@ -75,7 +76,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   if (LOG_POSTS) {
     LOG_POSTS.forEach((log) => {
       logRoutes.push({
-        url: `${baseUrl}/log/${log.id}`,
+        url: `${baseUrl}/log/${log.slug}`,
         lastModified: new Date(log.date || new Date()), 
         changeFrequency: 'weekly',
         priority: 0.6,
