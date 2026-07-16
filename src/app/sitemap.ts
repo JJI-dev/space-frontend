@@ -6,6 +6,7 @@ import { FAV_POSTS_DATA } from '@/lib/data/fav'
 import { LIFE_POSTS } from '@/lib/data/life' 
 import { books } from '@/lib/data/book' 
 import { LOG_POSTS} from '@/lib/data/log'   
+import { parseDateTime } from '@/lib/formatDate'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://space.jji.kr'
@@ -49,9 +50,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   
   if (LIFE_POSTS) {
     LIFE_POSTS.forEach((post) => {
+      const lastModifiedAt = parseDateTime(post.sub)
       lifeRoutes.push({
         url: `${baseUrl}/life/${post.slug}`, // 예: /life/trip-recap
-        lastModified: new Date(post.sub || new Date()), 
+        lastModified: Number.isNaN(lastModifiedAt) ? new Date() : new Date(lastModifiedAt),
         changeFrequency: 'daily',
         priority: 0.7,
       })
@@ -62,9 +64,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const bookRoutes: MetadataRoute.Sitemap = []
   if (books) {
     books.forEach((book) => {
+      const lastModifiedAt = parseDateTime(book.readDate || book.startDate)
       bookRoutes.push({
         url: `${baseUrl}/book/${book.slug}`,
-        lastModified: new Date(book.readDate || book.startDate || new Date()), 
+        lastModified: Number.isNaN(lastModifiedAt) ? new Date() : new Date(lastModifiedAt), 
         changeFrequency: 'weekly',
         priority: 0.6,
       })
@@ -75,9 +78,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const logRoutes: MetadataRoute.Sitemap = []
   if (LOG_POSTS) {
     LOG_POSTS.forEach((log) => {
+      const lastModifiedAt = parseDateTime(log.date)
       logRoutes.push({
         url: `${baseUrl}/log/${log.slug}`,
-        lastModified: new Date(log.date || new Date()), 
+        lastModified: Number.isNaN(lastModifiedAt) ? new Date() : new Date(lastModifiedAt), 
         changeFrequency: 'weekly',
         priority: 0.6,
       })

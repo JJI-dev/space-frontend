@@ -9,12 +9,12 @@ import LifeDetailClient from './LifeDetailClient'
 import styles from './detail.module.css'
 
 export function generateStaticParams() {
-  return LIFE_POSTS.map(p => ({ slug: p.slug }))
+  return LIFE_POSTS.flatMap((p) => [{ slug: p.slug }, { slug: p.id }])
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = LIFE_POSTS.find(p => p.slug === slug)
+  const post = LIFE_POSTS.find(p => p.slug === slug || p.id === slug)
   if (!post) return {}
 
   const baseUrl = 'https://space.jji.kr'
@@ -46,13 +46,16 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function LifeDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = LIFE_POSTS.find(p => p.slug === slug)
+  const post = LIFE_POSTS.find(p => p.slug === slug || p.id === slug)
   if (!post) notFound()
 
-  const filePath = path.join(process.cwd(), 'content/life', `${post.id}.mdx`)
+  const candidatePaths = [
+    path.join(process.cwd(), 'content/life', `${post.slug}.mdx`),
+    path.join(process.cwd(), 'content/life', `${post.id}.mdx`),
+  ]
+  const filePath = candidatePaths.find((p) => fs.existsSync(p))
   let fileContent = ''
-  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
-  catch(e) { 
+  if (!filePath) {
     return (
       <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
         <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
@@ -68,7 +71,7 @@ export default async function LifeDetailPage({ params }: { params: Promise<{ slu
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/life/{post.id}.mdx
+            content/life/{post.slug}.mdx (or {post.id}.mdx)
           </code>
         </p>
         
@@ -79,6 +82,8 @@ export default async function LifeDetailPage({ params }: { params: Promise<{ slu
       </div>
     ) 
   }
+  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
+  catch(e) { notFound() }
 
   const { content } = matter(fileContent)
 

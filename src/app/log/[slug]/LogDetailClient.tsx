@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import type { LogPost } from '@/types'
 import Footer from '@/components/layout/Footer'
+import { formatDate } from '@/lib/formatDate'
 import styles from './detail.module.css'
 
 interface Props { 
@@ -128,7 +129,7 @@ export default function LogDetailClient({ post, allPosts, children }: Props) {
           <p className={`${styles.category} ${styles.revealOnScroll}`}>{post.category}</p>
           <h1 className={`${styles.title} ${styles.revealOnScroll}`}>{post.title}</h1>
           <div className={`${styles.meta} ${styles.revealOnScroll}`}>
-            <span>{post.date}</span><span>·</span><span>조회 {viewCount}</span>
+            <span>{formatDate(post.date)}</span><span>·</span><span>조회 {viewCount}</span>
           </div>
 
           <div className={`${styles.content} ${styles.revealOnScroll}`}>{children}</div>

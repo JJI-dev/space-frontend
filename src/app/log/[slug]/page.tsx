@@ -9,12 +9,12 @@ import LogDetailClient from './LogDetailClient'
 import styles from './detail.module.css'
 
 export function generateStaticParams() {
-  return LOG_POSTS.map(p => ({ slug: p.slug }))
+  return LOG_POSTS.flatMap((p) => [{ slug: p.slug }, { slug: p.id }])
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const post = LOG_POSTS.find(p => p.slug === slug)
+  const post = LOG_POSTS.find(p => p.slug === slug || p.id === slug)
   if (!post) return {}
 
   const baseUrl = 'https://space.jji.kr'
@@ -47,18 +47,19 @@ export default async function LogDetailPage({ params }: { params: Promise<{ slug
   const { slug } = await params
   
  //기존 데이터에서 메타데이터(제목, 날짜, 썸네일 등) 가져오기
-  const post = LOG_POSTS.find(p => p.slug === slug)
+  const post = LOG_POSTS.find(p => p.slug === slug || p.id === slug)
   
   if (!post) notFound()
 
  
-  const fileName = post.id;
-  const filePath = path.join(process.cwd(), 'content/log', `${fileName}.mdx`);
-  
+  const candidatePaths = [
+    path.join(process.cwd(), 'content/log', `${post.slug}.mdx`),
+    path.join(process.cwd(), 'content/log', `${post.id}.mdx`),
+  ]
+  const filePath = candidatePaths.find((p) => fs.existsSync(p))
+
   let fileContent = '';
-  try {
-    fileContent = fs.readFileSync(filePath, 'utf8');
-  } catch(e) { 
+  if (!filePath) {
     // Log 페이지에서는 id 변수명에 따라 post.id 혹은 resolvedParams.id 를 사용합니다.
     const currentId = post ? post.id : '알수없음';
 
@@ -77,7 +78,7 @@ export default async function LogDetailPage({ params }: { params: Promise<{ slug
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/log/{currentId}.mdx
+            content/log/{post.slug}.mdx (or {currentId}.mdx)
           </code>
         </p>
         
@@ -88,6 +89,9 @@ export default async function LogDetailPage({ params }: { params: Promise<{ slug
       </div>
     ) 
   }
+  try {
+    fileContent = fs.readFileSync(filePath, 'utf8');
+  } catch(e) { notFound() }
   
   const { content } = matter(fileContent)
   const components = {

@@ -104,12 +104,12 @@
 .tagChip { padding: 5px 14px; border-radius: 100px; border: 1px solid var(--gray-200); font-size: 12px; color: var(--gray-600); }
 
 /* ✨ MDX 본문 스타일링 (태그 타겟팅) */
-.content p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: var(--gray-600); margin-bottom: 24px; word-break: keep-all; }
+.content p { font-size: 16px; line-height: 1.85; letter-spacing: -0.04em; color: inherit; margin-bottom: 24px; word-break: keep-all; }
 .content h1 { font-size: 28px; font-weight: 800; margin: 60px 0 24px; letter-spacing: -0.04em; }
 .content h2 { font-size: 24px; font-weight: 700; margin: 60px 0 24px; letter-spacing: -0.04em; }
 .content h3 { font-size: 20px; font-weight: 600; margin: 62px 0 24px; letter-spacing: -0.04em; }
 .content pre, .content code { background: var(--gray-100); border-radius: 8px; padding: 16px 20px; font-family: 'Courier New', monospace; font-size: 13px; overflow-x: auto; margin-bottom: 24px; line-height: 1.7; }
-.content ol, .content ul { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: var(--gray-600);}
+.content ol, .content ul { margin: 0 0 24px 24px; font-size: 16px; line-height: 1.85; color: inherit;}
 .content li { margin-bottom: 8px; }
 .content img { max-width: 100%; border-radius: 12px; margin: 24px 0; }
 

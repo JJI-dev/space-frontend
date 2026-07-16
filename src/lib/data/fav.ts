@@ -16,7 +16,8 @@ export const FAV_POSTS_DATA = {
     { id: '3', slug: 'what-if', title: 'if ', sub: '꼬마길가티네 / 버서커조 등', tag: '#이랬으면 좋겠다', date: '2026-04-07', thumbnail:'/fav/fsf/2.png' },
     { id: '4', slug: 'episodes-0-to-13', title: '0 ~ 13화', sub: '내 기준, 2026년 1분기 탑', tag: '#페스페', date: '2026-04-01', thumbnail:'https://i.namu.wiki/i/RUR1pobkR6hdxqBj48lRk2b7G52rCwiGSFCdb8UQWdiD0OL5g4yO8_v49jbZFBfR9r4Ijr58YxsB4UxSynQjsw.webp'},
     { id: '5', slug: 'original-novels', title: '원작', sub: '1~9권까지 라노벨을 읽어요', tag: '#나리타 료고님 얼른 10권 주세요', date: '2026-04-01', thumbnail: 'https://contents.kyobobook.co.kr/sih/fit-in/458x0/pdt/9791141157609.jpg'},
-    { id: '6', slug: 'provant-opening', title: 'PROVANT', sub: '오프닝이 너무 좋다', tag: '#미쳤다리 #내 인생 오프닝', date: '2026-04-01', thumbnail: 'https://m.media-amazon.com/images/I/812seBHzI9L._UF894,1000_QL80_.jpg'}
+    { id: '6', slug: 'provant-opening', title: 'PROVANT', sub: '오프닝이 너무 좋다', tag: '#미쳤다리 #내 인생 오프닝', date: '2026-04-01', thumbnail: 'https://m.media-amazon.com/images/I/812seBHzI9L._UF894,1000_QL80_.jpg'},
+    // { id: '6', slug: 'provant-opening', title: 'PROVANT', sub: '오프닝이 너무 좋다', tag: '#미쳤다리 #내 인생 오프닝', date: '2026-04-01', thumbnail: 'https://m.media-amazon.com/images/I/812seBHzI9L._UF894,1000_QL80_.jpg'}
   ]
 
 

@@ -1,5 +1,5 @@
 // ── Log ──────────────────────────────────────────────
-export type LogCategory = 'All' | 'Product' | 'Design' | 'Tech' | 'Study'
+export type LogCategory = 'All' | 'Product' | 'Design' | 'Tech' | 'Study'| 'Essay'
 
 export interface LogPost {
   id: string
@@ -46,7 +46,7 @@ export interface WishItem {
 }
 
 // ── Book ─────────────────────────────────────────────
-export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '문학' | '소설' | '자기계발' | '인문' | '과학' | 'SF' | '추리';
+export type BookCategory = 'All' | '기술' | '디자인' | '기획' | '고전' | '소설' | '자기계발' | '인문' | '과학' | 'SF' | '추리'| '사회' | '경제'| '예술'| '에세이'| '역사';
 export type BookType = '리뷰' | '위시';
 
 export interface Book {
@@ -68,7 +68,7 @@ export interface Book {
 
 // ── Archive ───────────────────────────────────────────
 export type ArchiveTab = 'site' | 'article'
-export type ArchiveCategory = 'All' | '디자인' | '디자인 토큰' | '에이전시 사이트'
+export type ArchiveCategory = 'All' | '디자인' | '디자인 토큰' | '브랜딩' | '에이전시' | '개발' | '목업' | '기획' | 'UIUX' | '폰트' | '포트폴리오' | '그림' | '프로젝트' | '참고' | '뉴스레터' | '색상' | '아이콘 ∙ 로고' | '기타'
 
 export interface ArchiveItem {
   id: string

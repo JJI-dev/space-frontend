@@ -14,7 +14,6 @@ interface Props {
 }
 
 export default function BookDetailClient({ book, allBooks, children }: Props) {
-  const [mounted, setMounted] = useState(false)
   const idx = allBooks.findIndex(p => p.id === book.id)
   const prev = allBooks[idx - 1]
   const next = allBooks[idx + 1]
@@ -35,7 +34,6 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
 
   // 1. 기존 스크롤 및 등장 애니메이션 이벤트
   useEffect(() => {
-    setMounted(true)
     const globalHeader = document.querySelector('header')
     
     const handleScroll = () => {
@@ -120,8 +118,6 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
       window.scrollTo({ top: elementPosition - offset, behavior: 'smooth' })
     }
   }
-
-  if (!mounted || !book) return null
 
   return (
     <>

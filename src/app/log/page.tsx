@@ -5,10 +5,10 @@ import Link from 'next/link'
 import { LOG_POSTS } from '@/lib/data/index'
 import type { LogCategory } from '@/types'
 import Footer from '@/components/layout/Footer'
-import { formatDate } from '@/lib/formatDate'
+import { formatDate, parseDateTime } from '@/lib/formatDate'
 import styles from './log.module.css'
 
-const CATEGORIES: LogCategory[] = ['All', 'Product', 'Design', 'Tech', 'Study']
+const CATEGORIES: LogCategory[] = ['All', 'Product', 'Design', 'Tech', 'Study', 'Essay']
 const PER_PAGE = 5
 
 export default function LogPage() {
@@ -18,8 +18,11 @@ export default function LogPage() {
   // const filtered = cat === 'All' ? LOG_POSTS : LOG_POSTS.filter(p => p.category === cat)
 
   const sortedPosts = [...LOG_POSTS].sort((a, b) => {
-    const dateA = new Date(a.date).getTime();
-    const dateB = new Date(b.date).getTime();
+    const dateA = parseDateTime(a.date)
+    const dateB = parseDateTime(b.date)
+    if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0
+    if (Number.isNaN(dateA)) return 1
+    if (Number.isNaN(dateB)) return -1
     if (dateA === dateB) return Number(b.id) - Number(a.id);
     return dateB - dateA;
   });

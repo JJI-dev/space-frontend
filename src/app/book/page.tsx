@@ -1,17 +1,19 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { books } from '@/lib/data/book'
 import { BookCategory, BookType } from '@/types'
 import Footer from '@/components/layout/Footer'
+import { parseDateTime } from '@/lib/formatDate'
 import styles from './list.module.css'
 
-const CATEGORIES: BookCategory[] = ['All', '기술', '디자인', '기획', '문학', '소설', '자기계발', '인문', '과학', 'SF', '추리']
+const CATEGORIES: BookCategory[] = ['All', '기술', '디자인', '기획', '고전', '소설', '자기계발', '인문', '과학', 'SF', '추리']
 
 export default function BookListClient() {
   const [activeCategory, setActiveCategory] = useState<BookCategory>('All')
   const [activeType, setActiveType] = useState<BookType>('리뷰')
+  const gridRef = useRef<HTMLDivElement>(null)
 
   const filteredBooks = books.filter(book => {
     const matchCategory = activeCategory === 'All' || book.category === activeCategory;
@@ -20,10 +22,22 @@ export default function BookListClient() {
   })
 
   .sort((a, b) => {
-    if (!a.readDate) return 1; 
-    if (!b.readDate) return -1;
-    return new Date(b.readDate).getTime() - new Date(a.readDate).getTime();
+    const dateA = parseDateTime(a.readDate)
+    const dateB = parseDateTime(b.readDate)
+    if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0
+    if (Number.isNaN(dateA)) return 1
+    if (Number.isNaN(dateB)) return -1
+    return dateB - dateA
   });
+
+  const handleTypeClick = (nextType: BookType) => {
+    setActiveType(nextType)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        gridRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    })
+  }
 
   return (
     <>
@@ -53,14 +67,14 @@ export default function BookListClient() {
                 <button
                   key={t}
                   className={`${styles.tab} ${activeType === t ? styles.tabActive : ''}`}
-                  onClick={() => setActiveType(t)}
+                  onClick={() => handleTypeClick(t)}
                 >
                   {t}
                 </button>
               ))}
             </div>
 
-            <div className={styles.grid}>
+            <div ref={gridRef} className={styles.grid}>
               {filteredBooks.map(book => (
                 <Link href={`/book/${book.slug}`} key={book.id} className={styles.card}>
                   <div className={styles.coverWrap}>

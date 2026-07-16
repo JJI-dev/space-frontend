@@ -1,6 +1,7 @@
 import fs from 'fs'
 import path from 'path'
 import matter from 'gray-matter'
+import { parseDateTime } from '@/lib/formatDate'
 
 // content 폴더의 절대 경로를 잡습니다.
 const rootDirectory = path.join(process.cwd(), 'content')
@@ -39,7 +40,14 @@ export const getAllPosts = (folder: string) => {
       return meta
     })
     // 날짜 최신순 정렬
-    .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
+    .sort((a, b) => {
+      const dateA = parseDateTime(a.date)
+      const dateB = parseDateTime(b.date)
+      if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0
+      if (Number.isNaN(dateA)) return 1
+      if (Number.isNaN(dateB)) return -1
+      return dateB - dateA
+    })
 
   return posts
 }   

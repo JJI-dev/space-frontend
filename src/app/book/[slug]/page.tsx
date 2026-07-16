@@ -9,12 +9,12 @@ import BookDetailClient from './BookDetailClient'
 import styles from './detail.module.css'
 
 export function generateStaticParams() {
-  return books.map(b => ({ slug: b.slug }))
+  return books.flatMap((b) => [{ slug: b.slug }, { slug: b.id }])
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const book = books.find(b => b.slug === slug)
+  const book = books.find(b => b.slug === slug || b.id === slug)
   if (!book) return {}
 
   const baseUrl = 'https://space.jji.kr'
@@ -45,18 +45,19 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BookDetailPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const book = books.find(b => b.slug === slug)
+  const book = books.find(b => b.slug === slug || b.id === slug)
   
   if (!book) notFound()
 
-  const fileName = book.id;
-  const filePath = path.join(process.cwd(), 'content/book', `${fileName}.mdx`);
+  // Prefer slug-based MDX path, but keep id-based fallback for legacy files.
+  const candidatePaths = [
+    path.join(process.cwd(), 'content/book', `${book.slug}.mdx`),
+    path.join(process.cwd(), 'content/book', `${book.id}.mdx`),
+  ]
+  const filePath = candidatePaths.find((p) => fs.existsSync(p))
   
-  let fileContent = '';
-  try {
-    fileContent = fs.readFileSync(filePath, 'utf8');
-  } catch(e) { 
-    // ✨ 파일 읽기 실패 시 예쁜 404 페이지 렌더링 (params.id -> book.id로 변경)
+  let fileContent = ''
+  if (!filePath) {
     return (
       <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
         <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
@@ -72,7 +73,7 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/book/{book.id}.mdx
+            content/book/{book.slug}.mdx (or {book.id}.mdx)
           </code>
         </p>
         
@@ -83,14 +84,30 @@ export default async function BookDetailPage({ params }: { params: Promise<{ slu
       </div>
     ) 
   }
+
+  try {
+    fileContent = fs.readFileSync(filePath, 'utf8')
+  } catch {
+    notFound()
+  }
   
   const { content } = matter(fileContent)
   const components = {
+    h1: (props: any) => <h1 className={`${styles.h1} ${styles.revealOnScroll}`} {...props} />,
     h2: (props: any) => <h2 className={`${styles.h2} ${styles.revealOnScroll}`} {...props} />,
     h3: (props: any) => <h3 className={`${styles.h3} ${styles.revealOnScroll}`} {...props} />,
     p: (props: any) => <p className={`${styles.p} ${styles.revealOnScroll}`} {...props} />,
     ol: (props: any) => <ol className={`${styles.ol} ${styles.revealOnScroll}`} {...props} />,
+    ul: (props: any) => <ul className={`${styles.ul} ${styles.revealOnScroll}`} {...props} />,
+    li: (props: any) => <li className={styles.olItem} {...props} />,
+    code: (props: any) => <code className={styles.inlineCode} {...props} />,
     pre: (props: any) => <pre className={`${styles.codeBlock} ${styles.revealOnScroll}`} {...props} />,
+    a: (props: any) => <a className={styles.link} {...props} />,
+    blockquote: (props: any) => <blockquote className={`${styles.blockquote} ${styles.revealOnScroll}`} {...props} />,
+    hr: (props: any) => <hr className={styles.hr} {...props} />,
+    img: (props: any) => <img className={styles.contentImg} {...props} />,
+    strong: (props: any) => <strong className={styles.strong} {...props} />,
+    em: (props: any) => <em className={styles.em} {...props} />,
   }
 
   return (

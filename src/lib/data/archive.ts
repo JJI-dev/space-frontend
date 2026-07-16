@@ -1,13 +1,152 @@
-import { ArchiveItem } from '@/types'
+import type { ArchiveCategory, ArchiveItem } from '@/types'
 
-export const ARCHIVE_ITEMS: ArchiveItem[] = [
-    { id: '1', tab: 'site', category: '디자인 토큰', name: '당근 디자인 토큰 사이트', url: 'https://seed-design.io', desc: '당근마켓 디자인 시스템 토큰 사이트', favicon: 'https://seed-design.io/favicon.ico', preview: '' },
-    { id: '2', tab: 'site', category: '디자인', name: 'Refactoring UI', url: 'https://www.refactoringui.com', desc: 'UI 개선 레퍼런스 모음', favicon: '', preview: '' },
-    { id: '3', tab: 'site', category: '에이전시 사이트', name: 'Locomotive', url: 'https://locomotive.ca', desc: '캐나다 크리에이티브 에이전시', favicon: '', preview: '' },
+type ArchiveItemCategory = Exclude<ArchiveCategory, 'All'>
+
+export const ARCHIVE_CATEGORIES: ArchiveCategory[] = [
+  'All',
+  '디자인',
+  '디자인 토큰',
+  '브랜딩',
+  '에이전시',
+  '개발',
+  '목업',
+  '기획',
+  'UIUX',
+  '폰트',
+  '포트폴리오',
+  '그림',
+  '프로젝트',
+  '참고',
+  '뉴스레터',
+  '색상',
+  '아이콘 ∙ 로고',
+  '기타'
+]
+
+export const ARCHIVE_ITEMS_BY_CATEGORY: Record<ArchiveItemCategory, ArchiveItem[]> = {
+  '디자인': [
+    { id: '2', tab: 'site', category: '디자인', name: '지디웹', url: 'https://www.gdweb.co.kr/main/', desc: '다양한 디자인 사이트', favicon: '', preview: '' },
     { id: '4', tab: 'site', category: '디자인', name: 'Dribbble', url: 'https://dribbble.com', desc: '디자인 포트폴리오 커뮤니티', favicon: 'https://cdn.dribbble.com/assets/favicon-b38525134603b9513174ec887944bde1a869eb6cd414f4d640ee48ab2a15a26b.ico', preview: '' },
     { id: '5', tab: 'site', category: '디자인', name: 'Awwwards', url: 'https://www.awwwards.com', desc: '웹 디자인 어워드', favicon: 'https://www.awwwards.com/favicon.ico', preview: '' },
     { id: '6', tab: 'article', category: '디자인', name: '디자인 시스템의 미래', url: '#', desc: '컴포넌트에서 토큰으로의 전환', favicon: '', preview: '' },
-    { id: '7', tab: 'article', category: '디자인 토큰', name: 'CSS Variables 완벽 가이드', url: '#', desc: '실무에서 바로 쓰는 방법', favicon: '', preview: '' },
     { id: '8', tab: 'article', category: '디자인', name: 'Figma Variables로 토큰 관리하기', url: '#', desc: 'Figma와 코드 사이의 싱크 맞추기', favicon: '', preview: '' },
-  ]
+    { id: '25', tab: 'site', category: '디자인', name: 'curations supply', url: 'https://curations.supply/', desc: '여러가지 아카이브 사이트', favicon: '', preview: '' },
+    { id: '29', tab: 'site', category: '디자인', name: 'rebrand gallery', url: 'https://www.rebrand.gallery/', desc: '비주얼 인터렉티브', favicon: '', preview: '' },
+    { id: '40', tab: 'site', category: '디자인', name: 'DBCUT', url: 'https://www.dbcut.com/', desc: '우수 웹사이트', favicon: '', preview: '' },
+    { id: '89', tab: 'site', category: '디자인', name: 'craftwork', url: 'https://craftwork.design/curated/websites/', desc: '여러가지 아카이브 사이트', favicon: '', preview: '' },
+    { id: '43', tab: 'site', category: '디자인', name: 'durumiref', url: 'https://durumiref.com/', desc: '여러가지 아카이브 사이트', favicon: '', preview: '' },
+    { id: '45', tab: 'site', category: '디자인', name: 'getdesign.md', url: 'https://getdesign.md/', desc: 'AI Agents', favicon: '', preview: '' },
+    { id: '61', tab: 'site', category: '디자인', name: 'abduzeedo', url: 'https://abduzeedo.com/', desc: '디자인 영감 모음', favicon: '', preview: '' },
+    { id: '62', tab: 'site', category: '디자인', name: 'the-brandidentity', url: 'https://the-brandidentity.com/store', desc: '여러가지 아카라이브 사이트', favicon: '', preview: '' },
+  ],
+  '디자인 토큰': [
+    { id: '1', tab: 'site', category: '디자인 토큰', name: '당근 디자인 토큰 사이트', url: 'https://seed-design.io', desc: '당근마켓 디자인 시스템 토큰 사이트', favicon: 'https://seed-design.io/favicon.ico', preview: '' },
+    { id: '7', tab: 'article', category: '디자인 토큰', name: '원티드 피그마 디자인 가이드', url: 'https://www.figma.com/design/siL6xcVIpuGLGQpqQCPB2z/Wanted-Design-System--Community-?node-id=16248-4248411&p=f&t=oNLKpbsKUXwNf1QE-0', desc: '원티드', favicon: '', preview: '' },
+  ],
+  '브랜딩': [
+    { id: '55', tab: 'site', category: '브랜딩', name: 'rebrand', url: 'https://www.rebrand.gallery/', desc: '브랜드 영감', favicon: '', preview: '' },
+    { id: '56', tab: 'site', category: '브랜딩', name: 'visualljounral', url: 'https://visualjournal.it/', desc: '브랜드 영감', favicon: '', preview: '' },
+    { id: '57', tab: 'site', category: '브랜딩', name: 'bpando', url: 'https://bpando.org/', desc: '브랜딩과 패키징', favicon: '', preview: '' },
+    { id: '58', tab: 'site', category: '브랜딩', name: 'comos', url: 'https://www.cosmos.so/explore', desc: '브랜딩 영감 사진', favicon: '', preview: '' },
+    { id: '59', tab: 'site', category: '브랜딩', name: 'brandarchive', url: 'https://brandarchive.xyz/', desc: '브랜딩 아카라이브', favicon: '', preview: '' },
+    { id: '60', tab: 'site', category: '브랜딩', name: 'worldbranddesign', url: 'https://worldbranddesign.com/', desc: '브랜딩 영감', favicon: '', preview: '' },
+  ],
+  '에이전시': [
+    { id: '82', tab: 'site', category: '에이전시', name: 'design pixel', url: 'https://designpixel.co.kr/portfolio.php', desc: '에이전시', favicon: '', preview: '' },
+    { id: '83', tab: 'site', category: '에이전시', name: 'plusX', url: 'https://www.plus-ex.com/experience', desc: '에이전시', favicon: '', preview: '' },
+    { id: '84', tab: 'site', category: '에이전시', name: '더즈인터렉티브', url: 'https://www.does.kr/', desc: '에이전시', favicon: '', preview: '' },
+    { id: '85', tab: 'site', category: '에이전시', name: '똑똑한 개발자', url: 'https://www.toktokhan.dev/', desc: '에이전시', favicon: '', preview: '' },
+    { id: '86', tab: 'site', category: '에이전시', name: 'VINYLC', url: 'https://www.vinylc.com/ko/main', desc: '에이전시', favicon: '', preview: '' },
+    { id: '87', tab: 'site', category: '에이전시', name: 'pulip', url: 'https://www.pulip.com/', desc: '에이전시', favicon: '', preview: '' },
+    { id: '88', tab: 'site', category: '에이전시', name: '스튜디오제이티', url: 'https://studio-jt.co.kr/', desc: '에이전시', favicon: '', preview: '' },
+    { id: '89', tab: 'site', category: '에이전시', name: '잇다소프트', url: 'https://itddaa.com/index.php', desc: '에이전시', favicon: '', preview: '' },
+    
+  ],
+  '개발': [],
+  '목업': [],
+  '기획': [],
+  'UIUX': [
+    { id: '11', tab: 'site', category: 'UIUX', name: 'mobbin', url: 'https://mobbin.com/discover/apps/ios/latest?via=abraham', desc: '모바일', favicon: '', preview: '' },
+    { id: '12', tab: 'site', category: 'UIUX', name: 'navbar gallery', url: 'https://www.navbar.gallery/mobile-navigation', desc: '네비게이션 디자인 모음', favicon: '', preview: '' },
+    { id: '13', tab: 'site', category: 'UIUX', name: 'origami archive', url: 'https://origamiarchive.com/', desc: '동작 애니메이션', favicon: '', preview: '' },
+    { id: '27', tab: 'site', category: 'UIUX', name: 'component gallery', url: 'https://component.gallery/', desc: '컴포넌트 용어', favicon: '', preview: '' },
+    { id: '30', tab: 'site', category: 'UIUX', name: '60fps design', url: 'https://60fps.design/', desc: '모바일 애니메이션', favicon: '', preview: '' },
+    { id: '35', tab: 'site', category: 'UIUX', name: 'spotted in prod', url: 'https://www.spottedinprod.com/', desc: '모바일 인터렉티브', favicon: '', preview: '' },
+    { id: '38', tab: 'site', category: 'UIUX', name: 'before', url: 'https://before.click/?app=arc', desc: '모바일 자료', favicon: '', preview: '' },
+    { id: '46', tab: 'site', category: 'UIUX', name: 'abtest', url: 'https://abtest.design/', desc: 'a/b 테스트', favicon: '', preview: '' },
+    { id: '52', tab: 'site', category: 'UIUX', name: 'asoinspo', url: 'https://www.asoinspo.com/', desc: '모바일 자료', favicon: '', preview: '' },
+  ],
+  '폰트': [
+    { id: '31', tab: 'site', category: '폰트', name: 'fontshare', url: 'https://fontshare.com/', desc: '폰트 모음', favicon: '', preview: '' },
+    { id: '32', tab: 'site', category: '폰트', name: 'uncut font', url: 'https://uncut.wtf/', desc: '폰트 모음', favicon: '', preview: '' },
+    { id: '49', tab: 'site', category: '폰트', name: 'kawai design', url: 'https://kawai-text-animation.pages.dev/', desc: '텍스트 애니메이션', favicon: '', preview: '' },
+  ],
+  '포트폴리오': [
+    { id: '3', tab: 'site', category: '포트폴리오', name: 'cargo', url: 'https://cargo.site/templates', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '9', tab: 'site', category: '포트폴리오', name: 'gallereee', url: 'https://www.gallereee.com/', desc: '인터렉티브한 포트폴리오', favicon: '', preview: '' },
+    { id: '10', tab: 'site', category: '포트폴리오', name: 'landing love', url: 'https://www.landing.love/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '22', tab: 'site', category: '포트폴리오', name: 'saaspo', url: 'https://saaspo.com/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '24', tab: 'site', category: '포트폴리오', name: 'Locomotive', url: 'https://www.landing.love/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '34', tab: 'site', category: '포트폴리오', name: 'framer gallery', url: 'https://www.framer.com/gallery/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '36', tab: 'site', category: '포트폴리오', name: 'css design awards', url: 'https://cssdesignawards.com/', desc: 'mobbin css 디자인 어워드', favicon: '', preview: '' },
+    { id: '37', tab: 'site', category: '포트폴리오', name: 'siteinspire', url: 'https://www.siteinspire.com/websites/category/portfolio/page/5', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '41', tab: 'site', category: '포트폴리오', name: 'saaspo', url: 'https://saaspo.com/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '44', tab: 'site', category: '포트폴리오', name: 'inspo', url: 'https://www.details.so/inspo', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '48', tab: 'site', category: '포트폴리오', name: 'savee', url: 'https://marketplace.savee.com/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '50', tab: 'site', category: '포트폴리오', name: 'webinspoo', url: 'https://www.webinspoo.com/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '54', tab: 'site', category: '포트폴리오', name: 'cofolios', url: 'https://www.cofolios.com/', desc: '포트폴리오 자료', favicon: '', preview: '' },
+    { id: '63', tab: 'site', category: '포트폴리오', name: 'refto', url: 'https://refto.one/', desc: '포트폴리오 자료', favicon: '', preview: '' },
   
+  ],
+  '그림': [
+    { id: '47', tab: 'site', category: '그림', name: 'x6ud', url: 'https://x6ud.github.io/pose-search/#/', desc: '포즈', favicon: '', preview: '' },
+    { id: '67', tab: 'site', category: '그림', name: '아또리얼', url: 'https://attorial.com/croquis', desc: '포즈 크로키', favicon: '', preview: '' },
+
+  ],
+  '프로젝트': [],
+  '참고': [],
+  '뉴스레터': [
+    { id: '23', tab: 'site', category: '뉴스레터', name: 'handheld design', url: 'https://www.handheld.design/', desc: '해외 디자인 뉴스레터', favicon: '', preview: '' },
+    { id: '66', tab: 'site', category: '뉴스레터', name: '데일리 뉴스럴', url: 'https://newsletter.neusral.com/', desc: '데일리 경제 뉴스레터', favicon: '', preview: '' },
+    { id: '68', tab: 'site', category: '뉴스레터', name: 'brandB', url: 'https://www.brandb.net/features', desc: '브랜드 뉴스레터', favicon: '', preview: '' },
+    { id: '69', tab: 'site', category: '뉴스레터', name: 'morning brew', url: 'https://www.morningbrew.com/', desc: '해외 뉴스레터', favicon: '', preview: '' },
+    { id: '70', tab: 'site', category: '뉴스레터', name: '연금술사', url: 'https://page.stibee.com/archives/160190', desc: '연금 뉴스레터', favicon: '', preview: '' },
+    { id: '71', tab: 'site', category: '뉴스레터', name: '경제용', url: 'https://page.stibee.com/archives/130181', desc: '경제 뉴스레터', favicon: '', preview: '' },
+    { id: '72', tab: 'site', category: '뉴스레터', name: '부딩', url: 'https://www.booding.co/', desc: '부동산 뉴스레터', favicon: '', preview: '' },
+    { id: '73', tab: 'site', category: '뉴스레터', name: '디그', url: 'https://dig.mk.co.kr/', desc: '경제 뉴스레터', favicon: '', preview: '' },
+    { id: '74', tab: 'site', category: '뉴스레터', name: '디에디트', url: 'https://the-edit.co.kr/', desc: '트렌드 뉴스레터', favicon: '', preview: '' },
+    { id: '75', tab: 'site', category: '뉴스레터', name: '바이트플러스', url: 'https://www.mydailybyte.com/', desc: '경제 뉴스레터', favicon: '', preview: '' },
+    { id: '76', tab: 'site', category: '뉴스레터', name: '어피티', url: 'https://uppity.co.kr/', desc: '경제 뉴스레터', favicon: '', preview: '' },
+    { id: '77', tab: 'site', category: '뉴스레터', name: '퍼블리', url: 'https://publy.co/', desc: '취업 이직 업무 뉴스레터', favicon: '', preview: '' },
+    { id: '78', tab: 'site', category: '뉴스레터', name: '요즘IT', url: 'https://yozm.wishket.com/', desc: 'IT 뉴스레터', favicon: '', preview: '' },
+    { id: '79', tab: 'site', category: '뉴스레터', name: '뉴닉', url: 'https://newneek.co/', desc: '세상 뉴스레터', favicon: '', preview: '' },
+    { id: '80', tab: 'site', category: '뉴스레터', name: '주말토리', url: 'https://joomaltory.com/', desc: '주말 뉴스레터', favicon: '', preview: '' },
+    { id: '81', tab: 'site', category: '뉴스레터', name: 'aurora', url: 'https://aurora.ai.kr/#home', desc: '디자인 뉴스레터', favicon: '', preview: '' },
+  ],
+  '색상' : [
+    { id: '26', tab: 'site', category: '색상', name: 'supacolors', url: 'https://supacolors.studio/', desc: '색상', favicon: '', preview: '' },
+  ],
+  '아이콘 ∙ 로고': [
+    { id: '28', tab: 'site', category: '아이콘 ∙ 로고', name: 'iconscout', url: 'https://iconscout.com/', desc: '아이콘 모음', favicon: '', preview: '' },
+    { id: '42', tab: 'site', category: '아이콘 ∙ 로고', name: '3dicons', url: 'https://3dicons.co/', desc: '3D 아이콘 모음', favicon: '', preview: '' },
+    { id: '51', tab: 'site', category: '아이콘 ∙ 로고', name: 'logoinspo', url: 'https://www.logoinspo.com/', desc: '로고 모음', favicon: '', preview: '' },
+    { id: '53', tab: 'site', category: '아이콘 ∙ 로고', name: 'thesvg', url: 'https://thesvg.org/', desc: '로고 아이콘', favicon: '', preview: '' },
+    
+  ],
+  '기타': [
+    { id: '14', tab: 'site', category: '기타', name: 'The Master Slides', url: 'https://themasterslides.gumroad.com/', desc: 'ppt 슬라이드', favicon: '', preview: '' },
+    { id: '15', tab: 'site', category: '기타', name: 'pixabay', url: 'https://pixabay.com/ko/', desc: '무료 사진', favicon: '', preview: '' },
+    { id: '16', tab: 'site', category: '기타', name: 'pixabay sound', url: 'https://pixabay.com/sound-effects/search/ui/', desc: '무료 사운드', favicon: '', preview: '' },
+    { id: '17', tab: 'site', category: '기타', name: 'unsplash', url: 'https://unsplash.com/ko', desc: '무료 사진', favicon: '', preview: '' },
+    { id: '18', tab: 'site', category: '기타', name: 'pexels', url: 'https://www.pexels.com/ko-kr/', desc: '무료 사진', favicon: '', preview: '' },
+    { id: '19', tab: 'site', category: '기타', name: 'shopify stock photos', url: 'https://www.shopify.com/stock-photos', desc: '무료 사진', favicon: '', preview: '' },
+    { id: '20', tab: 'site', category: '기타', name: 'foodiesfeed', url: 'https://www.foodiesfeed.com/', desc: '무료 음식 사진', favicon: '', preview: '' },
+    { id: '21', tab: 'site', category: '기타', name: 'lifeofpix', url: 'https://www.lifeofpix.com/', desc: '무료 사진', favicon: '', preview: '' },
+    { id: '33', tab: 'site', category: '기타', name: 'bklit', url: 'https://bklit.com/charts/funnel-chart', desc: '차트', favicon: '', preview: '' },
+    { id: '39', tab: 'site', category: '기타', name: 'texturelabs', url: 'https://texturelabs.org/', desc: '무료 텍스처', favicon: '', preview: '' },
+    { id: '64', tab: 'site', category: '기타', name: 'ray', url: 'https://ray.so/#theme=mono&code=IyDtg5zqt7g', desc: '코드 이미지 생성', favicon: '', preview: '' },
+    { id: '65', tab: 'site', category: '기타', name: 'carbon', url: 'https://carbon.now.sh/', desc: '코드 이미지 생성', favicon: '', preview: '' },
+  ]
+}
+
+export const ARCHIVE_ITEMS: ArchiveItem[] = Object.values(ARCHIVE_ITEMS_BY_CATEGORY).flat()

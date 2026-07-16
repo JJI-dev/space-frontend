@@ -4,19 +4,24 @@ import matter from 'gray-matter'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { FAV_POSTS_DATA } from '@/lib/data/index'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
 import FavDetailClient from './FavDetailClient'
 import styles from './detail.module.css'
 
 export function generateStaticParams() {
   return Object.entries(FAV_POSTS_DATA).flatMap(([seriesKey, posts]) =>
-    posts.map((post: any) => ({ series: seriesKey, slug: post.slug ?? post.id }))
+    posts.flatMap((post: any) => {
+      const params = [{ series: seriesKey, slug: post.id }]
+      if (post.slug) params.push({ series: seriesKey, slug: post.slug })
+      return params
+    })
   )
 }
 
 export async function generateMetadata({ params }: { params: Promise<{ series: string; slug: string }> }) {
   const { series, slug } = await params
   const seriesPosts: any[] = (FAV_POSTS_DATA as any)[series] || []
-  const current = seriesPosts.find(p => (p.slug ?? p.id) === slug)
+  const current = seriesPosts.find((p) => p.slug === slug || p.id === slug)
   if (!current) return {}
 
   const baseUrl = 'https://space.jji.kr'
@@ -52,7 +57,7 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
 
   // 1. 해당 장르(series)의 데이터 찾기
   const seriesPosts = FAV_POSTS_DATA[series as keyof typeof FAV_POSTS_DATA] || []
-  const currentIndex = seriesPosts.findIndex((p: any) => (p.slug ?? p.id) === slug)
+  const currentIndex = seriesPosts.findIndex((p: any) => p.slug === slug || p.id === slug)
   const current = seriesPosts[currentIndex]
 
   // 데이터 없으면 에러 화면 렌더링
@@ -71,12 +76,14 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
   const nextPost = currentIndex < seriesPosts.length - 1 ? seriesPosts[currentIndex + 1] : null
   const seriesName = series === 'iri' ? '이터널리턴' : series === 'elsword' ? '엘소드' : series === 'fsf' ? '페스페' : series
 
-  // 2. ✨ MDX 파일 읽어오기 (핵심: content/fav/iri/1.mdx)
-  const filePath = path.join(process.cwd(), 'content/fav', series, `${current.id}.mdx`)
-  
+  const candidatePaths = [
+    path.join(process.cwd(), 'content/fav', series, `${current.slug}.mdx`),
+    path.join(process.cwd(), 'content/fav', series, `${current.id}.mdx`),
+  ]
+  const filePath = candidatePaths.find((p) => fs.existsSync(p))
+
   let fileContent = ''
-  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
-  catch(e) { 
+  if (!filePath) {
     return (
       <div className="page-enter" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', minHeight: '70vh', textAlign: 'center', padding: '0 var(--px)' }}>
         <div style={{ width: '64px', height: '64px', borderRadius: '50%', background: 'var(--gray-100)', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
@@ -92,7 +99,7 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
         <p style={{ color: 'var(--gray-400)', fontSize: '15px', lineHeight: '1.6', marginBottom: '32px' }}>
           열심히 작성 중이거나 경로가 잘못된 것 같아요.<br />
           <code style={{ fontSize: '12px', background: 'var(--gray-100)', padding: '4px 8px', borderRadius: '6px', marginTop: '12px', display: 'inline-block', color: 'var(--gray-600)' }}>
-            content/fav/{series}/{current.id}.mdx
+            content/fav/{series}/{current.slug}.mdx (or {current.id}.mdx)
           </code>
         </p>
         
@@ -103,6 +110,8 @@ export default async function FavDetailPage({ params }: { params: Promise<{ seri
       </div>
     ) 
   }
+  try { fileContent = fs.readFileSync(filePath, 'utf8') } 
+  catch(e) { notFound() }
   const { content } = matter(fileContent)
 
   const components = {

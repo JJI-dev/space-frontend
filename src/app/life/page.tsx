@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { LIFE_POSTS } from '@/lib/data/index'
 import type { LifeCategory } from '@/types'
 import Footer from '@/components/layout/Footer'
-import { formatDate } from '@/lib/formatDate' // ✨ formatDate 임포트 추가
+import { formatDate, parseDateTime } from '@/lib/formatDate'
 import styles from './life.module.css'
 
 const CATEGORIES: LifeCategory[] = ['All', 'Travel', 'Hot spot', 'Diary', 'Game']
@@ -18,8 +18,11 @@ export default function LifePage() {
   const [gridKey, setGridKey] = useState(0)
 
   const sortedPosts = [...LIFE_POSTS].sort((a, b) => {
-    const dateA = new Date(a.sub).getTime();
-    const dateB = new Date(b.sub).getTime();
+    const dateA = parseDateTime(a.sub)
+    const dateB = parseDateTime(b.sub)
+    if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0
+    if (Number.isNaN(dateA)) return 1
+    if (Number.isNaN(dateB)) return -1
     if (dateA === dateB) return Number(b.id) - Number(a.id);
     return dateB - dateA;
   });

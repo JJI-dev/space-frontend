@@ -1,7 +1,7 @@
 'use client'
 
-import { useState } from 'react'
-import { ARCHIVE_ITEMS } from '@/lib/data/index'
+import { useRef, useState } from 'react'
+import { ARCHIVE_CATEGORIES, ARCHIVE_ITEMS } from '@/lib/data/index'
 import type { ArchiveTab, ArchiveCategory } from '@/types'
 // import SearchIcon from '@/components/ui/SearchIcon'
 import Footer from '@/components/layout/Footer'
@@ -11,7 +11,6 @@ const TABS_CONFIG = [
   { id: 'site' as ArchiveTab, label: '사이트' },
   { id: 'article' as ArchiveTab, label: '아티클' }
 ]
-const CATS: ArchiveCategory[] = ['All', '디자인', '디자인 토큰', '에이전시 사이트']
 
 // URL이 유효한지 검사하고 파비콘 주소를 안전하게 반환하는 헬퍼 함수
 const getFaviconUrl = (url?: string) => {
@@ -28,6 +27,7 @@ export default function ArchivePage() {
   const [tab, setTab] = useState<ArchiveTab>('site')
   const [cat, setCat] = useState<ArchiveCategory>('All')
   const [tip, setTip] = useState<{ x: number; y: number; item: typeof ARCHIVE_ITEMS[0] } | null>(null)
+  const listRef = useRef<HTMLDivElement>(null)
 
   const filtered = ARCHIVE_ITEMS
     .filter(i => i.tab === tab)
@@ -43,6 +43,16 @@ export default function ArchivePage() {
   
   const handleMouseLeave = () => setTip(null)
 
+  const handleTabClick = (nextTab: ArchiveTab) => {
+    setTab(nextTab)
+    setTip(null)
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      })
+    })
+  }
+
   return (
     <>
       <div className="page-enter">
@@ -54,7 +64,7 @@ export default function ArchivePage() {
         <div className={`${styles.layout} reveal reveal-delay-1`}>
           {/* Sidebar */}
           <aside className={`${styles.sidebar} no-scrollbar`}>
-            {CATS.map(c => (
+            {ARCHIVE_CATEGORIES.map(c => (
               <button
                 key={c}
                 className={`${styles.catBtn} ${cat === c ? styles.active : ''}`}
@@ -72,66 +82,67 @@ export default function ArchivePage() {
                 <button
                   key={t.id}
                   className={`${styles.tab} ${tab === t.id ? styles.tabActive : ''}`}
-                  onClick={() => setTab(t.id)}
+                  onClick={() => handleTabClick(t.id)}
                 >
                   {t.label}
                 </button>
               ))}
             </div>
 
-            <table className={styles.table}>
-              <colgroup>
-                <col style={{ width: '45%' }} />
-                <col style={{ width: '55%' }} />
-              </colgroup>
-              <thead>
-                <tr>
-                  <th>제목</th>
-                  <th>설명</th>
-                </tr>
-              </thead>
-              {/* key={tab}을 주어 탭이 바뀔 때마다 tbody가 새로 마운트되며 애니메이션이 실행됨 */}
-              <tbody key={tab} className={styles.tabContentEnter}>
-                {filtered.length === 0 ? (
-                  <tr>
-                    <td colSpan={2} className={styles.empty}>항목이 없습니다</td>
-                  </tr>
-                ) : filtered.map(item => {
-                  const faviconUrl = getFaviconUrl(item.url);
-                  
-                  return (
-                    <tr
-                      key={item.id}
-                      className={styles.row}
-                      onMouseEnter={e => handleMouseEnter(e, item)}
-                      onMouseMove={handleMouseMove}
-                      onMouseLeave={handleMouseLeave}
-                      onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
-                    >
-                      <td>
-                        <div className={styles.nameCell}>
-                          <span className={styles.favicon}>
-                            {faviconUrl ? (
-                              <img 
-                                src={faviconUrl}
-                                alt="" 
-                                width={16} 
-                                height={16}
-                                onError={e => ((e.target as HTMLImageElement).style.display='none')}
-                              />
-                            ) : (
-                              <span style={{ fontSize: 10, color: 'var(--gray-400)' }}>🔖</span>
-                            )}
-                          </span>
-                          <span className={styles.siteName}>{item.name}</span>
-                        </div>
-                      </td>
-                      <td className={styles.desc}>{item.desc}</td>
+            <div className={styles.tableHeader}>
+              <span>사이트</span>
+              <span>설명</span>
+            </div>
+
+            <div ref={listRef} className={styles.listScroll}>
+              <table className={styles.table}>
+                <colgroup>
+                  <col style={{ width: '45%' }} />
+                  <col style={{ width: '55%' }} />
+                </colgroup>
+                {/* key={tab}을 주어 탭이 바뀔 때마다 tbody가 새로 마운트되며 애니메이션이 실행됨 */}
+                <tbody key={tab} className={styles.tabContentEnter}>
+                  {filtered.length === 0 ? (
+                    <tr>
+                      <td colSpan={2} className={styles.empty}>항목이 없습니다</td>
                     </tr>
-                  )
-                })}
-              </tbody>
-            </table>
+                  ) : filtered.map(item => {
+                    const faviconUrl = getFaviconUrl(item.url);
+                    
+                    return (
+                      <tr
+                        key={item.id}
+                        className={styles.row}
+                        onMouseEnter={e => handleMouseEnter(e, item)}
+                        onMouseMove={handleMouseMove}
+                        onMouseLeave={handleMouseLeave}
+                        onClick={() => item.url && window.open(item.url, '_blank', 'noopener')}
+                      >
+                        <td>
+                          <div className={styles.nameCell}>
+                            <span className={styles.favicon}>
+                              {faviconUrl ? (
+                                <img 
+                                  src={faviconUrl}
+                                  alt="" 
+                                  width={16} 
+                                  height={16}
+                                  onError={e => ((e.target as HTMLImageElement).style.display='none')}
+                                />
+                              ) : (
+                                <span style={{ fontSize: 10, color: 'var(--gray-400)' }}>🔖</span>
+                              )}
+                            </span>
+                            <span className={styles.siteName}>{item.name}</span>
+                          </div>
+                        </td>
+                        <td className={styles.desc}>{item.desc}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

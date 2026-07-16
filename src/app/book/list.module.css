@@ -6,16 +6,17 @@
   .pageTitle { font-size: clamp(28px, 5vw, 48px); font-weight: 700; letter-spacing: -.05em; color: var(--black); }
   
   .layout {
-    padding: 0 var(--px) 80px;
-    display: flex; gap: 0; align-items: flex-start;
+    display: flex;
+    align-items: flex-start;
+    padding: 0 0 120px;
   }
   
   /* Sidebar */
   .sidebar {
     width: 180px; flex-shrink: 0;
+    padding: 0 24px 0 var(--px);
     display: flex; flex-direction: column; gap: 10px;
     position: sticky; top: calc(var(--header-h) + 24px); height: fit-content;
-    padding-right: 24px;
   }
   .catBtn {
     font-size: 14px; font-weight: 400;
@@ -26,16 +27,28 @@
   .catBtn.active { color: var(--black); font-weight: 600; }
   .catBtn:hover  { color: var(--black); }
   
-  .content { flex: 1; min-width: 0; }
+  .content {
+    flex: 1; min-width: 0;
+    padding-right: var(--px);
+    min-height: calc(100vh - var(--header-h));
+  }
   
   /* Tabs (리뷰 / 위시) */
-  .tabs { display: flex; gap: 8px; margin-bottom: 32px; }
+  .tabs {
+    display: flex; gap: 8px; margin-bottom: 0;
+    padding-bottom: 32px;
+    position: sticky;
+    top: var(--header-h);
+    z-index: 2;
+    background: var(--white);
+  }
   .tab {
     padding: 8px 24px; border-radius: 100px;
     font-size: 13px; font-weight: 600;
     background: var(--gray-100); color: var(--gray-400);
-    transition: background .2s, color .2s;
+    transition: background .2s, color .2s, transform .2s;
   }
+  .tab:active { transform: scale(.96); }
   .tab:hover { color: var(--black); }
   .tabActive { background: var(--black) !important; color: var(--white) !important; }
   
@@ -44,6 +57,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
     gap: 40px 20px;
+    scroll-margin-top: calc(var(--header-h) + 64px);
   }
   .card { display: flex; flex-direction: column; cursor: pointer; transition: transform 0.2s; }
   .coverWrap {
@@ -60,8 +74,10 @@
   .empty { grid-column: 1 / -1; padding: 60px 0; text-align: center; color: var(--gray-400); font-size: 14px; }
   
   @media (max-width: 768px) {
-    .layout { flex-direction: column; gap: 24px; }
+    .layout { flex-direction: column; gap: 24px; padding: 0 var(--px) 80px; }
     .sidebar { width: 100%; flex-direction: row; overflow-x: auto; padding: 0; gap: 20px; position: static; }
+    .content { padding-right: 0; min-height: 0; }
+    .tabs { position: static; margin-bottom: 32px; padding-bottom: 0; }
     .catBtn { white-space: nowrap; }
     .grid { grid-template-columns: repeat(2, 1fr); gap: 16px; }
   }
