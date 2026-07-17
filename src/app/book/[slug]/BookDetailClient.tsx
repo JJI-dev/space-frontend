@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Book } from '@/types'
-import { formatDate } from '@/lib/formatDate'
+import { formatDate, parseDateTime } from '@/lib/formatDate'
 import Footer from '@/components/layout/Footer'
 import styles from './detail.module.css'
 
@@ -17,6 +17,14 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
   const idx = allBooks.findIndex(p => p.id === book.id)
   const prev = allBooks[idx - 1]
   const next = allBooks[idx + 1]
+  const drawerBooks = [...allBooks].sort((a, b) => {
+    const dateA = parseDateTime(a.readDate)
+    const dateB = parseDateTime(b.readDate)
+    if (Number.isNaN(dateA) && Number.isNaN(dateB)) return 0
+    if (Number.isNaN(dateA)) return 1
+    if (Number.isNaN(dateB)) return -1
+    return dateB - dateA
+  })
   
   const [showFloatingBar, setShowFloatingBar] = useState(false)
   const [scrollPercent, setScrollPercent] = useState(0)
@@ -196,7 +204,7 @@ export default function BookDetailClient({ book, allBooks, children }: Props) {
           </button>
         </div>
         <div className={styles.drawerList}>
-          {allBooks.map(item => (
+          {drawerBooks.map(item => (
             <Link key={item.id} href={`/book/${item.slug}`} className={styles.drawerItem}>
               <div className={styles.drawerImg}>
                 {item.coverUrl ? <img src={item.coverUrl} alt="" /> : <div style={{width:'100%', height:'100%', background:'var(--gray-100)'}}/>}
