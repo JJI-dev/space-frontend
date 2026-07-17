@@ -862,7 +862,7 @@ export const books: Book[] = [
     rating: 3,
     type: '리뷰',
     firstImpression: '일상 일대기',
-    summary: '',
+    summary: 'ㅇㅈ 브이로그',
     category: '소설',
     coverUrl: 'https://image.yes24.com/goods/77133280/XL',
   },
